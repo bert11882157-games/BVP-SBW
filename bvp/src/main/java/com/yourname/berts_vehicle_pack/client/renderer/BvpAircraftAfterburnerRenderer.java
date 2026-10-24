@@ -79,9 +79,12 @@ public final class BvpAircraftAfterburnerRenderer {
             var transform = vehicle.getVehicleTransform(partialTicks);
             double time = activeLevel.m_46467_() + partialTicks;
             int index = 0;
+            double elevator = controls == null ? 0.0D : controls.getElevator();
             for (Outlet outlet : config.outlets()) {
-                Vec3 p = outlet.position();
-                Vec3 d = outlet.direction();
+                // a vectoring nozzle (opt-in per outlet) swings the flame and haze with the accepted elevator
+                double nozzle = nozzleDegrees(outlet, elevator);
+                Vec3 p = swing(outlet, outlet.position(), true, nozzle, state.swing);
+                Vec3 d = swing(outlet, outlet.direction(), false, nozzle, state.swing);
                 transform.transform(p.f_82479_, p.f_82480_, p.f_82481_, 1.0D, state.point);
                 transform.transform(d.f_82479_, d.f_82480_, d.f_82481_, 0.0D, state.direction);
                 com.atsuishio.superbwarfare.client.particle.AfterburnerPlumes.submit(vehicle.m_19879_(), index++,
@@ -284,7 +287,15 @@ public final class BvpAircraftAfterburnerRenderer {
             if (!Double.isFinite(radius) || radius < 0.05 || radius > 2.0) {
                 throw new IllegalArgumentException("Afterburner nozzle radius outside 0.05..2 blocks");
             }
-            outlets.add(new Outlet(outlet.id, position, direction.m_82541_(), radius));
+            double vector = outlet.vectorPitchDegrees == null ? 0.0D : outlet.vectorPitchDegrees;
+            if (!Double.isFinite(vector) || vector < 0.0D || vector > 45.0D) {
+                throw new IllegalArgumentException("Afterburner vector pitch outside 0..45 degrees");
+            }
+            Vec3 pivot = outlet.vectorPivot == null ? position : vector(outlet.vectorPivot);
+            if (Math.abs(pivot.f_82479_) > 128 || Math.abs(pivot.f_82480_) > 128 || Math.abs(pivot.f_82481_) > 128) {
+                throw new IllegalArgumentException("Invalid afterburner vector pivot");
+            }
+            outlets.add(new Outlet(outlet.id, position, direction.m_82541_(), radius, vector, pivot));
         }
         var emitters = new ArrayList<TapEmitter>();
         if (data.schema == 2) {
@@ -330,6 +341,21 @@ public final class BvpAircraftAfterburnerRenderer {
             }
         }
         return result;
+    }
+
+    /** Nozzle angle in degrees, nose-up positive: the accepted elevator times the outlet's vectoring range (0 = fixed). */
+    static double nozzleDegrees(Outlet outlet, double elevator) {
+        if (!(outlet.vectorDegrees() > 0.0D) || !Double.isFinite(elevator)) return 0.0D;
+        return Math.max(-1.0D, Math.min(1.0D, elevator)) * outlet.vectorDegrees();
+    }
+
+    /** A local point (about the outlet's hinge) or direction swung by the nozzle angle; unchanged when the nozzle is fixed. */
+    static Vec3 swing(Outlet outlet, Vec3 vector, boolean point, double degrees, double[] scratch) {
+        if (degrees == 0.0D) return vector;
+        Vec3 hinge = point ? outlet.pivot() : new Vec3(0.0D, 0.0D, 0.0D);
+        com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingThrustVectoring.swingPitch(
+                vector.f_82480_ - hinge.f_82480_, vector.f_82481_ - hinge.f_82481_, degrees, scratch);
+        return new Vec3(vector.f_82479_, hinge.f_82480_ + scratch[0], hinge.f_82481_ + scratch[1]);
     }
 
     static Vec3 tapSample(TapEmitter emitter, float x, float y, float z) {
@@ -419,7 +445,8 @@ public final class BvpAircraftAfterburnerRenderer {
         syncLevel(null);
     }
 
-    record Outlet(String id, Vec3 position, Vec3 direction, double radius) {}
+    /** vectorDegrees is the largest nozzle swing (0 = a fixed nozzle); pivot is the hinge it swings about. */
+    record Outlet(String id, Vec3 position, Vec3 direction, double radius, double vectorDegrees, Vec3 pivot) {}
     record TapEmitter(Vec3 position, Vec3 extents, Vec3 velocity, int interval, boolean flame) {}
     record Channel(float scale, float width, double length, double density, int lifetime,
                    float red, float green, float blue) {}
@@ -440,6 +467,7 @@ public final class BvpAircraftAfterburnerRenderer {
         final java.util.Random random = new java.util.Random();
         final Vector4d point = new Vector4d();
         final Vector4d direction = new Vector4d();
+        final double[] swing = new double[2];
 
         void advance(Config config) {
             flameCarry += config.flame().density() * 3;

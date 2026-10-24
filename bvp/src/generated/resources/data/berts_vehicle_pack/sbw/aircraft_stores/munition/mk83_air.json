@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "Mk 83 AIR · 1,000 lb ballute retarded (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk83_air.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.202,
+    -0.05
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.178,
+      0.0,
+      -0.05
+    ],
+    "Right": [
+      -0.178,
+      0.0,
+      -0.05
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.05
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk83_air.png",
+  "Capacity": 1,
+  "MassKg": 460.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 5,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 272.43,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk83_air",
+  "LaunchOffset": [
+    0.0,
+    -0.202,
+    0.0
+  ]
+}

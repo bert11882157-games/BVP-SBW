@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "215 US gal drop tank",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_215gal.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3247,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3339,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.3339,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_215gal.png",
+  "Capacity": 1,
+  "MassKg": 755.0,
+  "LaunchOffset": [
+    0.0,
+    -0.3247,
+    0.0
+  ]
+}

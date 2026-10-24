@@ -1,0 +1,91 @@
+{
+  "Schema": 1,
+  "Name": "GBU-12 Paveway II · 500 lb laser · TER-9A triple rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu12.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1394,
+      -0.1534,
+      0.0
+    ],
+    "Right": [
+      -0.1394,
+      -0.1534,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1534,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu12.png",
+  "Capacity": 1,
+  "MassKg": 227,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu12",
+  "MaxPerPylon": 3,
+  "FixedRackCount": 3,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_ter9a_x3.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/a10c_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.045,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.102,
+          -0.0225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.102,
+          -0.0225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.5,
+    0.45,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1534,
+    0.0
+  ]
+}

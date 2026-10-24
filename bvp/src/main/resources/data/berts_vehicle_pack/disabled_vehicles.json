@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "_comment": "Aircraft hidden from the creative tabs, the SBW lucky-container loot lists and every spawn list, 2026-10-23, bert: 'I dont want the aircraft with the old models, so remove them from the pack for the time being.' Their entity types, assets and data stay registered, so saved worlds and already-spawned entities still load. Evidence per id: work/elite_expansion_2/OLD_MODEL_AIRCRAFT.md. 0.5.0pre1, 2026-10-24: ah_56a hidden too, paused in its War Thunder state until bert's drawing. TO RESTORE ALL: empty the 'disabled' array (disabled: []).",
+  "disabled": [
+    "f_14a",
+    "f_14d",
+    "f_16b",
+    "ah_56a"
+  ]
+}

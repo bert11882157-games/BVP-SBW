@@ -1,0 +1,14 @@
+{
+  "why": "Vautour IIN windscreen: a framed windscreen with ONE flat armoured centre pane (a trapezoid in the plane y = YC0 - SLOPE (z - ZF) between the two slim posts' inner edges, |x| <= 0.17 at the arch, 0.12 at the base bar) and a flat triangular quarter pane each side (arch corner on the post's outer edge, arch foot, base-bar corner: planar by construction), in front of two blown (curved) canopies that are not listed (the SNCASO data sheets give the IIN's pilot and navigator 'in tandem, separate canopies'). The flat centre pane and the quarter panes follow the airframe model's own framed windscreen; no drawing or clear photo of the real pane layout was found, so the three-flat-panes layout is the model's own line and UNVERIFIED against the real jet (see canopy_vautour_iin.py). The centre pane's box starts at z 4.53 only to leave out the reflector sight's own small flat glass at z 4.46..4.51 (centre pane triangles have centroids at z 4.63 and 4.83); the canopy shells end at z 4.383.",
+  "panes": [
+    {
+      "name": "flat armoured centre pane",
+      "box": [[-0.175, 2.17, 4.53], [0.175, 2.65, 5.03]]
+    },
+    {
+      "name": "quarter pane",
+      "box": [[0.18, 2.17, 4.43], [0.43, 2.65, 5.03]],
+      "mirror": true
+    }
+  ]
+}

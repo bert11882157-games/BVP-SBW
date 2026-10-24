@@ -1,0 +1,102 @@
+{
+  "Schema": 1,
+  "Name": "MBD2-67U · 4 x OFAB-100-120 rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_100.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0.0004,
+    0.0371,
+    0.1462
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1289,
+      -0.121,
+      0.1462
+    ],
+    "Right": [
+      0.1298,
+      -0.121,
+      0.1462
+    ]
+  },
+  "MountAxis": [
+    0.0004,
+    -0.121,
+    0.1462
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_100.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 114,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 15.0,
+    "TntEquivalentKg": 38.0,
+    "BlastDamage": 200
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_100",
+  "AmmoItem": "superbwarfare:extra_small_freefall_bomb",
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_mer_x6.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/f16c_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.05,
+          -0.1665,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.1665,
+          0.0
+        ],
+        "Face": "right"
+      },
+      {
+        "Point": [
+          -0.05,
+          -0.5025,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.5025,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.47,
+    0.45,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1581,
+    0.0
+  ],
+  "RackColumns": 2,
+  "RackMassKg": 60.0
+}

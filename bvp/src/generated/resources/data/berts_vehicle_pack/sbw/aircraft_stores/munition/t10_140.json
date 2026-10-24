@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "Matra T10 140 · 6 x 120 mm HE (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/t10_pod.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.224,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.2,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/t10_pod.png",
+  "Capacity": 6,
+  "Scale": 1,
+  "MassKg": 28.0,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.224,
+    0.0
+  ]
+}

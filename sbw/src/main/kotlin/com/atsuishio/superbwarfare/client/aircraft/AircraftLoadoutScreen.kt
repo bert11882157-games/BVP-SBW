@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftGuidanceLabels
+import com.atsuishio.superbwarfare.api.aircraft.AircraftLoadoutAccess
 import com.atsuishio.superbwarfare.api.aircraft.AircraftLoadoutCost
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStorePerformance
 import com.atsuishio.superbwarfare.client.camera.AircraftCameraPivot
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.tools.InventoryTool
@@ -20,6 +22,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.ClipContext
+import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.registries.ForgeRegistries
@@ -36,7 +40,13 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     private val oldView = Minecraft.getInstance().options.cameraType
     private val heading = (Minecraft.getInstance().player?.vehicle as? VehicleEntity)?.getYaw(1f) ?: 0f
     private var selectedMount: String? = null
+    /** Picker tab the pilot chose for [selectedMount]; null shows the fitted store's tab. */
+    private var tab: AircraftLoadoutTab? = null
     private var page = 0
+    /** Right-drag view, in degrees: yaw from [heading] and absolute pitch. Null keeps the fitted default. */
+    private data class Orbit(val yawOffset: Float, val pitch: Float)
+    private var orbit: Orbit? = null
+    private var orbitDragging = false
     private var presetsOpen = false
     private var nameInput: EditBox? = null
     private var pending = false
@@ -63,7 +73,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         frameFitted=null; frameExempt=null; frameOwned.clear()
     }
     fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? =
-        cameraFit(vehicle,partial)?.let { Vec2(heading,it.pitch) }
+        cameraFit(vehicle,partial)?.let { Vec2(it.yaw,it.pitch) }
     fun cameraPosition(vehicle: VehicleEntity, partial: Float): Vec3? = cameraFit(vehicle,partial)?.position
     // Position and rotation are read separately per frame; both must come from one fit.
     private var cachedFit: AircraftLoadoutFraming.Fit? = null
@@ -71,7 +81,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     private fun cameraFit(vehicle: VehicleEntity, partial: Float): AircraftLoadoutFraming.Fit? {
         if(vehicle.uuid!=state.vehicle || !partial.isFinite()) return null
         val fov=Minecraft.getInstance().options.fov().get().toDouble()
-        val key=listOf(vehicle.tickCount,partial,width,height,fov,state.revision)
+        val key=listOf(vehicle.tickCount,partial,width,height,fov,state.revision,orbit ?: Unit)
         if(key==cachedFitKey) return cachedFit
         val speed=AircraftMountPresentation.speed(vehicle,partial)
         val points=state.definition.mounts.filterNot { it.internal }.flatMap { mount -> mount.positions.indices.map { mount.position(it,speed) } } + vehicle.computed().aircraftTerrainContact
@@ -83,16 +93,37 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         val world=points.map { local -> transform.transformPosition(Vector3d(local.x,local.y,local.z)).let { Vec3(it.x,it.y,it.z) } }
         val center=AircraftCameraPivot.center(vehicle,partial)
         val bayRows=(state.definition.mounts.count { it.internal }+3)/4
-        // Equipment is only editable on the ground, so the entity's feet are the ground plane.
-        var groundY=Mth.lerp(partial.toDouble(),vehicle.yo,vehicle.y)
-        var fit=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
-        // Rising terrain around the aircraft lifts the eye onto the obstructing surface.
-        for(lift in 1..MAX_TERRAIN_LIFTS) {
-            groundY=obstructionTop(vehicle,fit.position) ?: break
-            fit=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
+        val orbit=orbit
+        var fit=if(orbit!=null) AircraftLoadoutFraming.fit(center,world,heading+orbit.yawOffset,width,height,fov,bayRows,orbit.pitch)
+        else {
+            // Equipment is only editable on the ground, so the entity's feet are the ground plane.
+            var groundY=Mth.lerp(partial.toDouble(),vehicle.yo,vehicle.y)
+            var ground=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
+            // Rising terrain around the aircraft lifts the eye onto the obstructing surface.
+            for(lift in 1..MAX_TERRAIN_LIFTS) {
+                groundY=obstructionTop(vehicle,ground.position) ?: break
+                ground=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
+            }
+            ground
         }
+        // Neither the eye nor the corners of its near plane may pass through a block.
+        fit=AircraftLoadoutFraming.unobstructed(center,fit,EYE_BLOCK_CLEARANCE) { eye -> blockedDistance(vehicle,center,eye) }
         cachedFit=fit; cachedFitKey=key
         return fit
+    }
+    /** Distance in blocks from [center] at which a block first interrupts the view toward [eye], or null. */
+    private fun blockedDistance(vehicle: VehicleEntity, center: Vec3, eye: Vec3): Double? {
+        val level=vehicle.level()
+        var nearest: Double?=null
+        for(corner in 0..7) {
+            val nudge=Vec3(if(corner and 1==0) -NEAR_PLANE_HALF else NEAR_PLANE_HALF,
+                if(corner and 2==0) -NEAR_PLANE_HALF else NEAR_PLANE_HALF,
+                if(corner and 4==0) -NEAR_PLANE_HALF else NEAR_PLANE_HALF)
+            val from=center.add(nudge)
+            val hit=level.clip(ClipContext(from,eye.add(nudge),ClipContext.Block.VISUAL,ClipContext.Fluid.NONE,vehicle))
+            if(hit.type!=HitResult.Type.MISS) nearest=min(nearest ?: Double.MAX_VALUE,hit.location.distanceTo(from))
+        }
+        return nearest
     }
     /** World Y of the first open block above a solid block containing [eye], or null when open. */
     private fun obstructionTop(vehicle: VehicleEntity, eye: Vec3): Double? {
@@ -107,13 +138,21 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     private companion object {
         const val MAX_TERRAIN_LIFTS = 3
         const val MAX_TERRAIN_CLIMB_BLOCKS = 8
+        /** Gap in blocks kept between the eye and the first block toward it. */
+        const val EYE_BLOCK_CLEARANCE = .2
+        /** Half the side, in blocks, of the box around the eye that must stay out of blocks (vanilla's 0.1). */
+        const val NEAR_PLANE_HALF = .1
+        /** Height in GUI pixels of one row of picker tabs. */
+        const val TAB_HEIGHT = 14
+        /** Right-drag view rotation per GUI pixel, in degrees. */
+        const val ORBIT_DEGREES_PER_PIXEL = .5f
         val BUTTON_TEXT = 0xFFEDE7DC.toInt()
         /** Matches the green of the store tooltip lines (ChatFormatting.GREEN). */
         val OCCUPIED_STATION_TEXT = 0xFF55FF55.toInt()
     }
     private fun editable(): Boolean {
         val vehicle=Minecraft.getInstance().player?.vehicle as? VehicleEntity ?: return false
-        return !pending && vehicle.onGround() && vehicle.deltaMovement.lengthSqr()<=.0025
+        return !pending && AircraftLoadoutAccess.canRefit(vehicle)
     }
     private fun submit(operation: String, choices: Map<String,String> = state.selections,
                        counts: Map<String,Int> = state.counts, name: String? = null) {
@@ -144,6 +183,12 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     private fun ammoOf(storeId: String?): String? = storeId?.let { id ->
         runCatching { raw()?.getAsJsonObject("Stores")?.getAsJsonObject(id)?.let(AircraftLoadoutCost::ammoId) }.getOrNull()
     }
+    /** Flight and warhead figures of one munition of [store]; empty for pods and shapes without them. */
+    private fun performanceLines(store: AircraftStoreView): List<AircraftStorePerformanceText.Line> = runCatching {
+        raw()?.getAsJsonObject("Stores")?.getAsJsonObject(store.id)
+            ?.let { AircraftStorePerformance.of(it,AircraftStorePerformance.LoadedProfiles) }
+            ?.let(AircraftStorePerformanceText::lines)
+    }.getOrNull().orEmpty()
     private fun ammoItem(ammo: String) = ResourceLocation.tryParse(ammo)?.let { ForgeRegistries.ITEMS.getValue(it) }
         ?.takeIf { it != Items.AIR }
     private fun ammoName(ammo: String): String = ammoItem(ammo)?.description?.string ?: ammo
@@ -247,14 +292,32 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         return super.keyPressed(keyCode,scanCode,modifiers)
     }
     override fun mouseClicked(x: Double,y: Double,button: Int): Boolean {
+        if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT) { orbitDragging=true; return true }
         if(super.mouseClicked(x,y,button)) return true
         if(button!=0) return false
         hits.asReversed().firstOrNull { it.contains(x,y) }?.let { it.action(); return true }
         return false
     }
+    override fun mouseReleased(x: Double,y: Double,button: Int): Boolean {
+        if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT) { orbitDragging=false; return true }
+        return super.mouseReleased(x,y,button)
+    }
+    override fun mouseDragged(x: Double,y: Double,button: Int,dx: Double,dy: Double): Boolean {
+        if(button!=GLFW.GLFW_MOUSE_BUTTON_RIGHT || !orbitDragging) return super.mouseDragged(x,y,button,dx,dy)
+        // Turns like mouse look: the view swings around the aircraft from the angle it shows now.
+        val from=orbit ?: Orbit(0f,cachedFit?.pitch ?: AircraftLoadoutFraming.PITCH)
+        orbit=Orbit(Mth.wrapDegrees(from.yawOffset+dx.toFloat()*ORBIT_DEGREES_PER_PIXEL),
+            (from.pitch+dy.toFloat()*ORBIT_DEGREES_PER_PIXEL)
+                .coerceIn(AircraftLoadoutFraming.ORBIT_MIN_PITCH,AircraftLoadoutFraming.ORBIT_MAX_PITCH))
+        return true
+    }
     override fun tick() {
         val vehicle=Minecraft.getInstance().player?.vehicle as? VehicleEntity
         if(vehicle==null || vehicle.uuid!=state.vehicle || vehicle.isRemoved || vehicle.isWreck) { onClose(); return }
+        if(AircraftLoadoutAccess.inMotion(vehicle)) {
+            Minecraft.getInstance().player?.displayClientMessage(Component.literal(AircraftLoadoutAccess.IN_MOTION_MESSAGE),true)
+            onClose(); return
+        }
         // Re-read an acknowledgement, never replay a loadout mutation.
         if(pending && ++pendingTicks==100) AircraftArmamentClient.request("OPEN")
         nameInput?.tick()
@@ -289,12 +352,15 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         g.drawString(font,weight,width-font.width(weight)-10,7,-1)
         button(g,"Save preset",10,23,90,mx,my,!pending) { savePrompt() }
         button(g,"Load preset",104,23,90,mx,my,!pending) { presetsOpen=!presetsOpen; selectedMount=null }
+        if(orbit!=null) button(g,"Reset view",198,23,80,mx,my) { orbit=null }
         button(g,"Close",width-60,23,50,mx,my) { onClose() }
+        // Modal pickers keep only these top-bar controls clickable.
+        val topBarHits=hits.size
         val status=when { pending->"Fitting equipment…"; !editable()->"Stop on the ground to change equipment"
             hoverStatus!=null->hoverStatus!!
             state.message.isNotEmpty()->state.message
-            ammoExempt()->"Select a station · Creative supply: munitions are fitted free"
-            else->"Select a station · Munitions are taken from your inventory when fitted" }
+            ammoExempt()->"Select a station · Right-drag to turn the view · Creative supply: munitions are fitted free"
+            else->"Select a station · Right-drag to turn the view · Munitions are taken from your inventory when fitted" }
         g.drawCenteredString(font,font.plainSubstrByWidth(status,width-16),width/2,height-13,0xFFE2B66D.toInt())
         var bay=0; val transform=vehicle.getVehicleTransform(partial)
         val stations=stations()
@@ -306,7 +372,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         for(mount in state.definition.mounts) {
             if(mount.internal) {
                 val col=bay%4; val row=bay++/4
-                button(g,mount.name,10+col*64,height-65-row*23,60,mx,my) { selectedMount=mount.id; page=0; presetsOpen=false }
+                button(g,mount.name,10+col*64,height-65-row*23,60,mx,my) { selectedMount=mount.id; tab=null; page=0; presetsOpen=false }
             }
         }
         for(station in stations) {
@@ -323,11 +389,11 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             val center=x+AircraftLoadoutLayout.BUTTON_WIDTH/2
             g.hLine(min(anchor.x,center),max(anchor.x,center),y,0x997EB3C5.toInt())
             button(g,anchor.name,x,y,AircraftLoadoutLayout.BUTTON_WIDTH,mx,my,
-                textColor=if(anchor.name in occupiedStations) OCCUPIED_STATION_TEXT else BUTTON_TEXT) { selectedMount=anchor.id; page=0; presetsOpen=false }
+                textColor=if(anchor.name in occupiedStations) OCCUPIED_STATION_TEXT else BUTTON_TEXT) { selectedMount=anchor.id; tab=null; page=0; presetsOpen=false }
         }
         }
         if(presetsOpen) {
-            while(hits.size>3) hits.removeAt(hits.lastIndex)
+            while(hits.size>topBarHits) hits.removeAt(hits.lastIndex)
             val names=state.presets.keys.sorted()
             if(names.isEmpty()) g.drawString(font,"No saved presets",104,53,-1)
             val visible=((height-90)/21).coerceAtLeast(1)
@@ -341,14 +407,34 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             button(g,">",134.coerceAtMost(width-130),height-35,25,mx,my,(page+1)*visible<names.size) { page++ }
         }
         state.definition.mounts.firstOrNull { it.id==selectedMount }?.let { mount ->
-            while(hits.size>3) hits.removeAt(hits.lastIndex)
-            val pw=min(176,width-16); val x=(width-pw)/2; val y=56
+            while(hits.size>topBarHits) hits.removeAt(hits.lastIndex)
+            val pw=min(176,width-16); val x=(width-pw)/2
+            val allOptions=mount.allowed.mapNotNull { state.stores[it] }
+            val shownTab=AircraftLoadoutTab.choose(allOptions,tab,state.stores[state.selections[mount.id]])
+            // Tabs run left to right above the picker and wrap inside its width.
+            data class TabPlace(val tab: AircraftLoadoutTab, val x: Int, val row: Int, val w: Int)
+            val tabPlaces=ArrayList<TabPlace>(); var tabX=x; var tabRow=0
+            for(t in AircraftLoadoutTab.present(allOptions)) {
+                val tw=font.width(t.label)+10
+                if(tabX+tw>x+pw && tabX>x) { tabRow++; tabX=x }
+                tabPlaces+=TabPlace(t,tabX,tabRow,tw); tabX+=tw+2
+            }
+            val tabTop=56; val y=tabTop+if(tabPlaces.isEmpty()) 0 else (tabRow+1)*TAB_HEIGHT
             val bayControls=mount.internal && mount.quantitySelectable
             val columns=((pw-14)/18).coerceIn(1,9)
             val rows=((height-y-(if(bayControls) 94 else 70))/18).coerceIn(1,6); val perPage=columns*rows
-            val options=mount.allowed.mapNotNull { state.stores[it] }
+            val options=allOptions.filter { AircraftLoadoutTab.of(it)==shownTab }
             page=page.coerceIn(0,(options.size-1).coerceAtLeast(0)/perPage)
             inventoryPanel(g,x,y,pw,rows*18+if(bayControls) 82 else 58)
+            for(place in tabPlaces) {
+                val ty=tabTop+place.row*TAB_HEIGHT; val active=place.tab==shownTab
+                val over=mx in place.x until place.x+place.w && my in ty until ty+TAB_HEIGHT-1
+                // The active tab joins the panel below it; the others sit back in a darker grey.
+                g.fill(place.x,ty,place.x+place.w,ty+TAB_HEIGHT-1+(if(active && place.row==tabRow) 3 else 0),
+                    if(active) 0xFFC6C6C6.toInt() else if(over) 0xFFA0A0A0.toInt() else 0xFF8B8B8B.toInt())
+                g.drawString(font,place.tab.label,place.x+5,ty+3,if(active) 0xFF404040.toInt() else 0xFFE8E8E8.toInt(),false)
+                if(!active) hits+=Hit(place.x,ty,place.w,TAB_HEIGHT-1) { tab=place.tab; page=0 }
+            }
             val stationTitle=if(mount.internal) mount.name else stations.filter { it.mount.id==mount.id }
                 .joinToString(" / ") { it.number.toString() } + if(mount.positions.size>1) " · paired stations" else ""
             g.drawString(font,font.plainSubstrByWidth(stationTitle,pw-12),x+6,y+6,0xFF404040.toInt(),false)
@@ -378,6 +464,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                     Component.literal(store.categoryLabel).withStyle(ChatFormatting.GREEN),
                     Component.literal(AircraftGuidanceLabels.description(store.guidanceMode)).withStyle(ChatFormatting.GREEN),
                     Component.literal("${(store.massKg*(store.capacity?:1)*count+store.rackMassKg).toInt()} kg${if(count>1) " · $count munitions" else ""}").withStyle(ChatFormatting.GREEN)) +
+                    performanceLines(store).map { Component.literal(it.toString())
+                        .withStyle(if(it.known) ChatFormatting.AQUA else ChatFormatting.GRAY) } +
                     (if(fits) emptyList() else listOf(Component.literal("Payload or station limit exceeded").withStyle(ChatFormatting.RED))) +
                     (if(ammo!=null) listOf(Component.literal("Munitions: $rounds × ${ammoName(ammo)} · you have ${owned(ammo)}").withStyle(ChatFormatting.GRAY))
                     else if(store.category=="GUN_POD" || store.category=="ROCKET_POD" || store.category==com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY)

@@ -1,0 +1,74 @@
+{
+  "ID": "berts_vehicle_pack:scud_b",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/scud_b",
+    "Model": "berts_vehicle_pack:geo/native_fallback/scud_b.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/scud_b.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/scud_b.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 4,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3"
+      ]
+    },
+    "Steering": {
+      "Schema": 1,
+      "Wheels": [
+        {
+          "SteeringBone": "steer_wheelL0",
+          "WheelBone": "wheelL0",
+          "MaxAngleDegrees": 30,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelR0",
+          "WheelBone": "wheelR0",
+          "MaxAngleDegrees": 30,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelL1",
+          "WheelBone": "wheelL1",
+          "MaxAngleDegrees": 22,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelR1",
+          "WheelBone": "wheelR1",
+          "MaxAngleDegrees": 22,
+          "Sign": 1
+        }
+      ]
+    }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_group_origin_000",
+        "Position": [
+          1.386,
+          2.55663,
+          -0.3135
+        ]
+      }
+    ]
+  }
+}

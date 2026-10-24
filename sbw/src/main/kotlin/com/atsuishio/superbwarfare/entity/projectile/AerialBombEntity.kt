@@ -54,10 +54,19 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
      */
     private var clientDrag: Double? = null
 
+    /** Client copy of [hasGuidedFlight], from the spawn data (the bomb mode itself is server-only data). */
+    private var clientGuided = false
+
+    /**
+     * Guided bombs (laser, GPS, TV) are steered by the server, so their clients play back the server's flight. Dumb
+     * and legacy bombs keep the deterministic ballistic step below, which the client flies exactly.
+     */
+    override fun interpolatesFlight(): Boolean = if (level().isClientSide) clientGuided else hasGuidedFlight()
+
     private fun bombDrag(): Double? = if (level().isClientSide) clientDrag
         else if (persistentData.contains("BvpBombMode")) persistentData.getDouble("BvpBombDrag") else null
 
-    override fun smoothsBallisticFlight(): Boolean = motionSyncMode() != MotionSyncMode.NONE
+    override fun smoothsBallisticFlight(): Boolean = !interpolatesFlight() && motionSyncMode() != MotionSyncMode.NONE
 
     override fun ballisticStep(velocity: Vec3): Vec3 {
         val base = super.ballisticStep(velocity)
@@ -71,12 +80,14 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     override fun writeSpawnData(buffer: net.minecraft.network.FriendlyByteBuf) {
         super.writeSpawnData(buffer)
         buffer.writeDouble(bombDrag() ?: -1.0)
+        buffer.writeBoolean(hasGuidedFlight())
     }
 
     override fun readSpawnData(additionalData: net.minecraft.network.FriendlyByteBuf) {
         super.readSpawnData(additionalData)
         val drag = additionalData.readDouble()
         clientDrag = if (drag.isFinite() && drag >= 0.0) drag else null
+        clientGuided = additionalData.readBoolean()
     }
 
     override fun tick() {

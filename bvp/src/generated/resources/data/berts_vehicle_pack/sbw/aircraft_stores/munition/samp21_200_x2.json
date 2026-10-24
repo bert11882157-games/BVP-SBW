@@ -1,0 +1,83 @@
+{
+  "Schema": 1,
+  "Name": "SAMP Type 21 400 kg · parachute · PM3 twin rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/samp21_200.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2485,
+    -0.055
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2245,
+      0.0,
+      -0.055
+    ],
+    "Right": [
+      -0.2245,
+      0.0,
+      -0.055
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.055
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/samp21_200.png",
+  "Capacity": 1,
+  "MassKg": 400.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 5,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 167.0,
+    "BlastDamage": 540
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/samp21_200",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_pm3_samp21_200.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/mirage3e_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.1005,
+          -0.2545,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.1005,
+          -0.2545,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.6,
+    0.4,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.2485,
+    0.0
+  ]
+}

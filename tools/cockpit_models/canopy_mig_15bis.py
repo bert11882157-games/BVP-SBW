@@ -31,25 +31,35 @@ SECTIONS = [
     (0.40, [(0.34, -0.249), (0.319, -0.129), (0.274, -0.034), (0.21, 0.032), (0.14, 0.075), (0.075, 0.113), (0.0, 0.135)]),
     (0.60, [(0.265, -0.247), (0.262, -0.158), (0.228, -0.079), (0.154, -0.038), (0.094, -0.018), (0.043, -0.013), (0.0, -0.009)]),
     (0.74, [(0.20, -0.245), (0.19, -0.19), (0.15, -0.15), (0.09, -0.13), (0.0, -0.12)]),
+    (0.80, [(0.19, -0.22), (0.185, -0.19), (0.15, -0.165), (0.09, -0.157), (0.0, -0.155)]),
+    (0.82, [(0.18, -0.21), (0.175, -0.19), (0.14, -0.178), (0.08, -0.173), (0.0, -0.172)]),   # (on the nose deck, -0.19)
 ]
 SPLIT = 0.40                     # the canopy's front edge, against the windscreen arch (the DCS reference's joint, 0.42 m ahead of the eye)
+NOSE_RGB = (70, 78, 72)          # (work/handbuilt lower_skin.py: lowered skin in the cockpit linings' grey-green, not the red nose)
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the reference's)
+
+
+PANE = (0.445, 0.82, 0.12, 0.06, 0.035, 0.79, 2.4, 5.0)   # (taller: its foot down to 0.79, bert 2026-10-23)   # the flat armoured front pane: apex z, foot z, half width, (radius), frame width, frame foot z, oval n
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
-    sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -0.95, SPLIT, nz=16) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.74, nz=8)
+    # the armoured front pane is a flat slab: the windscreen made flat round it
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))
+    glass = C.glass_triangles(sh, E, -0.95, SPLIT, nz=16) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.82, nz=20)
     # the canopy: its tail frame, its front bow, the sill rails
     C.bow(m, sh, E, -0.93, 0.035, 0.025, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.028, 0.018, out, inner)
     C.member(m, sh, E, 0.0, -0.95, SPLIT, 0.04, 0.03, out, inner, steps=16)
+    # the bar along the canopy's top, its full length (bert's top-down reference)
+    C.member(m, sh, E, 1.0, -0.93, SPLIT - 0.005, 0.03, 0.022, out, inner, sides=(1,), steps=20)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.45, 0.74, 0.025, 0.02, out, inner)
-    C.bow(m, sh, E, 0.725, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.74, 0.04, 0.03, out, inner)
+    # the MiG-15's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
+    C.oval_pane(m, sh, E, 0.445, 0.79, 0.12, 0.035, 0.022, out, inner, n=2.4, n_bot=5.0)   # bert's War Thunder reference (2026-10-23): tall, round top, rounded lower corners, a flat foot, a thick ring
+    C.bow(m, sh, E, 0.807, 0.026, 0.02, out, inner)
+    C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.82, 0.04, 0.03, out, inner, steps=12)
     return m, glass
 
 

@@ -1,0 +1,199 @@
+{
+  "Schema": 1,
+  "Name": "Mi-8AMTSh",
+  "BuiltInWeapons": [
+    "PassengerGun1"
+  ],
+  "SuspendedWeapons": [
+    "B8Outer",
+    "UpkOuter",
+    "GuvGshgOuter",
+    "GuvYakbOuter",
+    "ShturmOuter",
+    "AtakaOuter",
+    "B8Middle",
+    "UpkMiddle",
+    "GuvGshgMiddle",
+    "GuvYakbMiddle",
+    "B8Inner",
+    "UpkInner",
+    "GuvGshgInner",
+    "GuvYakbInner"
+  ],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Outer pylons (WT slots 1 / 6)",
+      "Left": [
+        3.3435,
+        1.8382,
+        1.7971
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.3435,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.3435,
+        1.8382,
+        1.7971
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.3435,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:mi24p/b8v20",
+        "berts_vehicle_pack:mi24p/shturm_x2_pylon",
+        "berts_vehicle_pack:mi_8amtsh/ataka_x4",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:gun_pod/upk23_250",
+        "berts_vehicle_pack:mi24p/guv8700"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:mi24p/b8v20": "B8Outer",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter",
+        "berts_vehicle_pack:mi24p/guv8700": [
+          "GuvGshgOuter",
+          "GuvYakbOuter"
+        ],
+        "berts_vehicle_pack:mi24p/shturm_x2_pylon": "ShturmOuter",
+        "berts_vehicle_pack:mi_8amtsh/ataka_x4": "AtakaOuter"
+      }
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle pylons (WT slots 2 / 5)",
+      "Left": [
+        2.7808,
+        1.8382,
+        1.7971
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.7808,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.7808,
+        1.8382,
+        1.7971
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.7808,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:mi24p/b8v20",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/zb500",
+        "berts_vehicle_pack:mi_8amtsh/igla_x2",
+        "berts_vehicle_pack:mi_8amtsh/igla_x4",
+        "berts_vehicle_pack:gun_pod/upk23_250",
+        "berts_vehicle_pack:mi24p/guv8700"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:mi24p/b8v20": "B8Middle",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkMiddle",
+        "berts_vehicle_pack:mi24p/guv8700": [
+          "GuvGshgMiddle",
+          "GuvYakbMiddle"
+        ]
+      }
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner pylons (WT slots 3 / 4)",
+      "Left": [
+        2.2181,
+        1.8382,
+        1.7971
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.2181,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.2181,
+        1.8382,
+        1.7971
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.2181,
+            1.8382,
+            1.7971
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:mi24p/b8v20",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:gun_pod/upk23_250",
+        "berts_vehicle_pack:mi24p/guv8700"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:mi24p/b8v20": "B8Inner",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner",
+        "berts_vehicle_pack:mi24p/guv8700": [
+          "GuvGshgInner",
+          "GuvYakbInner"
+        ]
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 2500,
+  "MaxPylonMassKg": 520,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [],
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
+}

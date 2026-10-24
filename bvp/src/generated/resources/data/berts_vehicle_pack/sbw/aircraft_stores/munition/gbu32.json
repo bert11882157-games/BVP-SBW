@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "GBU-32 JDAM · Mk 83 GPS (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu32.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.202,
+    -0.075
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2201,
+      0.0,
+      -0.075
+    ],
+    "Right": [
+      -0.2201,
+      0.0,
+      -0.075
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.075
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu32.png",
+  "Capacity": 1,
+  "MassKg": 480.0,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 272.43,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu32",
+  "LaunchOffset": [
+    0.0,
+    -0.202,
+    0.0
+  ]
+}

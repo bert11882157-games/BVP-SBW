@@ -1,0 +1,219 @@
+{
+  "Schema": 1,
+  "Name": "SO-4050 Vautour IIN",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2",
+    "Gun3",
+    "Gun4"
+  ],
+  "SuspendedWeapons": [
+    "Matra116Inner",
+    "Matra116Outer",
+    "T10HeInner",
+    "T10HeOuter",
+    "T10HeatInner",
+    "T10HeatOuter",
+    "Matra104Bay"
+  ],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Stations 1/5 · outer wing pylons",
+      "Left": [
+        4.5263,
+        1.0863,
+        -0.86
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.5263,
+            1.0863,
+            -0.86
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.5263,
+        1.0863,
+        -0.86
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.5263,
+            1.0863,
+            -0.86
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aa20",
+        "berts_vehicle_pack:munition/r511",
+        "berts_vehicle_pack:munition/as20",
+        "berts_vehicle_pack:munition/matra116",
+        "berts_vehicle_pack:munition/t10_140",
+        "berts_vehicle_pack:munition/t10_151",
+        "berts_vehicle_pack:munition/samp25",
+        "berts_vehicle_pack:munition/samp21",
+        "berts_vehicle_pack:munition/m117"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 750,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/matra116": "Matra116Outer",
+        "berts_vehicle_pack:munition/t10_140": "T10HeOuter",
+        "berts_vehicle_pack:munition/t10_151": "T10HeatOuter"
+      }
+    },
+    {
+      "Id": "inner",
+      "Name": "Stations 2/4 · inner wing pylons",
+      "Left": [
+        1.4484,
+        1.1316,
+        1.1768
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.4484,
+            1.1316,
+            1.1768
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.4484,
+        1.1316,
+        1.1768
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.4484,
+            1.1316,
+            1.1768
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aa20",
+        "berts_vehicle_pack:munition/r511",
+        "berts_vehicle_pack:munition/as20",
+        "berts_vehicle_pack:munition/matra116",
+        "berts_vehicle_pack:munition/t10_140",
+        "berts_vehicle_pack:munition/t10_151",
+        "berts_vehicle_pack:munition/samp25",
+        "berts_vehicle_pack:munition/samp21",
+        "berts_vehicle_pack:munition/m117",
+        "berts_vehicle_pack:munition/as30"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 750,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/matra116": "Matra116Inner",
+        "berts_vehicle_pack:munition/t10_140": "T10HeInner",
+        "berts_vehicle_pack:munition/t10_151": "T10HeatInner"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 4400,
+  "Radar": {
+    "Enabled": true,
+    "Range": 3300
+  },
+  "MaxPylonMassKg": 750,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [
+    {
+      "Id": "bay_samp25",
+      "Name": "Bay · 6 SAMP Type 25 250 kg",
+      "Position": [
+        0.0,
+        0.6789,
+        0.2263
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/samp25"
+      ],
+      "MaxPylonMassKg": 1490,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_m117",
+        "bay_samp21",
+        "bay_rockets"
+      ]
+    },
+    {
+      "Id": "bay_m117",
+      "Name": "Bay · 6 M117 750 lb",
+      "Position": [
+        0.0,
+        0.6789,
+        0.2263
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/m117"
+      ],
+      "MaxPylonMassKg": 2180,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_samp25",
+        "bay_samp21",
+        "bay_rockets"
+      ]
+    },
+    {
+      "Id": "bay_samp21",
+      "Name": "Bay · 2 SAMP Type 21 400 kg",
+      "Position": [
+        0.0,
+        0.6789,
+        0.2263
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/samp21"
+      ],
+      "MaxPylonMassKg": 800,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_samp25",
+        "bay_m117",
+        "bay_rockets"
+      ]
+    },
+    {
+      "Id": "bay_rockets",
+      "Name": "Bay · Matra 104 pack, 112 SNEB",
+      "Position": [
+        0.0,
+        0.6789,
+        0.2263
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/matra104"
+      ],
+      "MaxPylonMassKg": 600,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_samp25",
+        "bay_m117",
+        "bay_samp21"
+      ],
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/matra104": "Matra104Bay"
+      }
+    }
+  ]
+}

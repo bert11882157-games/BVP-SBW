@@ -1,0 +1,50 @@
+{
+  "why": "F-4E windscreen: a flat bulletproof centre pane between two posts and a flat quarter pane each side (the glass is a plane, the frame is fitted around it); the two canopies over the cockpits are blown bubbles and are not listed. The boxes are the F-4C's (flat_panes/f_4c.json) carried over by this airframe's uniform scale (x, y, z: *1.01019, z also +0.00445). The LCOSS sight's reflector (z 6.14 to 6.20, y 3.10 to 3.20, just under the centre pane's top strip) is outside the boxes: the pane is the lower box plus the top strip box.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "boxes": [
+        [
+          [
+            -0.131,
+            2.728,
+            6.197
+          ],
+          [
+            0.131,
+            3.435,
+            6.975
+          ]
+        ],
+        [
+          [
+            -0.131,
+            3.212,
+            6.096
+          ],
+          [
+            0.131,
+            3.435,
+            6.197
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "quarter windscreen",
+      "box": [
+        [
+          0.152,
+          2.626,
+          6.066
+        ],
+        [
+          0.333,
+          3.435,
+          6.975
+        ]
+      ],
+      "mirror": true
+    }
+  ]
+}

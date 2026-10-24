@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "_comment": "Strela-10M2 (9A35M2) with the 9M37M: WT ussr_9a35_m2 data. Passive IR (the seeker must hold the target before launch, uncage before launch): LockTicks 24 = the 1.2 s seeker warm-up, ConeDegrees 40 = lockAngleMax, Range 500 = WT rangeMax 5,000 m at the pack scale of the other IR SAMs (FIM-92, 9M336: 500), MaxSpeed 5.5 = 700 m/s against the 9M336 at 4.5. Refused without a lock.",
+  "Weapons": {
+    "Missile": {
+      "Name": "9M37M",
+      "WithoutLock": "REFUSE",
+      "Guidance": {
+        "Mode": "INFRARED",
+        "LockTicks": 24,
+        "Range": 500,
+        "ConeDegrees": 40,
+        "CountermeasureVulnerability": 0.7
+      },
+      "Flight": {
+        "InitialSpeed": 0.5,
+        "MaxSpeed": 5.5,
+        "AccelerationPerTick": 0.2,
+        "TurnDegreesPerSecond": 80,
+        "Damage": 40,
+        "BlastRadius": 4,
+        "TntEquivalentKg": 1.694
+      }
+    }
+  }
+}

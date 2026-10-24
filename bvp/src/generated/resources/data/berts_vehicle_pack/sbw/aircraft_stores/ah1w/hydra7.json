@@ -1,0 +1,39 @@
+{
+  "Schema": 1,
+  "Name": "Aero 6A · 7 × 2.75 in FFAR Mighty Mouse",
+  "Category": "ROCKET_POD",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ah1w_hydra7.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2231,
+    0.0558
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1913,
+      -0.0319,
+      0.0558
+    ],
+    "Right": [
+      -0.1913,
+      -0.0319,
+      0.0558
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.0319,
+    0.0558
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ah1w_hydra7.png",
+  "Capacity": 7,
+  "Scale": 1,
+  "MassKg": 13.329,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.255,
+    0.0
+  ]
+}

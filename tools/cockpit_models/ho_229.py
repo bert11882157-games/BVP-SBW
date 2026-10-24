@@ -276,7 +276,7 @@ def build(atlas, E):
             n = fac[side].N * 0.0015; u = fac[side].U * 0.0015
             m.flat([p0 - u + n, p1 - u + n, p1 + u + n, p0 + u + n], sw['turq_d'], normal=fac[side].N)
     # -- instruments
-    cols, lamps = L.lamps_of('cw', 'soviet')
+    cols, lamps = L.lamps_of('ww2', 'luftwaffe')        # (the wartime lamp set, its legends in the cockpit's language)
     cache = {}
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]
@@ -368,6 +368,7 @@ def build(atlas, E):
     g_n = H.unit(np.cross(X, g_up))
     base_y = E[1] + TOP_C + 0.045                                  # the coaming's top
     g_c = np.array([E[0], E[1], E[2] + PANEL_Z + 0.14])
+    g_c, g_h = H.fit_sight_under(VID, E, g_c, g_up, g_h, g_hw)   # (the reflector under the windscreen glass)
     g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
     body_top = base_y + 0.07                                       # the sight head's own height
     body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z + 0.11])

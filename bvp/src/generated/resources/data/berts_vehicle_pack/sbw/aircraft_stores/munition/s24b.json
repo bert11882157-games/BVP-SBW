@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "S-24B · 240 mm rocket on APU-68 (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/s24b.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.144,
+    -0.1165
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.12,
+      0.0,
+      -0.1165
+    ],
+    "Right": [
+      -0.12,
+      0.0,
+      -0.1165
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.1165
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/s24b.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "MassKg": 235.0,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.144,
+    0.0
+  ]
+}

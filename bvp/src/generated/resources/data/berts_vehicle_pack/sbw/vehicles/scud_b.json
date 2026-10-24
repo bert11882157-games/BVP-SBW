@@ -1,0 +1,542 @@
+{
+  "ID": "berts_vehicle_pack:scud_b",
+  "MaxHealth": 180,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Wheel",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.13636,
+    "WheelDifferential": 0.75,
+    "MaxForwardSpeedRate": 0.7059,
+    "MaxBackwardSpeedRate": 0.23529411764705882,
+    "Increment": 0.008,
+    "Decrement": 0.011,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0.0,
+    0.726,
+    -1.749
+  ],
+  "BarrelPos": [
+    0.0,
+    0.0,
+    -0.0
+  ],
+  "TurretControllerIndex": 0,
+  "TurretTurnSpeed": [
+    2.6087,
+    0.8696
+  ],
+  "TurretPitchRange": [
+    0.0,
+    88.0
+  ],
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0.0,
+  "Mass": 37.4,
+  "TerrainCompat": [
+    [
+      1.419,
+      0.0,
+      3.696
+    ],
+    [
+      1.419,
+      0.0,
+      1.65
+    ],
+    [
+      1.419,
+      0.0,
+      -1.782
+    ],
+    [
+      1.419,
+      0.0,
+      -3.894
+    ],
+    [
+      -1.419,
+      0.0,
+      3.696
+    ],
+    [
+      -1.419,
+      0.0,
+      1.65
+    ],
+    [
+      -1.419,
+      0.0,
+      -1.782
+    ],
+    [
+      -1.419,
+      0.0,
+      -3.894
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.815,
+        1.2375,
+        6.0885
+      ],
+      "Position": [
+        -0.033,
+        1.5675,
+        0.3465
+      ]
+    },
+    {
+      "Size": [
+        0.792,
+        0.462,
+        1.518
+      ],
+      "Position": [
+        0.0,
+        0.924,
+        4.158
+      ],
+      "Part": "MainEngine"
+    },
+    {
+      "Size": [
+        0.33,
+        0.759,
+        4.554
+      ],
+      "Position": [
+        1.419,
+        0.759,
+        -0.099
+      ],
+      "Part": "WheelLeft"
+    },
+    {
+      "Size": [
+        0.33,
+        0.759,
+        4.554
+      ],
+      "Position": [
+        -1.419,
+        0.759,
+        -0.099
+      ],
+      "Part": "WheelRight"
+    },
+    {
+      "Size": [
+        0.9735,
+        0.66,
+        2.2935
+      ],
+      "Position": [
+        0.0,
+        0.627,
+        2.0955
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Part": "Turret"
+    },
+    {
+      "Size": [
+        1.056,
+        0.9405,
+        6.50925
+      ],
+      "Position": [
+        0.0,
+        0.9075,
+        6.50925
+      ],
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Part": "Turret"
+    }
+  ],
+  "Attachments": {
+    "gunnerCamera": {
+      "Parent": "Turret",
+      "Position": [
+        0.0,
+        2.508,
+        6.369
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "commander_camera": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.287,
+        2.55175,
+        5.28
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        0.726,
+        -1.749
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_1": {
+      "Parent": "Barrel",
+      "Position": [
+        0.0,
+        1.0461,
+        13.101
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        1.287,
+        2.55175,
+        5.28
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        1.287,
+        0.933,
+        4.356
+      ],
+      "BodyAttachment": "Vehicle",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          2.782,
+          0.3,
+          4.356
+        ]
+      },
+      "Weapons": [
+        "Rocket"
+      ],
+      "MinPitch": 0.0,
+      "MaxPitch": 88.0,
+      "Sensitivity": [
+        0.45,
+        0.52,
+        0.8
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "Turret",
+        "Direction": "Barrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "rocketMuzzle_1",
+        "ZoomDirectionAttachment": "rocketMuzzle_1",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        1.287,
+        0.933,
+        5.28
+      ],
+      "BodyAttachment": "Vehicle",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          2.782,
+          0.3,
+          5.28
+        ]
+      },
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -1.287,
+        0.933,
+        5.28
+      ],
+      "BodyAttachment": "Vehicle",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -2.782,
+          0.3,
+          5.28
+        ]
+      },
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "commander_camera",
+        "ZoomEyeAttachment": "commander_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    }
+  ],
+  "Weapons": {
+    "Rocket": {
+      "Name": "weapon.berts_vehicle_pack.scud_b_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 720.0
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 1,
+      "NormalReloadTime": 3600,
+      "EmptyReloadTime": 3600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:scud_b/rocket/default"
+      },
+      "Spread": 0.05,
+      "RPM": 6,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 22,
+      "TntEquivalentKg": 720.0,
+      "Gravity": 0.04,
+      "Velocity": 8.0,
+      "ProjectileLife": 320,
+      "ShellType": "HE",
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:tap_shipmissile",
+        "Fire3P": "berts_vehicle_pack:tap_shipmissile",
+        "Fire3PFar": "berts_vehicle_pack:tap_shipmissile",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_shipmissile",
+        "Fire1PGain": 0.8,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Volume": 1.6,
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile"
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:scud_b/rocket/default",
+        "ProjectileLife": 320
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            0.0,
+            1.7721,
+            11.352
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0,
+          1.7721,
+          11.352
+        ],
+        "MuzzleAttachments": [
+          "rocketMuzzle_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "rocketMuzzle_1"
+        ],
+        "EffectAttachments": [
+          "rocketMuzzle_1"
+        ],
+        "EffectDirectionAttachments": [
+          "rocketMuzzle_1"
+        ],
+        "BoundUpWithAmmoAmount": true
+      },
+      "ShootShake": [
+        8,
+        10,
+        60
+      ],
+      "ApDurability": 40
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "Tank",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/scud_b.png",
+  "ThirdPersonCameraPos": [
+    0,
+    3.6,
+    12.0
+  ],
+  "HasDecoy": false,
+  "DeathChargeKg": 15.0,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.5",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DamageClass": "WHEELED",
+  "TurretYawRange": [
+    -0.5,
+    0.5
+  ]
+}

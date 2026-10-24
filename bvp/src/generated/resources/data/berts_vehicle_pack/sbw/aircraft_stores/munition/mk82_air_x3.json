@@ -1,0 +1,91 @@
+{
+  "Schema": 1,
+  "Name": "Mk 82 AIR · 500 lb retarded · TER-9A triple rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82_air.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1605,
+    -0.05
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1365,
+      0.0,
+      -0.05
+    ],
+    "Right": [
+      -0.1365,
+      0.0,
+      -0.05
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.05
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_air.png",
+  "Capacity": 1,
+  "MassKg": 233.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 5,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_air",
+  "MaxPerPylon": 3,
+  "FixedRackCount": 3,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_ter9a_x3.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/a10c_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.045,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.102,
+          -0.0225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.102,
+          -0.0225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.5,
+    0.45,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1605,
+    0.0
+  ]
+}

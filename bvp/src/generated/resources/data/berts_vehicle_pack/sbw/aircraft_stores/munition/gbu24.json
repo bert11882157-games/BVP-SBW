@@ -1,0 +1,54 @@
+{
+  "Schema": 1,
+  "Name": "EGBU-24B Paveway III · BLU-109 laser (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu24.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.208,
+    -0.095
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.184,
+      0.0,
+      -0.095
+    ],
+    "Right": [
+      -0.184,
+      0.0,
+      -0.095
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.095
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu24.png",
+  "Capacity": 1,
+  "MassKg": 1079.6,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 11,
+    "TntEquivalentKg": 286.386,
+    "BlastDamage": 900,
+    "Penetrator": {
+      "MaxDepthBlocks": 4,
+      "MaxBlockHardness": 12,
+      "FuzeDelayTicks": 6
+    }
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu24",
+  "LaunchOffset": [
+    0.0,
+    -0.208,
+    0.0
+  ]
+}

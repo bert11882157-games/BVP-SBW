@@ -1,7 +1,7 @@
 {
   "_comment": "Jet-pipe exits (vehicle-local blocks: +X left, +Y up, +Z forward; mirrored pairs listed once with +X). Found by nozzles.py (rear-view pits, see-through pipes and dark painted exits) and checked by eye on its rear views; seeds marked 'manual' were read off the views and depth probes. 'dry': jets without an afterburner (heat haze only). 'fix': corrections to afterburner outlets that sat inside the airframe or off the nozzle.",
   "dry": {
-    "a_10":           [[1.449, 3.021, -4.99, 0.30]],
+    "a_10":           [[1.383, 2.844, -4.702, 0.482]],
     "a_7d":           [[0.0, 2.08, -6.68, 0.50, "manual"]],
     "b_47e":          [[6.24, 2.67, 2.12, 0.20], [7.24, 2.67, 2.12, 0.20], [13.68, 2.62, -4.32, 0.20]],
     "f2h_2":          [[0.75, 1.53, -2.50, 0.15]],
@@ -24,7 +24,7 @@
   "fix": {
     "f_14a":     [[1.289, 1.781, -8.778, 0.43]],
     "f_14d":     [[1.289, 1.781, -8.778, 0.43]],
-    "fa_18e":    [[0.52, 1.585, -8.496, 0.34]],
+    "fa_18e":    [[0.498, 2.037, -8.105, 0.264]],
     "b_1b":      [[3.039, 2.20, -11.069, 0.62], [4.713, 2.20, -11.069, 0.62]],
     "mirage_f1": [[0.0, 1.731, -6.668, 0.43]]
   }

@@ -44,6 +44,9 @@ public class BertsVehiclePack {
         ModSounds.SOUNDS.register(modEventBus);
         ModParticles.PARTICLE_TYPES.register(modEventBus);
         ModTabs.TABS.register(modEventBus);
+        // Disabled vehicles (disabled_vehicles.json, 2026-10-23, bert) stay registered but drop out of SBW container loot.
+        com.atsuishio.superbwarfare.data.container.ContainerDataManager.hiddenTypes
+                .addAll(com.yourname.berts_vehicle_pack.init.BvpDisabledVehicles.namespacedIds());
         VehicleItemLifecycleProviders.register(
                 BvpVehicleItem.LIFECYCLE_PROVIDER_ID,
                 new BvpVehicleItemLifecycleProvider());

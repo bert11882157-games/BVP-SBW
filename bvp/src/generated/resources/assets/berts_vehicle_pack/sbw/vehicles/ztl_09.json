@@ -6,7 +6,10 @@
     "Texture": "berts_vehicle_pack:textures/entity/ztl_09.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/ztl_09.png"
   },
-  "MouseSpeed": [0.2, 0.2],
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
   "RunningGear": {
     "Type": "WHEELED",
     "RoadWheelCount": 4,
@@ -59,11 +62,11 @@
     "Parent": "HULL",
     "Origins": [
       {
-        "Id": "fitted_exhaust_face_000",
+        "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -1.25173,
-          1.80806,
-          -1.8915
+          -1.49,
+          1.78125,
+          -1.875
         ]
       }
     ]

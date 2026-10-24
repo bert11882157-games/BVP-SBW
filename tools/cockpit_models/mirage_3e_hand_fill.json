@@ -1,0 +1,23 @@
+{
+  "_what": "Mirage IIIE: hand-built filler pieces between the canopy frame and the airframe's skin. Every vertex is written out by hand in vehicle-local blocks (x left, y up, z forward); the build step (canopy_mirage_3e.py, hand_fill_bars) only reads this file and emits each face as written, in the frame's own colour, with its normal away from the piece's middle. A piece is a closed solid: its buried part sits inside the airframe, its exposed top follows the skin 2.5 mm proud (never coplanar). Read off cross-sections and first-hit maps at the spots (cockpit_audit/fixes_mirage/xsec.py, topmap.py, the audit --images).",
+  "pieces": [
+    {
+      "name": "bar_pocket_right",
+      "why": "windscreen base bar, right: the deck plate's edge (x 0.175) drops 3 cm to the nose skin beside the bar's ear (z 5.062). This ramp carries the plate's top (y 1.9525 at x 0.170) down to the skin (y 1.9135 at x 0.200), z 4.990 .. 5.062, and sits 2.8 cm into the airframe underneath.",
+      "vertices": [
+        [0.170, 1.9525, 4.990], [0.200, 1.9135, 4.990], [0.200, 1.9135, 5.062], [0.170, 1.9525, 5.062],
+        [0.170, 1.885, 4.990], [0.200, 1.885, 4.990], [0.200, 1.885, 5.062], [0.170, 1.885, 5.062]
+      ],
+      "faces": [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    },
+    {
+      "name": "bar_pocket_left",
+      "why": "windscreen base bar, left: the same ramp, mirrored.",
+      "vertices": [
+        [-0.170, 1.9525, 4.990], [-0.200, 1.9135, 4.990], [-0.200, 1.9135, 5.062], [-0.170, 1.9525, 5.062],
+        [-0.170, 1.885, 4.990], [-0.200, 1.885, 4.990], [-0.200, 1.885, 5.062], [-0.170, 1.885, 5.062]
+      ],
+      "faces": [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    }
+  ]
+}

@@ -8,6 +8,46 @@
     ],
     "note": "driver centred under the gun, hatch just ahead of the turret face (turret front z 2.6, roof 1.89, glacis from z 4.0) (x0.86764 with the model fitted to the M1A2 size, fit_existing.py)"
   },
+  "m1a1_tusk": {
+    "eye": [
+      -0.87,
+      2.73275,
+      0.8468
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. M1A1 TUSK II: the gunner's GPS housing is the open-fronted box on the right of the turret roof, front (source part 3 elements 3-6, x 1-14, y -39.5..-33.5, z -20.5..-9.5); the eye is just in front of it on its axis, at the turret rest pose (tools/vehgen/tusk_build.py writes the attachment; the seat is the pack's controller seat and uses the same point as gunner1_camera)."
+  },
+  "puma_ifv": {
+    "eye": [
+      0.86094,
+      2.73438,
+      0.45125
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. SPz Puma: the gunner's sight windows on the turret front (source elements 189-190, x 26.5-27.5, y -38.5..-33.5), eye just ahead of the frame at the turret rest pose (tools/vehgen/puma_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 2 is the driver looking out of the same point, fixed to the hull)."
+  },
+  "m113a3": {
+    "eye": [
+      0.7735,
+      2.23425,
+      1.59757
+    ],
+    "note": "bert's expansion rule (PLAN item 11) applied to a vehicle without a gunner's optic: the ground driver camera sits where the driver's eyes really are. M113A3: the driver's hatch is front left (source elements 15-17, x 7..19, y 23..26, z -26..-14 geo units); the eye is on the hatch centre line, 2 units ahead of its front edge and 2 over it, looking over the glacis (tools/vehgen/m113a3_build.py writes the attachment; seat 0 is the driver and the pack's controller seat, the commander M2HB is the passenger weapon station on seat 1)."
+  },
+  "pgz_95": {
+    "eye": [
+      0.0,
+      2.46875,
+      0.82812
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. PGZ-95: the electro-optical sight head on the turret front (source elements 84-90, front face x 29.5, y -32.5..-29.5), eye just ahead of it at the turret rest pose (tools/vehgen/pgz95_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 2 is the driver looking out of the same point, fixed to the hull)."
+  },
+  "strela_10m2": {
+    "eye": [
+      0.01991,
+      3.61303,
+      -0.06371
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. Strela-10M2: the operator's IR / optical head between the containers of the launcher (source part 4 elements 398-412, front plates x -1.8, y -38.2..-31.8), eye one unit ahead of the plates on its axis at the launcher's rest pose (tools/vehgen/strela_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 1 is the driver looking out of the same point, fixed to the hull)."
+  },
   "t14_armata": {
     "eye": [
       0.5,
@@ -83,5 +123,29 @@
       ],
       "note": "was inside the gunner's sight housing (top 2.82) at the turret front left; in game its walls framed the view as two dark pillars; now 0.1 over it"
     }
+  },
+  "fv721_fox": {
+    "eye": [
+      -0.3025,
+      2.09,
+      1.27188
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. FV721: the gunner's sight is the box on the right of the gun in the turret front (source parts 3/50-54, x 16-25.5, z -8..-3); the eye is just in front of its lens, on its axis (y 28 units over the floor line), at the turret rest pose. The pack's controller seat (seat 0, drives and fires) uses the same point as its sight camera (gunnerCamera, turret frame)."
+  },
+  "t64bv": {
+    "eye": [
+      0.69839,
+      2.64292,
+      1.04493
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. T-64BV: the gunner's sight head is the box on the left of the turret front roof (source part 3 elements 181-186, glass x 17-18, z 11.6-14.6) recessed in the stepped turret front; the eye is on its axis over the front slab (y -38, x 19.6 toolbox units), at the turret rest pose (tools/vehgen/t64bv_build.py writes the attachment; seat 0 is the pack's controller seat and uses the same point as gunner1_camera)."
+  },
+  "zbd_05": {
+    "eye": [
+      0.43562,
+      2.73025,
+      -0.4715
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. ZBD-05: the gunner's sight head is the block on the left of the turret roof, ahead of the left hatch (source part 3, x -37..-29, y -44..-40, z 5..11.4 toolbox units); the eye is on its front glass, on its axis (toolbox -28.2, -42.2, 8.5), at the turret rest pose (tools/vehgen/zbd05_build.py writes the attachment; seat 0 is the pack's controller seat and uses the same point as gunner1_camera)."
   }
 }

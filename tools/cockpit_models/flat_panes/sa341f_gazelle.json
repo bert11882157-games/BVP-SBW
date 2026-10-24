@@ -1,0 +1,36 @@
+{
+  "why": "SA 341F Gazelle glasshouse, slim-frame pass: the real SA 341/342 glasshouse is a clear bubble on few slim members (a centre post between two curved windscreen panes, the A pillars, B pillars, one post splitting each door window, the roof arch). Curved on the real aircraft, so NOT listed: the windscreen and chin windows (one wrap-round pane each side of the centre post), the front door pane (it wraps round the leaning A pillar toward the nose), the shoulder strips and the rear quarter windows (small ruled panes). Flat, so listed: the rear door windows (one vertical plane each side between the B pillar and the door post) and the pilot's overhead window (the model's roof is open over the right seat; one pane in one roof plane). References were thin (see canopy_sa341f_gazelle.py): layout is the model's own member lines, UNVERIFIED against photographs.",
+  "panes": [
+    {
+      "name": "rear door windows",
+      "box": [
+        [
+          0.83,
+          0.7,
+          2.7
+        ],
+        [
+          0.97,
+          1.66,
+          3.25
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "pilot overhead window",
+      "box": [
+        [
+          -0.64,
+          1.86,
+          2.6
+        ],
+        [
+          -0.19,
+          2.06,
+          3.67
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "Mk 81 · 250 lb freefall (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk81.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1385,
+    0.01
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1145,
+      0.0,
+      0.01
+    ],
+    "Right": [
+      -0.1145,
+      0.0,
+      0.01
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.01
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk81.png",
+  "Capacity": 1,
+  "MassKg": 118.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 5.5,
+    "TntEquivalentKg": 60.75,
+    "BlastDamage": 300
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk81",
+  "LaunchOffset": [
+    0.0,
+    -0.1385,
+    0.0
+  ]
+}

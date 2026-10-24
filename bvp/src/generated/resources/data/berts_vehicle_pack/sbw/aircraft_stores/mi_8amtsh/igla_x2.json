@@ -1,0 +1,90 @@
+{
+  "Schema": 1,
+  "Name": "9M39 Igla · 2 × 9M39 launcher (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mi8_igla.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0604,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0604,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.0604,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mi8_igla.png",
+  "Capacity": 1,
+  "MassKg": 10.6,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 40,
+    "Range": 650,
+    "ConeDegrees": 38,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 3.4,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 60,
+    "Damage": 25,
+    "BlastRadius": 3,
+    "TntEquivalentKg": 0.55
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mi8_rack_igla_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/mi8_rack_igla_x2.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.0517,
+          -0.069,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0517,
+          -0.069,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.2242,
+    0.35,
+    0
+  ],
+  "RackMassKg": 6.0,
+  "LaunchOffset": [
+    0.0,
+    -0.0604,
+    0.0
+  ]
+}

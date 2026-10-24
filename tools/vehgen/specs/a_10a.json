@@ -1,0 +1,783 @@
+{
+  "id": "a_10a",
+  "name": "A-10A Thunderbolt II",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "a_10",
+  "source": "A-10A.mtb",
+  "note": "New vehicle (Elite Expansion 2): A-10A.mtb on the A-10C airframe data (the two sources share their airframe coordinates). Source nose is toolbox -x (yaw180). Closed state: the deployed boarding ladder (part 16) left out. Baked stores cut out (AIM-9L x2, Hydra 70 LAU-68 pods x14, SUU-23/A GAU-4 gun pods x2 in toolbox groups; the LAU-105 rail pieces and the triple-rack frames under stations 3/9 by position) and kept in work/elite_expansion_2/a10a/stores; the pylons stay. The A-10C cockpit data is not carried over (the A-10A gets its own analogue cockpit).",
+  "yaw180": true,
+  "scale": 0.7993,
+  "note_scale": "Real size: the source is 325.5 units nose to tail = 16.26 m (A-10C overall length) at 16 px/m; the span then comes out 17.58 m (real 17.53 m).",
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    16,
+    24
+  ],
+  "storeTextureV": -1,
+  "dropGroups": [
+    "Import aim9l",
+    "Import hydra70_m247",
+    "Import gau4"
+  ],
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -64,
+    -17,
+    65
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 113,
+          "absXMax": 125,
+          "yMax": 24.5
+        }
+      }
+    ],
+    "1": "fuselage",
+    "2": "wreck_fuselage_3__hull",
+    "4": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 113,
+          "absXMax": 125,
+          "yMax": 24.5
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 71.5,
+          "absXMax": 82.5,
+          "yMax": 18.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
+    "5": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 113,
+          "absXMax": 125,
+          "yMax": 24.5
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 71.5,
+          "absXMax": 82.5,
+          "yMax": 18.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
+    "7": {
+      "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+      "if": {
+        "frame": "source",
+        "zMin": 90
+      },
+      "else": "fuselage"
+    },
+    "8": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
+    "9": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
+    "10": [
+      {
+        "bone": "wreck_wing_left__aileron_left",
+        "if": {
+          "frame": "source",
+          "absXMin": 60
+        }
+      },
+      {
+        "bone": "wreck_wing_left__flap_left",
+        "if": {}
+      }
+    ],
+    "11": [
+      {
+        "bone": "wreck_wing_right__aileron_right",
+        "if": {
+          "frame": "source",
+          "absXMin": 60
+        }
+      },
+      {
+        "bone": "wreck_wing_right__flap_right",
+        "if": {}
+      }
+    ],
+    "12": [
+      {
+        "bone": "wreck_fuselage_0__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "yMax": -1,
+          "zMin": -102,
+          "zMax": -92
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "absXMax": 9,
+          "zMin": -102,
+          "zMax": -86
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__landing_gear_12",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_wing_left__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "absXMin": 56,
+          "yMax": 6
+        }
+      },
+      {
+        "bone": "wreck_wing_left__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_wing_right__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 56,
+          "yMax": 6
+        }
+      },
+      {
+        "bone": "wreck_wing_right__landing_gear_15",
+        "if": {}
+      }
+    ],
+    "17": "fuselage"
+  },
+  "addBones": [
+    {
+      "name": "flap_left",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_left__flap_left",
+      "parent": "flap_left",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "flap_right",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_right__flap_right",
+      "parent": "flap_right",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "gear_steer_0",
+      "parent": "landing_gear_12",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_0__gear_steer_0",
+      "parent": "gear_steer_0",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "gear_wheel_2",
+      "parent": "gear_steer_0",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_0__gear_wheel_2",
+      "parent": "gear_wheel_2",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "rigAdd": {
+    "Flaps": [
+      {
+        "Bone": "flap_left",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      },
+      {
+        "Bone": "flap_right",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      }
+    ],
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "gear_steer_0",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 100
+      }
+    ],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
+      }
+    ]
+  },
+  "sweeps": {
+    "aileron_left": {
+      "pivot": [
+        67.14,
+        29.175,
+        20.888
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "aileron_right": {
+      "pivot": [
+        -67.14,
+        29.175,
+        20.888
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "flap_left": {
+      "pivot": [
+        29.97,
+        27.176,
+        20.888
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "flap_right": {
+      "pivot": [
+        -29.97,
+        27.176,
+        20.888
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "elevator_left": {
+      "pivot": [
+        25.98,
+        30.773,
+        113.607
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "elevator_right": {
+      "pivot": [
+        -25.98,
+        30.773,
+        113.607
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_left": {
+      "pivot": [
+        45.56,
+        49.557,
+        115.205
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_right": {
+      "pivot": [
+        -45.56,
+        49.557,
+        115.205
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        45.16,
+        5.995,
+        3.703
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        -45.16,
+        5.995,
+        3.703
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        -4.396,
+        3.597,
+        -77.43
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        -4.396,
+        3.597,
+        -77.43
+      ]
+    }
+  },
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.7993 + [0, 7.993, 0.106]): ailerons (outer part 10/11 element) and the new flaps (inner element; down with the gear, 30 deg) on their leading edges, +-25 deg; elevators (parts 8/9) on their leading edge, +-25 deg; rudders (part 7 fin elements) on their leading edges, vertical hinge, +-25 deg; mains at the model's own wheel centres (r 5.995 px), the offset nose wheel (r 3.597 px, 0.44 m right of the centreline as on the real aircraft) on a new steering bone.",
+  "clientSet": {
+    "AircraftRig.Surfaces.Bone=rudder_left.ControlWeights.RudderRight": 1,
+    "AircraftRig.Surfaces.Bone=rudder_right.ControlWeights.RudderRight": 1,
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 152.93,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 152.93,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 254.88,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          1.383,
+          2.844,
+          -4.702
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.482
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -1.383,
+          2.844,
+          -4.702
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.482
+      }
+    ]
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "CockpitGauges",
+    "FlightDisplays",
+    "HeadUpDisplay"
+  ],
+  "armamentOverrides": {
+    "Name": "A-10A Thunderbolt II",
+    "MaxPayloadKg": 7257,
+    "SuspendedWeapons": [
+      "Hydra7St2",
+      "Hydra7St10",
+      "Hydra7Mid",
+      "Hydra21Mid",
+      "Hydra7Inner",
+      "Hydra21Inner"
+    ],
+    "Pairs": [
+      {
+        "Id": "st1_11",
+        "Name": "Stations 1/11 · wingtip (LAU-105)",
+        "Left": [
+          5.9448,
+          1.6236,
+          0.1682
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              5.9448,
+              1.6236,
+              0.1682
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -5.9448,
+          1.6236,
+          0.1682
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -5.9448,
+              1.6236,
+              0.1682
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:munition/aim9l_x2_lau105"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300
+      },
+      {
+        "Id": "st3_9",
+        "Name": "Stations 3/9 · mid wing",
+        "Left": [
+          3.8466,
+          1.3738,
+          -0.0316
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.8466,
+              1.3738,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.8466,
+          1.3738,
+          -0.0316
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.8466,
+              1.3738,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/lau68_hydra",
+          "berts_vehicle_pack:munition/lau68_hydra_x3",
+          "berts_vehicle_pack:munition/agm65d_x3",
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk82_x3",
+          "berts_vehicle_pack:munition/mk82_snakeeye",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk84_air"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau68_hydra": "Hydra7Mid",
+          "berts_vehicle_pack:munition/lau68_hydra_x3": "Hydra21Mid"
+        }
+      },
+      {
+        "Id": "st4_8",
+        "Name": "Stations 4/8 · inner wing",
+        "Left": [
+          1.8484,
+          1.2739,
+          -0.0316
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.8484,
+              1.2739,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.8484,
+          1.2739,
+          -0.0316
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.8484,
+              1.2739,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/lau68_hydra",
+          "berts_vehicle_pack:munition/lau68_hydra_x3",
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk82_x3",
+          "berts_vehicle_pack:munition/mk82_snakeeye",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk84_air"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau68_hydra": "Hydra7Inner",
+          "berts_vehicle_pack:munition/lau68_hydra_x3": "Hydra21Inner"
+        }
+      },
+      {
+        "Id": "st5_7",
+        "Name": "Stations 5/7 · fuselage side",
+        "Left": [
+          0.5495,
+          1.2239,
+          -0.3313
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              0.5495,
+              1.2239,
+              -0.3313
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -0.5495,
+          1.2239,
+          -0.3313
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -0.5495,
+              1.2239,
+              -0.3313
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk82_snakeeye",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk84_air"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "st2",
+        "Name": "Station 2 · left outer wing",
+        "Position": [
+          4.8957,
+          1.4737,
+          -0.0316
+        ],
+        "Stations": [
+          {
+            "Point": [
+              4.8957,
+              1.4737,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/lau68_hydra",
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk82_snakeeye"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau68_hydra": "Hydra7St2"
+        }
+      },
+      {
+        "Id": "st10",
+        "Name": "Station 10 · right outer wing",
+        "Position": [
+          -4.8957,
+          1.4737,
+          -0.0316
+        ],
+        "Stations": [
+          {
+            "Point": [
+              -4.8957,
+              1.4737,
+              -0.0316
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/lau68_hydra",
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk82_snakeeye"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau68_hydra": "Hydra7St10"
+        }
+      }
+    ],
+    "StoreGroups": {}
+  }
+}

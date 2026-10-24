@@ -259,8 +259,10 @@ def render(vid, out, eye=None, yaw=0.0, pitch=-12.0, fov=80.0, size=(1100, 760),
     draw_instruments(r, asset)
     if glass and asset.get('CanopyGlass'):
         g = np.array(asset['CanopyGlass']['Triangles'], float).reshape(-1, 3, 3)
+        glass_tint = tuple(c / 255.0 for c in asset['CanopyGlass']['Tint']) if asset['CanopyGlass'].get('Tint') \
+            else (0.75, 0.85, 0.8)                       # (the asset's "Tint", else the preview's old default)
         r.draw(g, np.zeros((len(g), 3, 2)), np.ones((1, 1, 4), np.float32), shade=False, alpha_test=False,
-               blend=0.05, tint=(0.75, 0.85, 0.8))      # (as faint as the game's CanopyGlass)
+               blend=0.05, tint=glass_tint)             # (as faint as the game's CanopyGlass)
     im = r.image(); im.save(out)
     return im
 

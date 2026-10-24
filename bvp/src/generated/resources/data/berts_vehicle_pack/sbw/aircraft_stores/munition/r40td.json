@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "R-40TD · infrared (AI)",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r40td.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.155,
+    0.8372
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.155,
+      0.0,
+      0.8372
+    ],
+    "Right": [
+      -0.155,
+      0.0,
+      0.8372
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.8372
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r40td.png",
+  "Capacity": 1,
+  "MassKg": 465.0,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 70,
+    "Range": 1800,
+    "ConeDegrees": 20,
+    "CountermeasureVulnerability": 1.2
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 30,
+    "Damage": 80,
+    "BlastRadius": 6,
+    "TntEquivalentKg": 40.0
+  },
+  "AmmoItem": "superbwarfare:large_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.155,
+    0.0
+  ],
+  "Generated": true
+}

@@ -78,6 +78,8 @@ object Annunciator {
 
     private class Panel(val centre: Vector3f, val normal: Vector3f, val up: Vector3f, val right: Vector3f,
                         val halfW: Float, val halfH: Float, val depth: Float, val columns: Int, val lamps: List<Lamp>) {
+        /** The crew seat the panel faces: its lamps light only for the player in that seat. */
+        var seat = 0
         fun point(x: Float, y: Float, back: Float): Vector3f = Vector3f(centre)
             .add(Vector3f(right).mul(x)).add(Vector3f(up).mul(y)).sub(Vector3f(normal).mul(back))
 
@@ -108,6 +110,7 @@ object Annunciator {
     private var whitePainted = false
     private var failed = false
     private var liveVehicleId = -1
+    private var liveSeat = -1
     private var lit: Set<Condition> = emptySet()
 
     // ------------------------------------------------------------------ state
@@ -137,7 +140,8 @@ object Annunciator {
         }
         val mc = Minecraft.getInstance()
         val vehicle = mc.player?.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
-        val panels = panels(vehicle)
+        val seat = FlightDisplayState.crewSeat(vehicle)
+        val panels = panels(vehicle).filter { it.seat == seat }       // only the local player's own seat's panels
         if (panels.isEmpty() || vehicle.isWreck) { liveVehicleId = -1; return }
         val wanted = panels.flatMap { it.lamps }.map { it.condition }.toSet()
         val state = FlightDisplayState.sample(vehicle, partialTick) ?: run { liveVehicleId = -1; return }
@@ -145,6 +149,7 @@ object Annunciator {
             RwrDisplayState.sample(vehicle, partialTick) else RwrDisplayState.STILL
         lit = evaluate(state, rwr)
         liveVehicleId = vehicle.id
+        liveSeat = seat
     }
 
     private fun evaluate(s: FlightDisplayState, rwr: RwrDisplayState): Set<Condition> {
@@ -194,7 +199,8 @@ object Annunciator {
     private fun panels(vehicle: VehicleEntity): List<Panel> {
         val resource = VehicleResource.getDefault(vehicle).cockpitGauges ?: return emptyList()
         if (resource.frame != "VEHICLE_LOCAL_BLOCKS") return emptyList()
-        return resource.gauges.orEmpty().filter { "ANNUNCIATOR".equals(it.kind, ignoreCase = true) }.mapNotNull { Panel.of(it) }
+        return resource.gauges.orEmpty().filter { "ANNUNCIATOR".equals(it.kind, ignoreCase = true) }
+            .mapNotNull { g -> Panel.of(g)?.also { it.seat = g.seat } }
     }
 
     // ------------------------------------------------------------------ drawing
@@ -218,7 +224,7 @@ object Annunciator {
                 val col = i % panel.columns; val row = i / panel.columns
                 val x = -panel.halfW + MARGIN + col * (lw + GAP) + lw / 2
                 val y = panel.halfH - MARGIN - row * (lh + GAP) - lh / 2
-                val on = isLit(panel, lamp, live, blink)
+                val on = isLit(panel, lamp, if (panel.seat == liveSeat) live else emptySet(), blink)
                 val cell = cells[lamp.text] ?: run {
                     if (whitePainted && cells.size < COLS * ROWS - 1) {
                         val index = cells.size + 1

@@ -1,0 +1,493 @@
+{
+  "id": "fc_31",
+  "name": "FC-31 Gyrfalcon",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_15c",
+  "source": "FC-31.mtb",
+  "note": "New vehicle (Elite Expansion 2): FC-31.mtb, the Shenyang FC-31 prototype 31001 of 2012 (marking 31001 on the nose, triangular fins, two-piece canopy frame, twin-wheel nose gear, RD-93 class round nozzles) on the F-15C rig (twin-engine single-seater with ailerons, stabilators and twin rudders; the F-22A is built the same way and carries thrust vectoring, which the FC-31 does not have, so it is not the template). Real size by span: 11.5 m (scale 0.68657; the model comes out 17.5 m with the nose probe, real 16.8 m for 31001 and 17.3 m for 31003). The model has one canopy state (frame only, no glass) and closed, painted bay doors: nothing to close. Baked stores cut out (PL-12 and 2 x PL-10 under each wing) and kept in work/elite_expansion_2/fc31/stores; the ventral keel fairing (part 3) is airframe and stays. The model's own gear and wheels; the F-15C cockpit data is not carried over.",
+  "yaw180": true,
+  "scale": 0.68657,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    21,
+    23,
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -97.736,
+    -15.347,
+    49.877
+  ],
+  "keepTemplateBones": [],
+  "attachments": {
+    "pilot_eye": [
+      0.0,
+      42.22406,
+      -74.39221
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0.0,
+      16.32406,
+      -74.39221
+    ]
+  },
+  "addSeats": [],
+  "dropGroups": [
+    "Import PL-12",
+    "Import PL-10"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "CockpitGauges",
+    "FlightDisplays",
+    "HeadUpDisplay"
+  ],
+  "dataOverrides": {
+    "Weapons": {}
+  },
+  "note_scale": "Real size by span: 268 source units (x -134..134) = 11.5 m at 16 px/m (0.68657 px per unit); length is 17.5 m with the pitot probe (real 16.8 m for 31001, 17.3 m for 31003): no uniform scale fits both.",
+  "parts": {
+    "3": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "20": "wing",
+    "22": "wing",
+    "7": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
+    "2": [
+      {
+        "bone": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 60,
+          "zMin": 130
+        }
+      }
+    ],
+    "10": "wreck_wing_left__aileron_10",
+    "11": "wreck_wing_right__aileron_11",
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_0",
+        "if": {
+          "xMin": 1.5,
+          "xMax": 4.5,
+          "yMax": 3.2,
+          "frame": "source"
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_3",
+        "if": {
+          "xMin": -4.5,
+          "xMax": -1.5,
+          "yMax": 3.2,
+          "frame": "source"
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_1",
+        "if": {
+          "absXMin": 51,
+          "absXMax": 58,
+          "yMax": 3.2,
+          "frame": "source"
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_2",
+        "if": {
+          "absXMin": 51,
+          "absXMax": 58,
+          "yMax": 3.2,
+          "frame": "source"
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ]
+  },
+  "addBones": [
+    {
+      "name": "gear_wheel_3",
+      "parent": "gear_steer_0",
+      "pivot": [
+        -2.05971,
+        4.11942,
+        -55.51154
+      ]
+    },
+    {
+      "name": "wreck_fuselage_1__gear_wheel_3",
+      "parent": "gear_wheel_3",
+      "pivot": [
+        -2.05971,
+        4.11942,
+        -55.51154
+      ]
+    }
+  ],
+  "sweeps": {
+    "elevator_0": {
+      "pivot": [
+        34.3285,
+        30.55237,
+        108.23541
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_0": {
+      "pivot": [
+        30.38072,
+        47.71662,
+        92.10102
+      ],
+      "axis": [
+        -0.46844,
+        -0.83082,
+        0.30051
+      ],
+      "maxDegrees": 30
+    },
+    "elevator_1": {
+      "pivot": [
+        -34.3285,
+        30.55237,
+        108.23541
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_1": {
+      "pivot": [
+        -30.38072,
+        47.71662,
+        92.10102
+      ],
+      "axis": [
+        0.46844,
+        -0.83082,
+        0.30051
+      ],
+      "maxDegrees": 30
+    },
+    "aileron_10": {
+      "pivot": [
+        50.11961,
+        29.52251,
+        63.95164
+      ],
+      "axis": [
+        -0.98058,
+        -0.0,
+        0.19612
+      ],
+      "maxDegrees": 25
+    },
+    "aileron_11": {
+      "pivot": [
+        -50.11961,
+        29.52251,
+        63.95164
+      ],
+      "axis": [
+        -0.98058,
+        0.0,
+        -0.19612
+      ],
+      "maxDegrees": 25
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        2.05971,
+        4.11942,
+        -55.51154
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0.0,
+        4.11942,
+        -55.51154
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        37.07478,
+        5.14928,
+        30.99628
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        -37.07478,
+        5.14928,
+        30.99628
+      ]
+    }
+  },
+  "rigAdd": {
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_3",
+        "Parent": "gear_steer_0",
+        "Pivot": [
+          -2.05971,
+          4.11942,
+          -55.51154
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 222.556
+      }
+    ]
+  },
+  "clientSet": {
+    "AircraftRig.Flaps": [],
+    "AircraftRig.Surfaces.Bone=elevator_0.ControlWeights.RightRoll": 0.3,
+    "AircraftRig.Surfaces.Bone=elevator_1.ControlWeights.RightRoll": -0.3,
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 222.556,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 178.044,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 178.044,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.644,
+          1.692,
+          -7.451
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.321
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.644,
+          1.692,
+          -7.451
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.321
+      }
+    ]
+  },
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.68657 + [0, 6.866, z offset]): the one trailing-edge surface a side (parts 10/11) as aileron/flaperon +-25 deg; all-moving stabilators (the flat plates of part 2) on a lateral spindle at mid chord, +-25 deg, 0.3 roll; canted twin rudders (part 7) on their forward-raked hinge lines, +-30 deg; twin nose wheel rotors and one main wheel rotor a side at the model's own centres. No thrust-vectoring nozzle bones (the FC-31 has round fixed nozzles). No leading-edge flaps: the wing is not split there.",
+  "flightReference": {
+    "maximumTrueAirspeedKmh": 1910,
+    "referenceAltitudeMetres": 11000,
+    "climbMetresPerSecond": 230,
+    "turnSeconds": 24,
+    "takeoffRunMetres": 450,
+    "baseMassKg": 12700,
+    "mainFuelMassKg": 4300,
+    "fullFuelWingLoadingKgPerSquareMetre": 425.0,
+    "maximumIndicatedAirspeedKmh": 1390,
+    "negativeGLimit": -3,
+    "positiveGLimit": 9,
+    "engineCount": 2,
+    "dryThrustKgfPerEngine": 5040.0,
+    "afterburnerThrustKgfPerEngine": 8290.0
+  },
+  "armamentOverrides": {
+    "Name": "FC-31 Gyrfalcon",
+    "BuiltInWeapons": [],
+    "SuspendedWeapons": [],
+    "MaxPayloadKg": 8000,
+    "Pairs": [
+      {
+        "Id": "wing_inner",
+        "Name": "Stations 3/4 · inner wing pylons (tank / LS-6 / AAM)",
+        "Left": [
+          2.8536,
+          1.3946,
+          -1.6798
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.8536,
+              1.3946,
+              -1.6798
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.8536,
+          1.3946,
+          -1.6798
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.8536,
+              1.3946,
+              -1.6798
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/tank_300gal",
+          "berts_vehicle_pack:munition/ls6_500",
+          "berts_vehicle_pack:munition/pl15",
+          "berts_vehicle_pack:munition/pl12",
+          "berts_vehicle_pack:munition/pl10"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1100
+      },
+      {
+        "Id": "wing_outer",
+        "Name": "Stations 2/5 · outer twin-rail pylons (2 x PL-10)",
+        "Left": [
+          3.5401,
+          1.6821,
+          -2.2376
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.5401,
+              1.6821,
+              -2.2376
+            ],
+            "Face": "bottom"
+          },
+          {
+            "Point": [
+              4.1838,
+              1.7379,
+              -2.2376
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.5401,
+          1.6821,
+          -2.2376
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.5401,
+              1.6821,
+              -2.2376
+            ],
+            "Face": "bottom"
+          },
+          {
+            "Point": [
+              -4.1838,
+              1.7379,
+              -2.2376
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl10"
+        ],
+        "MaxWeaponsPerPylon": 2,
+        "MaxPylonMassKg": 220
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "bay_main",
+        "Name": "Main bay · 4 PL-15 / PL-12",
+        "Position": [
+          0.0,
+          0.9869,
+          -1.122
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl15",
+          "berts_vehicle_pack:munition/pl12"
+        ],
+        "MaxPylonMassKg": 820,
+        "QuantitySelectable": true,
+        "ExclusiveWith": [
+          "bay_bombs"
+        ]
+      },
+      {
+        "Id": "bay_bombs",
+        "Name": "Main bay · 2 LS-6-500 guided bombs",
+        "Position": [
+          0.0,
+          0.9869,
+          -1.122
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/ls6_500"
+        ],
+        "MaxPylonMassKg": 1100,
+        "QuantitySelectable": true,
+        "ExclusiveWith": [
+          "bay_main"
+        ]
+      }
+    ],
+    "StoreGroups": {}
+  },
+  "note_armament": "No War Thunder FC-31: the reported load of the 2012 prototype, written by work/elite_expansion_2/fc31/fc31_armament.py."
+}

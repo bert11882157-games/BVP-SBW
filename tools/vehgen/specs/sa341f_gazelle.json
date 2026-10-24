@@ -1,0 +1,141 @@
+{
+  "id": "sa341f_gazelle",
+  "name": "SA 341F Gazelle",
+  "entityClass": "AuthoredHelicopter",
+  "template": "ah_1f",
+  "source": "Aerospatiale Gazelle.mtb",
+  "note": "New vehicle (Elite Expansion 2): Aerospatiale Gazelle.mtb (TaskForce51, French Army, M621 20 mm gun on the right of the cabin (stays on the airframe), four-tube HOT launcher on the left (baked store, cut out)) on the AH-1F helicopter data (rotor and tail-rotor rig). Source nose is toolbox -x (yaw180).",
+  "yaw180": true,
+  "scale": 0.827,
+  "note_scale": "Source rotor 234 units across for the real 10.5 m and nose-to-tail with rotor turning 265.5 units for 11.97 m (22.2 units/m); the pack scales helicopters 18.4 px/m (16 x 1.15), so 18.4/22.25 = 0.827.",
+  "lengthParts": [
+    1
+  ],
+  "templateLengthBones": [
+    "hull"
+  ],
+  "groundParts": [
+    25
+  ],
+  "excludeParts": [],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [],
+  "shift": [
+    0,
+    0,
+    34.9
+  ],
+  "parts": {
+    "0": [
+      {
+        "if": {
+          "yMin": 38.2,
+          "zMin": -23,
+          "zMax": -9,
+          "absXMax": 12,
+          "frame": "source"
+        },
+        "bone": "main_rotor"
+      },
+      {
+        "if": {
+          "frame": "source",
+          "zMin": -100,
+          "zMax": 10,
+          "yMin": -5,
+          "yMax": 30,
+          "xMin": 25
+        },
+        "bone": "drop"
+      },
+      {
+        "if": {},
+        "bone": "hull"
+      }
+    ],
+    "1": "hull",
+    "2": "hull",
+    "7": "hull",
+    "8": "hull",
+    "9": "hull",
+    "24": "hull",
+    "25": "hull",
+    "28": "main_rotor",
+    "29": "tail_rotor"
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "dropGroups": [],
+  "removeClientKeys": [
+    "DefensiveStationPresentation"
+  ],
+  "armamentOverrides": {
+    "Name": "SA 341F Gazelle",
+    "MaxPayloadKg": 400,
+    "SuspendedWeapons": [
+      "Aero6aLeft"
+    ],
+    "BuiltInWeapons": [
+      "GiatM621"
+    ],
+    "Pairs": [],
+    "Singles": [
+      {
+        "Id": "left",
+        "Name": "Left pylon (WT slots 1 / 2)",
+        "Position": [
+          1.4472,
+          1.0079,
+          1.7908
+        ],
+        "Stations": [
+          {
+            "Point": [
+              1.4472,
+              1.0079,
+              1.7908
+            ],
+            "Face": "right",
+            "Stores": [
+              "berts_vehicle_pack:gazelle/hot_x2",
+              "berts_vehicle_pack:gazelle/hot2_x2",
+              "berts_vehicle_pack:ah1w/hydra7"
+            ]
+          },
+          {
+            "Point": [
+              1.2922,
+              0.8528,
+              1.7908
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:gazelle/hot_x2",
+          "berts_vehicle_pack:gazelle/hot2_x2",
+          "berts_vehicle_pack:gazelle/atam_x2",
+          "berts_vehicle_pack:ah1w/hydra7"
+        ],
+        "MaxWeaponsPerPylon": 2,
+        "MaxPylonMassKg": 200,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:ah1w/hydra7": "Aero6aLeft"
+        }
+      }
+    ],
+    "StoreGroups": {},
+    "MaxPylonMassKg": 200,
+    "MaxWeaponsPerPylon": 2,
+    "WeaponSeat": 1,
+    "WeaponSeats": [
+      1,
+      0
+    ]
+  },
+  "note_armament": "War Thunder sa_341f stations (work/elite_expansion_2/gazelle/WT-sa341f.md), written by work/elite_expansion_2/tools/gazelle_armament.py; the point is on the model's own pylon arm."
+}

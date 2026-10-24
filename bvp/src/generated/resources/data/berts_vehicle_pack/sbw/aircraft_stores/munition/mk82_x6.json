@@ -1,0 +1,117 @@
+{
+  "Schema": 1,
+  "Name": "Mk 82 · 500 lb freefall · MER six-bomb rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1971,
+      -0.2513,
+      0.0
+    ],
+    "Right": [
+      -0.1971,
+      -0.2513,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2513,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82.png",
+  "Capacity": 1,
+  "MassKg": 227,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82",
+  "MaxPerPylon": 6,
+  "FixedRackCount": 6,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_mer_x6.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/f16c_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.05,
+          -0.1665,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.1665,
+          0.0
+        ],
+        "Face": "right"
+      },
+      {
+        "Point": [
+          -0.05,
+          -0.5025,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.5025,
+          0.0
+        ],
+        "Face": "right"
+      },
+      {
+        "Point": [
+          -0.05,
+          -0.8385,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.8385,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.47,
+    0.45,
+    0
+  ],
+  "RackColumns": 2,
+  "RackMassKg": 83.4,
+  "LaunchOffset": [
+    0.0,
+    -0.2513,
+    0.0
+  ]
+}
