@@ -129,4 +129,44 @@ class LcacCargoDeckTest {
         }
         assertTrue(abs(pose.yaw - 10f) > 0f)
     }
-}
+
+    /**
+     * Every seat's DismountInfo (VehicleEntity.getDismountLocationForIndex: the Position through the Vehicle transform, no
+     * velocity offset) lands on the cargo-well floor within 2 blocks of the seat, never in a wall or on a ramp edge, also when the
+     * craft has moved and turned. The first version put every dismount 1 block behind the stern: a rider in the bow cab was thrown
+     * 23 blocks (the server's "moved too quickly").
+     */
+    @Test
+    fun everySeatDismountsOntoTheFloorBesideIt() {
+        val d = deck()
+        val vehicle = File(System.getProperty("bvp.root") ?: "../bvp",
+            "src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/lcac.json")
+        val seats = vehicle.reader().use { JsonParser.parseReader(it).asJsonObject }.getAsJsonArray("Seats")
+        assertEquals(11, seats.size())
+        val floor = d.deckHeight
+        val random = Random(5)
+        for ((n, e) in seats.withIndex()) {
+            val seat = e.asJsonObject
+            val info = seat.getAsJsonObject("DismountInfo")
+            assertEquals("Vehicle", info.get("Transform").asString, "seat $n frame")
+            val s = seat.getAsJsonArray("Position").map { it.asDouble }
+            val p = info.getAsJsonArray("Position").map { it.asDouble }
+            val horizontal = Math.hypot(p[0] - s[0], p[2] - s[2])
+            assertTrue(horizontal <= 2.0, "seat $n dismount ${"%.2f".format(horizontal)} blocks from the seat")
+            assertTrue(abs(p[1] - s[1]) <= 0.6, "seat $n dismount height")
+            // on the walkable floor: the column is the well floor, its neighbours within half a block too, and the feet are over it
+            for (dx in doubleArrayOf(-0.5, 0.0, 0.5)) for (dz in doubleArrayOf(-0.5, 0.0, 0.5)) {
+                assertEquals(floor, d.topAt(p[0] + dx, p[2] + dz), 1e-6, "seat $n dismount neighbourhood ($dx, $dz)")
+            }
+            assertTrue(p[1] >= floor && p[1] <= floor + 0.5, "seat $n feet ${p[1]} over floor $floor")
+            // the craft moved and turned: world seat and world dismount stay within 2 blocks, the dismount is still on the floor column
+            repeat(50) {
+                val pose = DeckPose(random.nextDouble(-900.0, 900.0), 63.0, random.nextDouble(-900.0, 900.0),
+                    random.nextFloat() * 360f - 180f)
+                val sx = pose.worldX(s[0], s[2]); val sz = pose.worldZ(s[0], s[2])
+                val dxw = pose.worldX(p[0], p[2]); val dzw = pose.worldZ(p[0], p[2])
+                assertTrue(Math.hypot(dxw - sx, dzw - sz) <= 2.0, "seat $n world distance at yaw ${pose.yaw}")
+                assertEquals(floor, d.topAt(pose.localX(dxw, dzw), pose.localZ(dxw, dzw)), 1e-6, "seat $n world dismount column")
+            }
+        }
+    }}

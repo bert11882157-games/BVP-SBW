@@ -33,8 +33,8 @@ GEO = os.path.join(vehgen.ASSETS, 'custom_geo', VID + '.geo.json')
 OUT = os.path.join(vehgen.DATA, 'sbw', 'decks', VID + '.json')
 
 
-def triangles(geo_path=GEO):
-    g = json.load(open(geo_path, encoding='utf-8'))
+def triangles(geo_path=GEO, geo=None):
+    g = geo if geo is not None else json.load(open(geo_path, encoding='utf-8'))
     bone = next(b for b in g['minecraft:geometry'][0]['bones'] if b['name'] == 'hull')['poly_mesh']
     P = np.array(bone['positions'], float)
     D = np.column_stack([P[:, 0] / 16, P[:, 1] / 16, -P[:, 2] / 16])        # geo px -> data blocks (+X left, +Z forward)
@@ -119,8 +119,27 @@ def rle(values):
     return base64.b64encode(bytes(out)).decode()
 
 
-def build(geo_path=GEO):
-    T = triangles(geo_path)
+def floor_spot(deck, top, x, z, clearance=0.5):
+    """The nearest well-floor point to (x, z) (data frame): the centre of the cell closest to it whose column is the well floor
+    and whose neighbours within `clearance` blocks are the floor too (never beside a wall or a ramp edge), one tenth of a block
+    over the floor. Returns (x, y, z)."""
+    sx, sz = deck['SizeX'], deck['SizeZ']
+    floor_q = int(round(deck['DeckHeight'] * 16))
+    r = int(np.ceil(clearance / CELL))
+    best = None
+    for j in range(r, sz - r):
+        for i in range(r, sx - r):
+            if top[j, i] != floor_q or not (top[j - r:j + r + 1, i - r:i + r + 1] == floor_q).all():
+                continue
+            cx, cz = deck['MinX'] + (i + 0.5) * CELL, deck['MinZ'] + (j + 0.5) * CELL
+            d2 = (cx - x) ** 2 + (cz - z) ** 2
+            if best is None or d2 < best[0]:
+                best = (d2, cx, cz)
+    return round(best[1], 4), round(deck['DeckHeight'] + 0.1, 4), round(best[2], 4)
+
+
+def build(geo_path=GEO, geo=None):
+    T = triangles(geo_path, geo)
     min_x, min_z, size_x, size_z, top, bot = rasterize(T)
     well = top[size_z // 2, size_x // 2] / 16.0
     return {

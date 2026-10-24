@@ -45,10 +45,15 @@ public final class FittedDeckBoatEntity extends FittedBoatEntity implements Deck
         return DeckPose.of(this).envelope(surface).inflate(2.0D);
     }
 
+    /**
+     * Drawn out to the hull radius (16 blocks) plus 128: the craft is tracked to its clients out to 160 blocks (the entity type's 10-chunk
+     * tracking range), so it is drawn wherever it exists, but not out to the 780 blocks vanilla would allow a 15 x 6.5 x 15 box and not the
+     * carrier's +512 (a 267-block hull seen from the far end of the world). A 27 m craft is a few pixels beyond that.
+     */
     @Override
     public boolean shouldRenderAtSqrDistance(double distanceSquared) {
         DeckSurface surface = this.deckSurface();
-        double reach = (surface == null ? 0.0D : surface.getRadius()) + 256.0D;
+        double reach = (surface == null ? 0.0D : surface.getRadius()) + 128.0D;
         return distanceSquared < reach * reach;
     }
 }

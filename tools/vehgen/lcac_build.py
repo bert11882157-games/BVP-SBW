@@ -37,8 +37,8 @@ SKIRT_Y = 23.0                      # toolbox y of the skirt bottom: the geometr
 CENTRE_X = -12.0                    # the origin: the middle of the length (x -227 .. 203)
 EYE_UP = 13.9 / SCALE
 CRAFTMASTER_EYE = (143.0, -36.0, -88.0)    # the cab is a solid block (windows are texture): 5 units ahead of its front face (x 138)
-SEATS = {'craftmaster': (112.0, -21.0, -88.0), 'navigator': (112.0, -21.0, -70.0), 'engineer': (96.0, -21.0, -88.0),
-         'loadmaster_1': (96.0, -21.0, -70.0), 'loadmaster_2': (84.0, -21.0, -79.0)}
+SEATS = {'craftmaster': (112.0, -21.0, -76.0), 'navigator': (112.0, -21.0, -62.0), 'engineer': (96.0, -21.0, -76.0),
+         'loadmaster_1': (96.0, -21.0, -62.0), 'loadmaster_2': (84.0, -21.0, -69.0)}      # inside the cab, 1.0 - 1.9 blocks from the well
 DECK_SEATS = [(x, z) for x in (10.0, 40.0, 70.0) for z in (50.0, -50.0)]     # troops on the cargo deck, facing the centre line
 REAL = {
     'Mass': 185.0,                   # 182 long tons full load (Wikipedia LCAC)
@@ -101,13 +101,23 @@ def main(argv):
     at['driver_camera'] = {'Parent': 'VehicleCustomPitch', 'Position': E.r5(eye), 'Direction': [0, 0, 1]}
     d['Attachments'] = at
     hull_lo, hull_hi = model.box(hull)
-    dismount = {'Transform': 'Vehicle', 'Position': [0, 0.5, round(-(float(hull_hi[2]) / 16 + 1.0), 4)]}
+    # dismount: every seat steps out onto the nearest point of the cargo-well floor (0.5 block clear of walls and ramp edges), found on
+    # the deck heightfield itself (lcac_deck.py), in the vehicle frame; the old single point 1 block behind the stern threw a rider from the
+    # bow cab 23 blocks (the server's 'moved too quickly') and left him in the water
+    import lcac_deck as L
+    deck, deck_top, _ = L.build(geo=geo)
+
+    def dismount_for(seat_pos):
+        x, y, z = L.floor_spot(deck, deck_top, seat_pos[0], seat_pos[2])
+        return {'Transform': 'Vehicle', 'Position': [x, y, z]}
+    dismount = None
     base = copy.deepcopy(d['Seats'][2])
 
     def seat(pos_tb, orientation=0):
         s = copy.deepcopy(base)
         s.update({'Position': E.r5(to_data(np.array(g_(pos_tb)) + [0, -12.0, 0])), 'Orientation': orientation,
-                  'DismountInfo': copy.deepcopy(dismount), 'HidePassenger': True})
+                  'HidePassenger': True})
+        s['DismountInfo'] = dismount_for(s['Position'])
         return s
     seats = []
     for name in ('craftmaster', 'navigator', 'engineer', 'loadmaster_1', 'loadmaster_2'):
@@ -115,8 +125,8 @@ def main(argv):
         if not seats:
             s = copy.deepcopy(d['Seats'][0])
             s.update({'Position': E.r5(to_data(np.array(g_(SEATS[name])) + [0, -12.0, 0])),
-                      'DismountInfo': copy.deepcopy(dismount), 'CameraPos': driver_cameras.camera(), 'CanRotateHead': True,
-                      'HidePassenger': True})
+                      'CameraPos': driver_cameras.camera(), 'CanRotateHead': True, 'HidePassenger': True})
+            s['DismountInfo'] = dismount_for(s['Position'])
         seats.append(s)
     for x, z in DECK_SEATS:
         seats.append(seat((x, -21.0, z), orientation=-90 if z > 0 else 90))
