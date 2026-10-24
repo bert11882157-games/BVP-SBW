@@ -595,8 +595,8 @@ def build(atlas, E):
     headbox = atlas.paint(64, 64, p_headbox)
     stripes = atlas.paint(64, 16, H.p_stripes)
     ax_b = (X, H.unit([0, 1, -0.10]), H.unit([0, 0.10, 1]))
-    m.box(P(0, -1.040, -0.10), (X, Y, Z), (0.18, 0.025, 0.28), sw['frame'])                      # the seat base (floor -1.08)
-    m.box(P(0, -0.925, -0.12), (X, Y, Z), (0.17, 0.030, 0.27), sw['cushion'], front=(1, 1, cushion, -X, Z))   # the pan
+    m.box(P(0, -1.040, -0.10), (X, Y, Z), (0.187, 0.025, 0.28), sw['frame'])                      # the seat base (floor -1.08)
+    m.box(P(0, -0.925, -0.1175), (X, Y, Z), (0.192, 0.030, 0.2675), sw['cushion'], front=(1, 1, cushion, -X, Z))   # the pan (its sides buried in the bucket's)
     for s in (1, -1):
         m.box(P(s * 0.195, -0.88, -0.14), (X, Y, Z), (0.012, 0.12, 0.25), sw['frame'])           # bucket sides
         m.box(P(s * 0.15, -0.46, -0.415), ax_b, (0.018, 0.55, 0.020), sw['frame'])               # guide rails up to the headbox

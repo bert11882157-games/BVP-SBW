@@ -100,8 +100,11 @@ Z_BASE = (1.325, 1.385)                   # the base bar on the nose deck (its f
 Z_WS = (Z_ARCH[1], Z_BASE[0])             # the panes run from the arch's front face to the base bar's rear face
 POST_IN, POST_OUT = 0.085, 0.130
 SIDE_SLOPE = 1.5                          # the quarter panes' plane drops 1.5 per block of |x| out from the posts' outer edge
+EDGE_OVER = 0.004           # a frame member covers the glass edge by this much (glass never runs under it further)
 SIDE_W = 0.030                            # the sill strips along the quarter panes' outer edges
 DECK_Y = -0.46                            # the skirts end buried in the deck
+SIDE_W2 = 0.075                          # ... and 6 cm wide from the strip's third station on (it reaches the skin, no wedge between)
+STRIP_TAPER = 5
 
 
 def yc(z):                                # the centre pane's plane (flat: independent of x)
@@ -275,6 +278,7 @@ def bow_bars(b, z0, z1):
     for side in (1, -1):
         def line(z, rad):
             return [V(side * (p[0] + n[0] * rad), p[1] + n[1] * rad, z) for p, n in zip(sec, nrm)]
+        z1 = z1 + EDGE_OVER                                  # the bow's front face covers the glass edge (the glass sits in its channel)
         A, B, C, D = line(z0, T_OUT), line(z1, T_OUT), line(z1, -T_IN), line(z0, -T_IN)
         for Ln in (A, B, C, D):
             Ln[0] = Ln[0] + np.array([0, -0.012, 0])        # the foot goes into the rail
@@ -383,7 +387,7 @@ def arch_bars(b):
         Bf = []
         for x, y in sec:
             yy = yc(z_f) if x <= POST_OUT else ys(x, z_f)
-            Bf.append(V(side * x, yy + T_OUT, z_f))
+            Bf.append(V(side * x, yy + T_OUT, z_f + EDGE_OVER))
         C = [p - np.array([0, T_ARCH, 0]) for p in Bf]
         D = [p - np.array([0, T_ARCH, 0]) for p in A]
         for Ln in (A, Bf, C, D):
@@ -426,6 +430,39 @@ def rail_edge(z, fy):
         sx = skin_x(z, fy - 0.002 * k, x_max=0.46)
         if sx is not None:
             return sx
+    return None
+
+
+def skin_top(x, z):
+    """the airframe's highest surface under the vertical line at left-side x and eye-relative z (eye-relative y), or None"""
+    if SKIN_T is None:
+        return None
+    T = SKIN_T
+    xx, zz = float(x), zr(z)
+    a, b, c = T[:, 0], T[:, 1], T[:, 2]
+    d = (b[:, 2] - c[:, 2]) * (a[:, 0] - c[:, 0]) + (c[:, 0] - b[:, 0]) * (a[:, 2] - c[:, 2])
+    ok = np.abs(d) > 1e-12
+    dd = np.where(ok, d, 1.0)
+    l1 = ((b[:, 2] - c[:, 2]) * (xx - c[:, 0]) + (c[:, 0] - b[:, 0]) * (zz - c[:, 2])) / dd
+    l2 = ((c[:, 2] - a[:, 2]) * (xx - c[:, 0]) + (a[:, 0] - c[:, 0]) * (zz - c[:, 2])) / dd
+    l3 = 1 - l1 - l2
+    hit = ok & (l1 >= -1e-9) & (l2 >= -1e-9) & (l3 >= -1e-9)
+    if not hit.any():
+        return None
+    y = l1[hit] * a[hit, 1] + l2[hit] * b[hit, 1] + l3[hit] * c[hit, 1]
+    return float(y.max()) - EY
+
+
+def strip_reach(z):
+    """x where the quarter pane's plane (outside its edge) dips under the airframe's skin: the sill strip has to reach out to it
+    and a little past, so no wedge is left between strip and skin; None without a skin reference"""
+    if SKIN_T is None:
+        return None
+    for k in range(0, 80):
+        x = x_out(z) + 0.002 * k
+        s = skin_top(x, z)
+        if s is not None and ys(x, z) <= s - 0.002:
+            return x + 0.012
     return None
 
 
@@ -517,9 +554,10 @@ def windscreen_bars(b):
             if d[0] * side < 0:
                 d = -d
             d /= np.linalg.norm(d)
+            w = SIDE_W + (SIDE_W2 - SIDE_W) * min(1.0, k / float(STRIP_TAPER))    # wider along the strip, tapering in at the arch foot
             top_in.append(p + nplane * T_OUT)
-            top_out.append(p + d * SIDE_W + nplane * T_OUT)
-            bot_out.append(p + d * SIDE_W - nplane * 0.030)
+            top_out.append(p + d * w + nplane * T_OUT)
+            bot_out.append(p + d * w - nplane * 0.030)
             bot_in.append(p - nplane * 0.030)
         b.sweep(top_in, top_out, bot_out, bot_in)
         for k in range(len(top_out) - 1):                 # the skirt: from the strip's outer edge straight down into the deck
@@ -550,7 +588,7 @@ def mirror_bars(b, seg=14):
                 a = 2 * math.pi * k / seg
                 xk, zk = xc + rx * math.cos(a), zc + rz * math.sin(a)
                 sk = section(zk)                             # the rim follows the glass at every point (12 mm into it)
-                yk = float(np.interp(xk, [q[0] for q in sk][::-1], [q[1] for q in sk][::-1])) - 0.012
+                yk = float(np.interp(xk, [q[0] for q in sk][::-1], [q[1] for q in sk][::-1])) - 0.020
                 ring.append(V(side * xk, yk + hh, zk))
             rings.append(ring)
         inside = c + np.array([0, h * 0.2, 0])

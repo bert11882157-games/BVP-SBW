@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(REPO, 'tools', 'cockpit_models'))
 import canopy_mirage_3e as CM   # noqa: E402
 
 E = np.array([0.0, CM.EY, CM.EZ])
+POST_BOX = ((0.12, -0.60, 0.56), (0.45, -0.10, 1.40))          # eye-relative (|x| lo/hi, y lo/hi, z lo/hi) of the old windscreen side posts
 CAP_UNDER = 0.004                                 # the restored ridge stops this far under the rail's top
 SK = np.array([1, 1, -1]) / 16.0
 
@@ -154,6 +155,34 @@ def main():
             keep.append({'bone': bn, 'P': P, 'N': N, 'U': U})
             cap_n += 1
     print(f'  + {cap_n} faces of the nose piece\'s rear cap go back')
+    # the original windscreen side posts: the outward faces of the old frame's side member beside the quarter panes (the modeller's
+    # own post section), so the strip's skirt, the bar's end and the arch's foot meet the original post and not a hollow
+    post_n = 0
+    box_lo = np.array([POST_BOX[0][0], POST_BOX[0][1], POST_BOX[0][2]]); box_hi = np.array(POST_BOX[1])
+    have2 = {tuple(sorted(tuple(np.round(np.array(p) * SK, 3)) for p in k_['P'])) for k_ in keep}
+    for k, (bn, P, N, U) in org.items():
+        if k in cur or os.environ.get('MR_POST') != '1':
+            continue
+        Q = np.array(P) * SK
+        if tuple(sorted(tuple(np.round(q, 3)) for q in Q)) in have2:
+            continue
+        rr = Q - E
+        side = 1.0 if rr[:, 0].mean() > 0 else -1.0
+        ax = np.abs(rr[:, 0])
+        # the long side walls of the old nose shell under the quarter panes: they run from the old rear of the shell (z 3.955) to the
+        # nose piece's rear plane (z 5.102), at least 0.8 m long, below the pane level, |x| 0.17 .. 0.45
+        if not (rr[:, 2].max() - rr[:, 2].min() > 0.8 and rr[:, 2].max() <= 1.40 and ax.min() >= 0.17 and ax.max() <= 0.45
+                and rr[:, 1].max() <= -0.33 and rr[:, 1].min() >= -0.60):
+            continue
+        fn = np.cross(Q[1] - Q[0], Q[2] - Q[0]); fn /= np.linalg.norm(fn) + 1e-12
+        n = np.array(N[0]) * np.array([1, 1, -1]); n /= np.linalg.norm(n) + 1e-12
+        if fn @ n < 0:
+            fn = -fn
+        if abs(fn @ n) < 0.9:
+            n = fn
+        keep.append({'bone': bn, 'P': P, 'N': N, 'U': U})
+        post_n += 1
+    print(f'  + {post_n} outward faces of the original windscreen side posts go back')
     print(f'mirage_3e: {gone} faces gone near the cockpit, {len(keep)} are exterior skin and go back ({ridge} of them sill ridge faces cut off under the rail)')
     json.dump(keep, open(out_path, 'w'))
 
