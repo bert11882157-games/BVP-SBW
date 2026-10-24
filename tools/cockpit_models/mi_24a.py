@@ -7,7 +7,7 @@ size). The pilot's eye is main's (0.5, 3.4, 5.19); the operator's (0, 2.991, 6.9
   * pilot: the cabin open to his right (the flight technician's side), its left wall 0.50-0.56 out from his eye under
     the greenhouse sill (about y -0.55), the floor at y -1.21, the old panel about 0.70 ahead;
   * operator: the nose's walls at x +-0.38-0.40, the floor at y -1.05, the nose glazing 1.0-1.4 ahead.
-The model's greenhouse is bare frames: glaze fits a flat pane in every opening between them.
+The model's greenhouse is bare frames: its glass is fitted by hand, one flat pane per opening (glass_mi_24a.py).
 Built (the Mi-24A's cockpits as photographed and described):
   * pilot: the flight and engine instruments, the warning lights and the weapons panel; the PKV collimator gunsight on
     the coaming (its reticle the game's reflector sight, live for the pilot);
@@ -28,7 +28,6 @@ import free_atlas as FA   # noqa: E402
 import heli_station as HS  # noqa: E402
 
 VID = 'mi_24a'
-PANE_FILL = '0,1'               # (run_heli.ps1: a flat pane in every window the crew sees out of with no glass)
 L.INTERIOR_BONES.add('hull')
 FA.also_used(VID, 'ad56207c', 'suspended_')
 
@@ -232,7 +231,8 @@ def main(argv):
     E0, E1 = ac.eye(0), ac.eye(1)
     removed = {'old interior': HS.remove_old(ac, [
         (E0, (-0.50, -1.19, -0.62), (0.50, -0.55, 1.00), 0.50, -0.55),    # the pilot's tub up to the greenhouse sill
-        (E0, (-0.36, -0.55, -0.62), (0.36, 0.30, 0.95), 0.36, -0.55),     # his old seat, panel and sight above it
+        (E0, (-0.36, -0.55, -0.62), (0.36, 0.30, 1.20), 0.36, -0.55),     # his old seat, panel and sight above it (the
+                                                                          # panel's black hood to z 6.38 with them)
         (E1, (-0.40, -1.03, -0.60), (0.40, -0.55, 0.95), 0.40, -0.55),    # the operator's nose up to its sill
         (E1, (-0.62, -1.03, -0.60), (0.62, -0.58, 0.40), 0.62, -0.58),    # its old consoles where the cabin is wider
         (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55),     # his old seat and sight above it
@@ -260,7 +260,7 @@ def main(argv):
     gauges.append(pilot_details(m, atlas, pilot))
     huds[1] = operator_details(m, atlas, operator)
     cabin_panels(m, atlas, E0)
-    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
+    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1], glaze=False)
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
           f'{len(displays)} displays, {len([h for h in huds if h])} sights; {line}')
     if not dry:
