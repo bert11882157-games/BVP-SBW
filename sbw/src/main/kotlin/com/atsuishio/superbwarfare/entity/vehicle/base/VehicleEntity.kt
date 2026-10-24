@@ -40,6 +40,7 @@ import com.atsuishio.superbwarfare.capability.ModCapabilities
 import com.atsuishio.superbwarfare.capability.energy.SyncedEntityEnergyStorage
 import com.atsuishio.superbwarfare.capability.player.PlayerVariable
 import com.atsuishio.superbwarfare.client.VehicleAimPresentationController
+import com.atsuishio.superbwarfare.client.camera.AircraftChaseCameraOffset
 import com.atsuishio.superbwarfare.client.camera.VehicleCameraRequest
 import com.atsuishio.superbwarfare.client.camera.VehicleCameraResolver
 import com.atsuishio.superbwarfare.client.particle.CannonMuzzleFlareOption
@@ -1135,7 +1136,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     val thirdPersonCameraPosition: Vec3
         get() {
-            val pos = computed().thirdPersonCameraPos
+            val pos = AircraftChaseCameraOffset.thirdPerson(vehicleType, computed().thirdPersonCameraPos)
             return Vec3(pos.z + ClientMouseHandler.custom3pDistanceLerp, pos.y, pos.x)
         }
 
