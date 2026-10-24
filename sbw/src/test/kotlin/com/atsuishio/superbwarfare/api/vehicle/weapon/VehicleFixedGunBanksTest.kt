@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.api.vehicle.weapon
 
 import net.minecraft.resources.ResourceLocation
+import com.atsuishio.superbwarfare.data.StringOrVec3
 import com.atsuishio.superbwarfare.data.vehicle.subdata.SeatInfo
+import net.minecraft.world.phys.Vec3
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -62,6 +64,14 @@ class VehicleFixedGunBanksTest {
         assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("M230"), pilotRockets))
         // two independent weapons, one per seat, never block each other
         assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("HydraS2"), gunner))
+    }
+
+    @Test
+    fun `a station-barrel muzzle direction matches its authored vector by value`() {
+        // owner 2026-10-23: station guns (AH-64D M230 and others) never fired on a held click
+        assertTrue(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3(Vec3(0.0, 0.0, 1.0))))
+        assertFalse(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3(Vec3(0.0, 0.1, 1.0))))
+        assertFalse(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3("Default")))
     }
 
     @Test

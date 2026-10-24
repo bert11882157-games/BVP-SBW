@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.api.vehicle.weapon
 import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.data.gun.ProjectileBeltResolutionStatus
+import com.atsuishio.superbwarfare.data.StringOrVec3
+import net.minecraft.world.phys.Vec3
 
 /** Opt-in grouping only. Cadence and accepted-shot mutation remain scheduler-owned. */
 internal object VehicleFixedGunBanks {
@@ -120,6 +122,13 @@ internal object VehicleFixedGunBanks {
         return supportedProjectile(belt.projectileData ?: data)
     }
 
+    /**
+     * A muzzle frame's direction against the gun's authored one. The authored value is a StringOrVec3, which has no
+     * value equality: comparing it to the frame's Vec3 directly was always unequal, so every station-barrel bank
+     * (AH-64D M230, AH-1F M197, Mi-24 gunner guns, rear and tail guns) failed and never fired on a held click.
+     */
+    internal fun sameDirection(frame: Vec3, authored: StringOrVec3): Boolean = authored.vec3 == frame
+
     private fun supportedProjectile(data: GunData): Boolean {
         val projectile = data.get(GunProp.PROJECTILE)
         return projectile.itemId in projectileTypes &&
@@ -156,7 +165,7 @@ internal object VehicleFixedGunBanks {
             val position = shootPos.positions[index]
             val direction = frame.direction
             if (frame.parent != parent || frame.position != position ||
-                (parent == "WeaponStationBarrel" && frame.direction != shootPos.directions[index]) ||
+                (parent == "WeaponStationBarrel" && !sameDirection(frame.direction, shootPos.directions[index])) ||
                 !position.x.isFinite() || !position.y.isFinite() || !position.z.isFinite() ||
                 !direction.x.isFinite() || !direction.y.isFinite() || !direction.z.isFinite() ||
                 !direction.lengthSqr().isFinite() || direction.lengthSqr() <= 1.0E-12

@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget;
 import com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies;
 import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudProvider;
 import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudLayoutProvider;
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType;
 import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudMarker;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleHudLayout;
 import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudState;
@@ -128,6 +129,11 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     @Override
     protected int initialPassengerReloadProgressPercent() {
         return ReloadTransitionPolicy.VEHICLE_PARTIAL_RELOAD_PROGRESS_PERCENT;
+    }
+
+    @Override
+    protected boolean armsGunsOnFirstBoarding() {
+        return getVehicleType() == VehicleType.AIRPLANE || getVehicleType() == VehicleType.HELICOPTER;
     }
 
     @Override
