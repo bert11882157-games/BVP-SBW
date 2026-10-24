@@ -100,10 +100,11 @@ class DisabledVehiclesTest {
         for (id in disabled()) assertTrue(id in inTab, "$id should still be in the generated tab file")
     }
 
-    @Test fun `the disabled list holds only old-model F-14 and F-16 variants and keeps the swapped ones visible`() {
+    @Test fun `the disabled list holds only old-model F-14 and F-16 variants and the paused AH-56A, and keeps the swapped ones visible`() {
         assumeTrue(main.isDirectory, "BVP sources not present")
         val ids = disabled() // empty is allowed: that is the restored state
-        assertTrue(setOf("f_14a", "f_14d", "f_16b").containsAll(ids), "unexpected disabled ids $ids")
+        // ah_56a is hidden while its War Thunder rebuild is paused (0.5.0pre1)
+        assertTrue(setOf("f_14a", "f_14d", "f_16b", "ah_56a").containsAll(ids), "unexpected disabled ids $ids")
         for (keep in listOf("f_15c", "f_15e", "f_16c", "f_4c", "f_14c", "f_16a", "f_15a", "f_15ex", "f_4b", "f_4d", "f_4e", "fa_18e", "a_10")) {
             assertFalse(keep in ids, "$keep is an expansion model and must stay visible")
         }
