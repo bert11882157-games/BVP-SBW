@@ -69,9 +69,11 @@ object AircraftTvGuidance {
         val line = direction.normalize()
         val heading = munition.deltaMovement.takeIf { it.lengthSqr() > 1.0E-6 }?.normalize() ?: munition.lookAngle
         if (line.dot(heading) < GIMBAL_COSINE) return
-        // The client draws the seeker a little ahead of the munition; lase from the point it drew when that is
-        // plausibly this munition's, so the crosshair and the aim point agree.
-        val slack = 12.0 + munition.deltaMovement.length() * 3.0
+        // The client draws the seeker a little ahead of the munition, and plays the munition's flight back a few
+        // ticks behind the server; lase from the point it drew when that is plausibly this munition's, so the
+        // crosshair and the aim point agree.
+        val slack = 12.0 + munition.deltaMovement.length() *
+            (3.0 + com.atsuishio.superbwarfare.api.projectile.MunitionFlightPlayback.MAX_DELAY_TICKS)
         val origin = AircraftArmamentRegistry.vector(body["Origin"])?.takeIf {
             it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.distanceToSqr(munition.position()) <= slack * slack
         } ?: munition.position()

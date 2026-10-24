@@ -11,6 +11,9 @@ import com.atsuishio.superbwarfare.api.projectile.SmoothedBallisticProjectile
 import com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileSimulation
+import com.atsuishio.superbwarfare.api.projectile.MunitionFlightPlayback
+import com.atsuishio.superbwarfare.api.projectile.MunitionFlightSync
+import com.atsuishio.superbwarfare.client.MunitionFlightClient
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.projectile.ProjectileTrailKind
 import com.atsuishio.superbwarfare.api.projectile.ProjectileTrailProviders
@@ -528,6 +531,11 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
 
     override fun syncMotion() {
         if (this.level().isClientSide || isRemoved) return
+        if (interpolatesFlight()) {
+            // The whole end-of-tick state is published once the server tick is over, after subclass guidance.
+            MunitionFlightSync.queue(this)
+            return
+        }
         val mode = motionSyncMode()
         if (mode == MotionSyncMode.EVERY_TICK && smoothsBallisticFlight()) {
             // Smoothed clients only accept step-aligned states; a legacy motion message would be ignored.
@@ -575,6 +583,14 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
     /** Opt-in for unguided rounds whose whole flight is the deterministic air step below. */
     override fun smoothsBallisticFlight(): Boolean = false
 
+    /**
+     * Opt-in for munitions the client cannot fly itself because the server steers or powers them (seekers,
+     * command guidance, motors). Their clients play back the server's own end-of-tick states with a short adaptive
+     * delay ([MunitionFlightPlayback]) instead of predicting and snapping to corrections. Must evaluate the same on
+     * both sides from spawn data, and must not be combined with [smoothsBallisticFlight].
+     */
+    open fun interpolatesFlight(): Boolean = false
+
     override fun ballisticStep(velocity: Vec3): Vec3 =
         NominalProjectileMotion.afterFastThrowableAirStep(velocity, this.gravity.toDouble())
 
@@ -608,12 +624,15 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
      * deterministic round takes velocity only from step-aligned motion messages.
      */
     override fun lerpMotion(x: Double, y: Double, z: Double) {
+        if (level().isClientSide && interpolatesFlight() && MunitionFlightClient.playing(this)) return
         if (ballisticSpawned && level().isClientSide && smoothsBallisticFlight()) return
         super.lerpMotion(x, y, z)
     }
 
     /** Tracker positions carry no simulation step; step-aligned motion messages own corrections. */
     override fun lerpTo(x: Double, y: Double, z: Double, yRot: Float, xRot: Float, steps: Int, teleport: Boolean) {
+        // Tracker positions are quantized and arrive unevenly; the flight stream owns streamed munitions.
+        if (level().isClientSide && interpolatesFlight() && MunitionFlightClient.playing(this)) return
         if (level().isClientSide && smoothsBallisticFlight()) {
             val target = Vec3(x, y, z)
             if (BallisticSync.grossDivergence(target.subtract(position()), deltaMovement)) {
