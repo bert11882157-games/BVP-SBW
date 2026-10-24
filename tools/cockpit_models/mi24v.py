@@ -80,13 +80,13 @@ def stations(ac):
                  PANEL_Z=0.52, LEAN=12, HINGE=0.17, WING=30, WALL_X=0.47, TOP_C=-0.330, TOP_W=-0.370,
                  BOT_C=-0.820, BOT_W=-0.780, FRONT_Z=0.66, FRONT_Y_C=-0.330, FRONT_Y_W=-0.360, COAMING_X=0.34,
                  CONSOLE_Y=-0.620, CONSOLE_IN=0.32, CONSOLE_OUT=0.56, CONSOLE_FRONT=0.36, CONSOLE_FOOT=-1.08,
-                 CONSOLE_BACK=-0.30, CUSHION_Y=-0.90, SEAT_Z=0.02, SEAT_FOOT=-1.10, BACK_TOP=0.04,
+                 CONSOLE_BACK=-0.29, CUSHION_Y=-0.90, SEAT_Z=0.02, SEAT_FOOT=-1.10, BACK_TOP=0.04,
                  seat_kind='armoured', seat_label='Ми-24В', STICK_Z=0.36, STICK_FOOT=-1.12, PEDAL_Z=0.66,
                  PEDAL_Y=-1.00, PEDAL_HANG=False, FLOOR_Y=-1.12,
                  hud=dict(z=0.55, w=0.12, h=0.11, lean=30, body_top=-0.255, body_w=0.075, body_d=0.035, style='GYRO'))
     operator = dict(seat=1, E=ac.eye(1), S=1.1, ppm=240, console_tile=(34, 140), colours=COLOURS, layout=OPERATOR_LAYOUT, consoles=CONSOLES_OPERATOR,
-                    PANEL_Z=0.52, LEAN=12, HINGE=0.15, WING=32, WALL_X=0.35, TOP_C=-0.360, TOP_W=-0.400,
-                    BOT_C=-0.780, BOT_W=-0.740, FRONT_Z=0.70, FRONT_Y_C=-0.380, FRONT_Y_W=-0.410, COAMING_X=0.30,
+                    PANEL_Z=0.52, LEAN=12, HINGE=0.15, WING=32, WALL_X=0.35, TOP_C=-0.385, TOP_W=-0.430,
+                    BOT_C=-0.780, BOT_W=-0.740, FRONT_Z=0.66, FRONT_Y_C=-0.430, FRONT_Y_W=-0.460, COAMING_X=0.30,
                     CONSOLE_Y=-0.600, CONSOLE_IN=0.27, CONSOLE_OUT=0.43, CONSOLE_FRONT=0.35, CONSOLE_FOOT=-1.05,
                     CONSOLE_BACK=-0.30, CUSHION_Y=-0.86, SEAT_Z=0.02, SEAT_FOOT=-1.08, BACK_TOP=0.02,
                     seat_kind='armoured', seat_label='Ми-24В', STICK_Z=0.32, STICK_FOOT=-1.05, PEDAL_Z=0.48,
@@ -118,7 +118,7 @@ def main(argv):
     for st in (pilot, operator):
         g, d, h = HS.build(m, atlas, st, painters=painters)
         gauges += g; displays += d; huds.append(h)
-    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
+    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1], glaze=False)
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
           f'{len(displays)} displays, {len([h for h in huds if h])} sights; {line}')
     if not dry:
