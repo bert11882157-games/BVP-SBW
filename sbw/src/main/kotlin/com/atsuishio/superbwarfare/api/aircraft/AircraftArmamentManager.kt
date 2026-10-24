@@ -568,8 +568,9 @@ object AircraftArmamentManager {
         if (request.operation == "OPEN") {
             val now = player.serverLevel().gameTime
             if (now - (lease.last["open"] ?: Long.MIN_VALUE / 2) >= 10) {
-                lease.pod = false
-                lease.last["open"] = now; reply(player, lease, true)
+                lease.last["open"] = now
+                if (AircraftLoadoutAccess.inMotion(vehicle)) reply(player, lease, message = AircraftLoadoutAccess.IN_MOTION_MESSAGE)
+                else { lease.pod = false; reply(player, lease, true) }
             }
             return
         }
@@ -706,7 +707,7 @@ object AircraftArmamentManager {
     }
     private fun apply(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject,
                       savedPreset: Boolean = false): AircraftLoadoutCost.Plan {
-        require(vehicle.onGround() && vehicle.deltaMovement.lengthSqr() <= 0.0025) { "Stop the aircraft on the ground before fitting weapons." }
+        require(AircraftLoadoutAccess.canRefit(vehicle)) { "Stop the aircraft on the ground before fitting weapons." }
         val state = equipment(vehicle)
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
         val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"), savedPreset)
