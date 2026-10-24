@@ -73,6 +73,22 @@ def check(vid, geo_path=None, asset_path=None, step=0.5, geo=None, asset=None):
     xs, zs = xs.ravel(), zs.ravel()
     f0 = first_hits(t0, xs, zs)
     sel = np.where((f0 >= 0) & np.where(f0 >= 0, well0[np.maximum(f0, 0)], False))[0]
+    # with the gear up nothing of it may show from below
+    ta, _, _, wa = R.posed_triangles(geo, R.rig_pose(asset, 1.0))
+    bones = {b['name']: b for b in geo['minecraft:geometry'][0]['bones']}
+
+    moving = {g['Bone'] for g in rig.get('Gear') or [] if 'Retract' in g}   # pop-in legs are hidden in game
+
+    def leg_of(n):
+        while n:
+            if n in moving:
+                return True
+            n = bones[n].get('parent') if n in bones else None
+        return False
+    fa = first_hits(ta * np.array([16.0, 16.0, -16.0]), xs, zs)
+    for k, f in enumerate(fa):
+        if f >= 0 and leg_of(wa[f]):
+            problems.append(f'the stowed gear ({wa[f]}) shows from below at ({xs[k]:.1f},{zs[k]:.1f})')
     f1 = first_hits(t1, xs[sel], zs[sel])
     for k, f in zip(sel, f1):
         if f < 0:

@@ -188,10 +188,12 @@ class Gear:
             self.axle = np.array([low[:, 0].mean(), self.lo[1] + self.radius, low[:, 2].mean()])
         top = pts[pts[:, 1] > self.hi[1] - 1.5]
         self.top = np.array([top[:, 0].mean(), self.hi[1], top[:, 2].mean()])
-        self.nose = abs(self.axle[0]) < 3.0 and len([1 for w in self.wheels if abs(w['pivot'][0]) > 3]) == 0
+        # a leg on the centreline (a nose leg, or a bomber's twin-wheel centre leg) folds fore-and-aft or sideways
+        self.nose = abs(self.axle[0]) < 3.0
         # the leg telescopes: everything below split_y (wheel, fork, steering, lower strut) can slide up the leg
         self.split_y = self.axle[1] + self.radius + 0.3
         self.direct = [n for n in self.mesh_bones if self.m.bones[n].get('parent') == self.leg]
+        self.sq = None           # (direction, factor, leg axis) struts are thinned along, or None
         self._parts = {}
         # a strut stand-in from the top of the gear up to the hinge is added when the model's strut stops short
         legp = [c for p in self.mesh.get(self.leg_mesh, []) for c in p]
@@ -287,14 +289,19 @@ class Gear:
     def strut_polys(self, H, half=0.6):
         """A square strut from the top of the gear's attached pieces up to the hinge, if they stop short."""
         legp = [c[0] for n, ps in self.mesh.items() if n not in self.wheel_bones for p in ps for c in p]
-        if not legp:
+        if legp:
+            legp = np.array(legp)
+            topy = legp[:, 1].max()
+            near = legp[legp[:, 1] > topy - 1.0]
+            cx, cz = near[:, 0].mean(), near[:, 2].mean()
+        elif self.wheels:        # nothing of the leg reaches the wheels (a bogie under a gap): stand on the axle
+            topy = max(w['hi'][1] for w in self.wheels)
+            cx, cz = self.axle[0], self.axle[2]
+            half = max(half, 0.12 * self.radius)
+        else:
             return []
-        legp = np.array(legp)
-        topy = legp[:, 1].max()
         if H[1] - topy < 1.0:
             return []
-        near = legp[legp[:, 1] > topy - 1.0]
-        cx, cz = near[:, 0].mean(), near[:, 2].mean()
         y0, y1 = topy - 1.0, H[1] + 0.5
         uv = self.strut_uv
         P = lambda x, y, z: np.array([x, y, z], float)
@@ -312,7 +319,7 @@ class Gear:
         the leg mesh) and of the sliding lower part (pieces of the leg meshes below split_y, then every mesh
         under the steering / wheel bones). Narrow pieces of the lower part (strut pistons) are slimmed by 15 %
         about the axle's vertical line, so they never share a face with the upper strut they slide into."""
-        key = tuple(np.round(H, 4))
+        key = (tuple(np.round(H, 4)), self.sq_key())
         if key in self._parts:
             return self._parts[key]
         upper, lower = {}, {}
@@ -332,8 +339,26 @@ class Gear:
                 lower[n] = self._slim(lo)
             else:
                 lower[n] = polys if n in self.wheel_bones else self._slim(polys)
+        if self.sq is not None:
+            for part in (upper, lower):
+                for n in part:
+                    if n not in self.wheel_bones:
+                        part[n] = [self._squash(p) for p in part[n]]
         self._parts[key] = (upper, lower)
         return upper, lower
+
+    def sq_key(self):
+        return None if self.sq is None else (tuple(np.round(self.sq[0], 3)), round(self.sq[1], 3))
+
+    def _squash(self, poly):
+        """Thins a strut piece toward the leg's axis along the direction that stands vertical once the leg is
+        stowed (the tyre rule applied to struts and braces: whatever is thicker than the wing is too thick)."""
+        v, k, u = self.sq
+        out = []
+        for c in poly:
+            o = c[0] - self.axle
+            out.append((c[0] - v * ((o @ v) * (1 - k)), c[1], c[2]))
+        return out
 
     def _slim(self, polys, k=0.85):
         out = [None] * len(polys)
@@ -353,7 +378,8 @@ class Gear:
     def rest_points(self, H, D, tw=0.0, u=(0.0, 1.0, 0.0)):
         """Sample points of the gear with the lower part twisted tw degrees about the leg's vertical axis through
         the axle and slid D px up the leg (before the swing), the upper part trimmed at the hinge."""
-        key = ('rest', tuple(np.round(H, 4)), round(float(D), 3), round(float(tw), 3), tuple(np.round(u, 4)))
+        key = ('rest', tuple(np.round(H, 4)), round(float(D), 3), round(float(tw), 3), tuple(np.round(u, 4)),
+               self.sq_key())
         if key in self._pts:
             return self._pts[key]
         upper, lower = self.parts(H)
@@ -600,6 +626,7 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
         ups.append(unit(lean))
     modes = cfg.get('hinge_modes', range(len(ups)))
     cands, worst, hits_any = [], None, False
+    strut_k = cfg.get('strut_k', 1.0)
     # fore-and-aft folds may twist the wheel a quarter turn so it lies flat (mirrored left and right)
     twists = [t * (1.0 if g.nose else side) for t in cfg.get('twists', [0.0, 90.0] if direction in DIRS else [0.0])]
     for ui, u in enumerate(ups):
@@ -618,6 +645,12 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
                     continue
                 a, ang = swing_axis(g.axle + u * D - H, s, ideal)
                 ang += extra * (1 if ang >= 0 else -1)
+                g.sq = None
+                if strut_k < 1.0:     # thin the struts along what becomes their height once stowed
+                    v = rot(a, ang).T @ np.array([0, 1.0, 0])
+                    v = v - (v @ u) * u
+                    if np.linalg.norm(v) > 1e-6:
+                        g.sq = (unit(v), strut_k, u)
                 st = (g.rest_points(H, D, tw, u) - H) @ rot(a, ang).T + H
                 ok = True       # every stowed point must sit above the skin over it, so the doors close
                 for p in st[:: max(1, len(st) // 160)]:
@@ -625,7 +658,13 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
                     if y is None or p[1] < y + DOOR_CLEAR:
                         ok = False; worst = worst or (p, y); break
                 if ok:
-                    cands.append((d + extra / 10.0 + D / 3.0 + abs(tw) / 90.0 + ui, H, a, ang, st, d, extra, D, tw, u, ui))
+                    # how far the stowed gear would poke above the airframe's top skin: plans that fit under it
+                    # are checked first, whatever their cost, since check_plan refuses the others anyway
+                    over = max(p[1] + CEIL_MARGIN + TOP_SKIN - top for p in st[:: max(1, len(st) // 160)]
+                               for col in [skin.column(round(p[0] * 2) / 2, round(p[2] * 2) / 2, which='all')]
+                               for top in [col[-1] if len(col) else -1e9])
+                    cands.append((over > 0, d + extra / 10.0 + D / 3.0 + abs(tw) / 90.0 + ui, H, a, ang, st, d, extra,
+                                  D, tw, u, ui, g.sq))
                     break
     if not hits_any:
         return None, 'leg axis never meets the skin'
@@ -634,11 +673,13 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
             f' (e.g. {np.round(worst[0], 1).tolist()} over skin {worst[1] if worst[1] is None else round(worst[1], 1)})'
             if worst else '')
     first = None
-    for _, H, a, ang, st, d, extra, D, tw, u, ui in sorted(cands, key=lambda c: c[0])[:40]:
+    for _, _, H, a, ang, st, d, extra, D, tw, u, ui, sq in sorted(cands, key=lambda c: c[:2])[:40]:
+        g.sq = sq
         plan, why = check_plan(g, skin, direction, s, H, a, ang, st, d, others, D, tw, u)
         if plan is not None:
             plan['extra'] = extra
             plan['mode'] = ui
+            plan['sq'] = sq
             if accept is None:
                 return plan, None
             why = accept(plan)
@@ -650,6 +691,14 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
 
 def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u=(0.0, 1.0, 0.0)):
     m = g.m
+    # every stowed point (the planner only sampled them) must sit above the skin, judged by the highest skin on the
+    # lattice around it, so no tyre edge pokes out through a curved belly
+    q = 0.25
+    for p in st:
+        x0, z0 = np.floor(p[0] / q) * q, np.floor(p[2] / q) * q
+        ys = [skin.skin_y(x, z) for x in (x0, x0 + q) for z in (z0, z0 + q)]
+        if any(y is None or p[1] < y + DOOR_CLEAR for y in ys):
+            return None, f'the stowed gear pokes out of the skin at ({p[0]:.1f},{p[1]:.1f},{p[2]:.1f})'
     s_axis = 2 if abs(s[2]) > 0.5 else 0           # the well runs along the swing
     c_axis = 2 - s_axis
     well = Well(st)
@@ -801,7 +850,7 @@ def build(m, plans, gears, skin):
             for blo, bhi in boxes:
                 kept = []
                 for poly in new_polys[n]:
-                    if not M.overlaps_box(poly, blo, bhi):
+                    if len(poly) < 3 or not M.overlaps_box(poly, blo, bhi):
                         kept.append(poly); continue
                     outs, ins = M.subtract_box(poly, blo, bhi)
                     kept += outs
@@ -935,6 +984,7 @@ def apply(m, new_polys, new_bones, door_entries, retracts, gears):
         trim = plan['H'][1] + 0.8
         D = float(plan.get('slide', 0.0))
         tw = float(plan.get('twist', 0.0))
+        g.sq = plan.get('sq')
         upper, lower = g.parts(plan['H'])
         slide = None
         if D > 0.01 or tw:
@@ -1025,9 +1075,21 @@ def write(m, out_dir=None):
 
 
 def run(vid, do_write=False, cfg_all=None, out_dir=None):
+    """Plans, cuts and checks one aircraft. `tyre_ratios` lists the tyre slimming to try in turn (0: tyres as
+    modelled; bombers try theirs first, since big aircraft really have fat tyres), fresh from the model each time."""
     cfg_all = cfg_all if cfg_all is not None else (json.load(open(CONFIG)) if os.path.exists(CONFIG) else {})
     cfg = dict(cfg_all.get('default', {}))
     cfg.update(cfg_all.get(vid, {}))
+    notes = []
+    for ratio in cfg.get('tyre_ratios', [cfg.get('tyre_ratio', TYRE_RATIO)]):
+        m, n = _run(vid, dict(cfg, tyre_ratio=ratio), do_write, out_dir)
+        if m is not None:
+            return m, n + ([f'tyres slimmed to {ratio} of their height'] if ratio else [])
+        notes += [f'with tyres at {ratio or "full width"}:'] + n
+    return None, notes
+
+
+def _run(vid, cfg, do_write, out_dir):
     m = Model(vid)
     legs = [e for e in m.rig.get('Gear') or [] if e.get('VisibleWhen') != 'RETRACTED']
     if not legs:
@@ -1039,12 +1101,17 @@ def run(vid, do_write=False, cfg_all=None, out_dir=None):
     gears = {e['Bone']: Gear(m, e, loose, claimed, cfg.get('tyre_ratio', TYRE_RATIO)) for e in legs}
     plans, notes = [], []
 
+    biggest = max(g.radius for g in gears.values())
+
+    def outrigger(g):
+        return cfg.get('optional_outriggers', True) and not g.nose and g.radius < 0.5 * biggest
+
     def mirror_of(g):
         return next((o for o in gears.values() if o is not g and not o.nose and not g.nose
                      and abs(o.axle[0] + g.axle[0]) < 0.6 and abs(o.axle[2] - g.axle[2]) < 0.6), None)
 
-    def same_as(p):
-        return dict(cfg, slides=[p['slide']], extra_degs=[p['extra']], twists=[abs(p['twist'])],
+    def same_as(p, c):
+        return dict(c, slides=[p['slide']], extra_degs=[p['extra']], twists=[abs(p['twist'])],
                     hinge_modes=[p['mode']])
 
     # nose legs first: they are the most constrained; a main gear and its mirror are planned together, folding
@@ -1056,23 +1123,38 @@ def run(vid, do_write=False, cfg_all=None, out_dir=None):
         g = gears[leg]
         twin = mirror_of(g)
         reasons, chosen, pair = [], None, None
-        for d in preferences(g, cfg):
-            if twin is None:
-                plan, why = plan_leg(g, skin, d, plans, cfg)
-            else:
-                found = {}
+        # struts as modelled first; then thinned (like the tyres) where they are thicker than the wing
+        for k in cfg.get('strut_ks', [1.0, 0.6, 0.4]):
+            ck = dict(cfg, strut_k=k)
+            reasons = []
+            for d in preferences(g, ck):
+                if twin is None:
+                    plan, why = plan_leg(g, skin, d, plans, ck)
+                else:
+                    found = {}
 
-                def accept(p, d=d, found=found):
-                    q, why = plan_leg(twin, skin, d, plans + [p], same_as(p))
-                    if q is None:
-                        return f'its mirror {twin.leg} does not fit the same way ({why})'
-                    found['q'] = q
-                    return None
-                plan, why = plan_leg(g, skin, d, plans, cfg, accept)
-                pair = found.get('q')
-            if plan is not None:
-                chosen = plan; break
-            reasons.append(f'{d}: {why}')
+                    def accept(p, d=d, found=found, ck=ck):
+                        q, why = plan_leg(twin, skin, d, plans + [p], same_as(p, ck))
+                        if q is None:
+                            return f'its mirror {twin.leg} does not fit the same way ({why})'
+                        found['q'] = q
+                        return None
+                    plan, why = plan_leg(g, skin, d, plans, ck, accept)
+                    pair = found.get('q')
+                if plan is not None:
+                    chosen = plan; break
+                reasons.append(f'{d}: {why}')
+            if chosen is not None:
+                if k < 1.0:
+                    notes.append(f'{leg}: struts thinned to {k:.0%} to fit')
+                break
+        if chosen is None and outrigger(g):
+            # a small outrigger wheel (wingtip gear) that fits no well keeps its old pop-in behaviour
+            notes.append(f'{leg}: outrigger kept as it was, no well fits ({"; ".join(reasons)})')
+            done.add(leg)
+            if twin is not None:
+                done.add(twin.leg)
+            continue
         if chosen is None:
             notes.append(f'{leg}: no well fits ({"; ".join(reasons)})')
             return None, notes

@@ -106,6 +106,8 @@ def posed_triangles(geo, pose, skip=()):
         N = N * np.array([1.0, 1.0, -1.0])
         uv = np.array(pm['uvs'], float)
         for poly in pm['polys']:
+            if len(poly) < 3:
+                continue
             idx = [v[0] for v in poly]; nid = [v[1] for v in poly]; tid = [v[2] for v in poly]
             n = N[nid].sum(0) if len(N) > max(nid) else np.zeros(3)
             for k in range(1, len(idx) - 1):

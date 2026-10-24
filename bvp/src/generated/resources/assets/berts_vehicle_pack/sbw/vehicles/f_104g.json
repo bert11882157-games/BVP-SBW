@@ -285,7 +285,7 @@
         "Retract": {
           "Pivot": [
             21.05212,
-            19.89752,
+            20.39752,
             36.43637
           ],
           "Axis": [
@@ -293,7 +293,7 @@
             0.0,
             1.0
           ],
-          "AngleDegrees": -90.0,
+          "AngleDegrees": -100.0,
           "Slide": {
             "Bone": "gear_slide_1",
             "Pivot": [
@@ -316,7 +316,7 @@
         "Retract": {
           "Pivot": [
             -21.05212,
-            19.89752,
+            20.39752,
             36.43637
           ],
           "Axis": [
@@ -324,7 +324,7 @@
             0.0,
             1.0
           ],
-          "AngleDegrees": 90.0,
+          "AngleDegrees": 100.0,
           "Slide": {
             "Bone": "gear_slide_2",
             "Pivot": [
@@ -347,7 +347,7 @@
         "Retract": {
           "Pivot": [
             0.0,
-            11.27606,
+            13.02606,
             -33.60242
           ],
           "Axis": [
@@ -355,7 +355,7 @@
             0.0,
             0.0
           ],
-          "AngleDegrees": 110.0,
+          "AngleDegrees": 90.0,
           "Slide": {
             "Bone": "gear_slide_0",
             "Pivot": [
@@ -368,7 +368,7 @@
               1.0,
               0.0
             ],
-            "DistancePx": 0.0,
+            "DistancePx": 2.0,
             "TwistDegrees": 90.0
           }
         }
@@ -398,8 +398,8 @@
         "Parent": "hull",
         "Pivot": [
           -4.0,
-          11.56849,
-          -39.0
+          11.53243,
+          -38.5
         ],
         "Axis": [
           0.0,
@@ -413,8 +413,8 @@
         "Parent": "hull",
         "Pivot": [
           4.0,
-          11.45287,
-          -39.0
+          11.4279,
+          -38.5
         ],
         "Axis": [
           0.0,
@@ -427,8 +427,8 @@
         "Bone": "gear_door_2",
         "Parent": "hull",
         "Pivot": [
-          8.0,
-          13.13128,
+          12.0,
+          12.91704,
           31.0
         ],
         "Axis": [
@@ -442,8 +442,8 @@
         "Bone": "gear_door_3",
         "Parent": "hull",
         "Pivot": [
-          8.0,
-          14.01549,
+          12.0,
+          13.45695,
           42.0
         ],
         "Axis": [
@@ -457,8 +457,8 @@
         "Bone": "gear_door_4",
         "Parent": "hull",
         "Pivot": [
-          -8.0,
-          13.43311,
+          -12.0,
+          12.91042,
           31.0
         ],
         "Axis": [
@@ -472,8 +472,8 @@
         "Bone": "gear_door_5",
         "Parent": "hull",
         "Pivot": [
-          -8.0,
-          13.63102,
+          -12.0,
+          13.23405,
           42.0
         ],
         "Axis": [

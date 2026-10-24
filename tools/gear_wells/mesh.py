@@ -159,6 +159,9 @@ def repair_t_junctions(polys, points, tol=2e-4):
     pts = np.array(points, float)
     out = []
     for poly in polys:
+        if len(poly) < 3:          # a degenerate face in the source model is passed through untouched
+            out.append(poly)
+            continue
         p = np.array([c[0] for c in poly])
         lo, hi = p.min(0) - tol, p.max(0) + tol
         cand = pts[np.all((pts >= lo) & (pts <= hi), axis=1)]
