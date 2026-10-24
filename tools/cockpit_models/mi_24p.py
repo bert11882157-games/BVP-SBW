@@ -387,7 +387,7 @@ class Facet:
         return np.array([-a, y, self.z(y)]) + self.N * lift
 
 
-PF = Facet(6.280, 2.400)                   # the pilot's instrument panel face (the hump's rear face)
+PF = Facet(6.095, 2.400)                   # the pilot's instrument panel face: 3.5 cm in front of the model's own partition (rear face z 6.129, restored)
 GF = Facet(7.440, 1.900)                   # the operator's panel face
 PANEL_TOP_P, PANEL_BOT_P = 2.720, 2.120
 PANEL_TOP_G, PANEL_BOT_G = 2.120, 1.640
@@ -764,10 +764,8 @@ def build(atlas):
         m.box([0, (SLAB_BOT + FLOOR_G) / 2, (za + zb) / 2], (X, Y, Z), (xh, (FLOOR_G - SLAB_BOT) / 2, (zb - za) / 2), sw['floor'])
     m.box([0, (SLAB_BOT + FLOOR_P) / 2, (4.74 + PF.z(FLOOR_P)) / 2], (X, Y, Z), (WALL + 0.015, (FLOOR_P - SLAB_BOT) / 2, (PF.z(FLOOR_P) - 4.74) / 2), sw['floor'])
     HUMP_TOP = 2.60
-    m.yz_prism([(FLOOR_P, PF.z(FLOOR_P)), (2.30, PF.z(2.30)), (2.30, 6.66), (FLOOR_G, 6.66), (FLOOR_G, PF.z(FLOOR_P) + 0.01)], -0.60, 0.60, sw['panel_d'])
-    m.yz_prism([(2.28, PF.z(2.28) + 0.004), (2.34, PF.z(2.34) + 0.004), (2.34, 6.56), (2.28, 6.66)], -0.60, 0.60, sw['panel_d'])
-    m.yz_prism([(2.34, PF.z(2.34) + 0.004), (2.42, PF.z(2.42) + 0.004), (2.42, 6.56), (2.34, 6.56)], -0.574, 0.574, sw['panel_d'])             # (the canopy narrows over the sill)
-    m.yz_prism([(2.42, PF.z(2.42)), (PANEL_TOP_P, PF.z(PANEL_TOP_P)), (2.66, 6.46), (2.42, 6.56)], -0.42, 0.42, sw['panel_d'])           # (convex: a fan over a dented profile would overlap itself)   # the hump's body (the operator's seat back stands against it)
+    # (the model's own partition and its arch plates between the crews stand behind the panel: no hump body is built)
+    m.yz_prism([(FLOOR_P, PF.z(FLOOR_P)), (2.30, PF.z(2.30)), (2.30, 6.12), (FLOOR_G, 6.12), (FLOOR_G, PF.z(FLOOR_P) + 0.01)], -0.60, 0.60, sw['panel_d'])
     # ---- pilot's panel: two bands (PILOT_BANDS), each its own painted face, the wide one under the narrow one
     ppm = 760
     kick = atlas.paint(220, 70, p_kick)
@@ -855,7 +853,7 @@ def build(atlas):
     zbp = lambda y: ez - 0.30 - 0.0696 * (y - 2.9)
     ax_b = (X, unit([0, 1, -0.0696]), unit([0, 0.0696, 1]))
     m.box([0, (FLOOR_P + PAN_P - 0.02) / 2, ez - 0.02], (X, Y, Z), (0.215, (PAN_P - 0.02 - FLOOR_P) / 2, 0.245), sw['frame'])
-    m.box([0, PAN_P - 0.01, ez - 0.01], (X, Y, Z), (0.200, 0.030, 0.255), sw['cushion'], front=(1, 1, cushion, -X, Z))
+    m.box([0, PAN_P - 0.01, ez - 0.01], (X, Y, Z), (0.200, 0.030, 0.252), sw['cushion'], front=(1, 1, cushion, -X, Z))
     yc = 2.86
     m.box([0, yc, zbp(yc) + 0.035], ax_b, (0.185, 0.36, 0.035), sw['cushion'], front=(2, 1, backt, -X, ax_b[1]))
     m.box([0, yc, zbp(yc) - 0.015], ax_b, (0.200, 0.37, 0.020), sw['frame'])
@@ -922,7 +920,7 @@ def build(atlas):
     zg = GF.z
     # the dash block and the wedge under the windscreen (closed, so the nose bay cannot be seen into)
     WEDGE_Z = 7.64                                                       # (the nose bay's own front wall stands at z 7.651: the wedge ends in front of it)
-    pane_z = lambda y: CM.OB_BL[2] - (y - CM.OB_BL[1]) * (CM.OB_BL[2] - CM.OB_TL[2]) / (CM.OB_TL[1] - CM.OB_BL[1])
+    pane_z = lambda y: CM.OB_BL[2] - (y - CM.OB_BL[1]) * (CM.OB_BL[2] - CM.OB_TL[2]) / (CM.OB_TL[1] - CM.OB_BL[1]) - 0.012            # (12 mm behind the glass: the restored hoop's frame stands there)
     m.yz_prism([(FLOOR_G, zg(FLOOR_G)), (PANEL_TOP_G, zg(PANEL_TOP_G)), (PANEL_TOP_G, pane_z(PANEL_TOP_G) - 0.004), (CM.OB_BL[1] - 0.004, min(CM.OB_BL[2] - 0.004, WEDGE_Z)),
                 (FLOOR_G, min(CM.OB_BL[2] - 0.004, WEDGE_Z))], -0.30, 0.30, sw['panel_d'])
     m.box([0, PANEL_TOP_G + 0.012, (zg(PANEL_TOP_G) - 0.10 + pane_z(PANEL_TOP_G)) / 2], (X, Y, Z), (0.30, 0.012, (pane_z(PANEL_TOP_G) - zg(PANEL_TOP_G) + 0.10) / 2 - 0.012), sw['black'])   # coaming
@@ -1000,7 +998,7 @@ def build(atlas):
     PAN_G = 1.78
     zbg = lambda y: ezg - 0.30 - 0.0696 * (y - 2.20)
     m.box([0, (FLOOR_G + PAN_G - 0.02) / 2, ezg - 0.02], (X, Y, Z), (0.215, (PAN_G - 0.02 - FLOOR_G) / 2, 0.245), sw['frame'])
-    m.box([0, PAN_G - 0.01, ezg - 0.01], (X, Y, Z), (0.200, 0.030, 0.255), sw['cushion'], front=(1, 1, cushion, -X, Z))
+    m.box([0, PAN_G - 0.01, ezg - 0.01], (X, Y, Z), (0.200, 0.030, 0.252), sw['cushion'], front=(1, 1, cushion, -X, Z))
     yc = 2.16
     m.box([0, yc, zbg(yc) + 0.035], ax_b, (0.185, 0.36, 0.035), sw['cushion'], front=(2, 1, gcus, -X, ax_b[1]))
     m.box([0, yc, zbg(yc) - 0.015], ax_b, (0.200, 0.37, 0.020), sw['frame'])
