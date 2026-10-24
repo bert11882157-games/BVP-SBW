@@ -67,15 +67,15 @@ PANES = {
                          (-0.385, 3.4375, ws(3.4375)), (-0.322, 3.245, ws(3.245)), (-0.26, 3.115, ws(3.115))],
     # the pilot's left side and roof: one opening in the original from the windscreen ring back to the rear arch, from
     # the sill up over the top to the right roof rail, no bar in it; three flat facets meeting along two seams.
-    # The lower side, upright at x 0.46 (the ring's outer face is at 0.5, the arch's at 0.5-0.56, the skin's top edge
+    # The lower side, upright at x 0.47 (1 cm out of the pilot panel's left wing; the ring's outer face is at 0.5, the arch's at 0.5-0.56, the skin's top edge
     # at 0.47-0.56): its front edge 2-3 cm into the ring behind its rear face, its rear 3 cm into the arch, its foot
     # 3 cm under the sill line (y = 3.52 at z 5.15 falling to 2.88 at z 6.80)
-    'pilot left side': [(0.46, 3.6875, 6.72), (0.46, 3.6875, 5.22), (0.46, 3.482, 5.17), (0.46, 2.80, 6.92),
-                        (0.46, 3.06, 6.975), (0.46, 3.4375, 6.85)],
+    'pilot left side': [(0.47, 3.6875, 6.72), (0.47, 3.6875, 5.22), (0.47, 3.482, 5.17), (0.47, 2.80, 6.92),
+                        (0.47, 3.06, 6.995), (0.47, 3.4375, 6.87)],
     # the shoulder: from the side's top seam (x 0.46, y 3.6875) up to the roof seam (x 0.27, y 3.952), following the
     # ring's upper-left bend ((0.5, 3.6875) - (0.4375, 3.8125) - (0.25, 3.9375)) and the arch's ((0.5, 3.6875, 5.25) -
     # (0.4375, 3.8125, 5.5) - (0.3125, 3.9375, 5.625))
-    'pilot left shoulder': [(0.46, 3.6875, 6.72), (0.27, 3.952, 6.56), (0.27, 3.952, 5.60), (0.46, 3.6875, 5.22)],
+    'pilot left shoulder': [(0.47, 3.6875, 6.72), (0.27, 3.952, 6.56), (0.27, 3.952, 5.60), (0.47, 3.6875, 5.22)],
     # the roof, on y = 3.995 - 0.16 x: from the shoulder seam across to 1 cm under the right roof rail (its inner edge at
     # x -0.25, y 4.0-4.0625, z 5.875-6.3125, and its diagonal to the ring's top at (-0.0625, 4.0, 6.4375)); its front
     # 3 cm into the ring's top, its rear into the arch's top ((0, 4.0, 5.6875), (-0.25, 3.9375, 5.625))
