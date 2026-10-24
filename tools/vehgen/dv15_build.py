@@ -122,14 +122,16 @@ def main(argv):
     eye = to_data(np.array(g_(HELM_EYE)))
     at['driver_camera'] = {'Parent': 'VehicleCustomPitch', 'Position': E.r5(eye), 'Direction': [0, 0, 1]}
     d['Attachments'] = at
-    dismount = {'Transform': 'Vehicle', 'Position': [0, 0.4, round(-(float(model.box(model.hull)[1][2]) / 16 + 1.0), 4)]}
+    # dismount: each seat steps out beside the hull at its own z (the bridge is a closed block; the old single point 1 block behind the
+    # stern put the helm 11 blocks from it, the same defect as the LCAC's 23-block throw): ee2_naval.side_dismount
+    obbs = d['OBB']
     sp = d['Seats']
 
     def seat_pos(name):
         return E.r5(to_data(np.array(g_(SEATS[name])) + [0, -12.0, 0]))
     import driver_cameras
     helm = copy.deepcopy(sp[0])
-    helm.update({'Position': seat_pos('helm'), 'DismountInfo': copy.deepcopy(dismount), 'CameraPos': driver_cameras.camera(),
+    helm.update({'Position': seat_pos('helm'), 'DismountInfo': N.side_dismount(seat_pos('helm'), obbs), 'CameraPos': driver_cameras.camera(),
                  'CanRotateHead': True, 'HidePassenger': True})
     gunner = {'Transform': 'Vehicle', 'Position': seat_pos('gunner'), 'MinPitch': REAL['TurretPitchRange'][0],
               'MaxPitch': REAL['TurretPitchRange'][1], 'CanRotateBody': True, 'Weapons': ['MachineGun'],
@@ -139,11 +141,11 @@ def main(argv):
                             'EyeAttachment': 'gunnerCamera', 'ZoomEyeAttachment': 'gunnerCamera',
                             'DirectionAttachment': 'hmg_muzzle', 'ZoomDirectionAttachment': 'hmg_muzzle',
                             'CameraMode': 'PLAYER_LOOK_AIM', 'AimCameraMode': 'PLAYER_LOOK_AIM'},
-              'DismountInfo': copy.deepcopy(dismount)}
+              'DismountInfo': N.side_dismount(seat_pos('gunner'), obbs)}
     rear = []
     for name in ('rear_l', 'rear_r'):
         s = copy.deepcopy(sp[2])
-        s.update({'Position': seat_pos(name), 'Orientation': 0, 'DismountInfo': copy.deepcopy(dismount), 'HidePassenger': True})
+        s.update({'Position': seat_pos(name), 'Orientation': 0, 'DismountInfo': N.side_dismount(seat_pos(name), obbs), 'HidePassenger': True})
         rear.append(s)
     d['Seats'] = [helm, gunner] + rear
 

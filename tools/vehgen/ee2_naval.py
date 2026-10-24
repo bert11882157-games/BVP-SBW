@@ -133,6 +133,25 @@ def boat_geo(model, template_geo, bones):
     return g
 
 
+WATERLINE_STEP = 1.0                 # dismount height over the entity origin: just above the nominal waterline (draught ~0.9 block)
+
+
+def side_dismount(seat_pos, obbs, margin=0.5, y=WATERLINE_STEP):
+    """DismountInfo for a seat inside a closed hull: the point beside the hull at the seat's z, on the seat's own side (+X left),
+    `margin` blocks outside every Vehicle-frame collision box that spans that z, at `y` over the origin (SBW only transforms the
+    point by the vehicle pose: no deck or hull awareness, no velocity offset, see VehicleEntity.getDismountLocationForIndex).
+    `obbs` are the data OBB dicts (Position / Size half sizes in blocks)."""
+    side = 1.0 if seat_pos[0] >= 0 else -1.0
+    reach = abs(seat_pos[0])
+    for o in obbs:
+        if o.get('Transform', 'Vehicle') != 'Vehicle':
+            continue
+        (px, py, pz), (sx, sy, sz) = o['Position'], o['Size']
+        if abs(seat_pos[2] - pz) <= sz:
+            reach = max(reach, side * px + sx)
+    return {'Transform': 'Vehicle', 'Position': [round(side * (reach + margin), 4), y, round(seat_pos[2], 4)]}
+
+
 def speedboat_data():
     return E.load(SPEEDBOAT)
 
