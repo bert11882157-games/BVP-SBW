@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.init;
 
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.entity.Ags30Entity;
+import com.yourname.berts_vehicle_pack.entity.FittedDeckBoatEntity;
 import com.yourname.berts_vehicle_pack.entity.FittedBoatEntity;
 import com.yourname.berts_vehicle_pack.entity.T80BvmObr2022Entity;
 import com.yourname.berts_vehicle_pack.entity.T64AEntity;
@@ -736,7 +737,7 @@ public class ModEntities {
                     3.4f, 2.6f, "dv15"));
     public static final RegistryObject<EntityType<FittedBoatEntity>> LCAC =
             ENTITIES.register("lcac", () -> vehicle(
-                    (type, level) -> new FittedBoatEntity(type, level, "lcac"),
+                    (type, level) -> new FittedDeckBoatEntity(type, level, "lcac"),
                     15.0f, 6.5f, "lcac"));
     public static final RegistryObject<EntityType<Leopard1A1A1Entity>> LEOPARD_1A1A1 =
             ENTITIES.register("leopard_1a1a1", () -> vehicle(Leopard1A1A1Entity::new, 3.94f, 2.6f, "leopard_1a1a1"));

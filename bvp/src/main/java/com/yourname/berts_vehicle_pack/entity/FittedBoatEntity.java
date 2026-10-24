@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
  * Source-fitted boats and craft (DV15, LCAC): the SBW ship engine and the data-driven seats and weapons, native hull damage
  * and collision (no tank armour resolution, ground mobility limits, track systems or ammo-rack warnings).
  */
-public final class FittedBoatEntity extends UnarmoredMountedWeaponEntity {
+public class FittedBoatEntity extends UnarmoredMountedWeaponEntity {
     public FittedBoatEntity(EntityType<?> type, Level level, String profileId) {
         super(type, level, profileId);
     }

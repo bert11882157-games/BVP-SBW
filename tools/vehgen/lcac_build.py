@@ -77,7 +77,8 @@ def main(argv):
     d['DamageModifiers'] = balance.modifiers(cls)
     d['Mass'] = REAL['Mass']
     d['EngineInfo'].update({'MaxForwardSpeedRate': REAL['MaxForwardSpeedRate'], 'MaxBackwardSpeedRate': 0.4,
-                            'Increment': 0.015, 'Decrement': 0.015, 'SteeringSpeed': 0.06})
+                            'Increment': 0.015, 'Decrement': 0.015, 'SteeringSpeed': 0.06,
+                            'BodyRollRate': 0.0})      # the cargo deck (lcac_deck.py) never rolls, like a carrier's
     d['VehicleIcon'] = f'berts_vehicle_pack:textures/vehicle_icon/{VID}.png'
     d['ThirdPersonCameraPos'] = [0, 6.0, 18.0]
     d['DestroyInfo'] = {'ParticleType': 'Medium', 'ExplosionDamage': 150, 'ExplosionRadius': 10}
@@ -126,7 +127,7 @@ def main(argv):
               round(float(hull_hi[2] - hull_lo[2]) / 16, 2), 'blocks, width', round(float(hull_hi[0] - hull_lo[0]) / 16, 2))
         return 0
     paths, out = N.write_vehicle(VID, geo, d, None)
-    N.register_boat(VID, (15.0, 6.5), AFTER)
+    N.register_boat(VID, (15.0, 6.5), AFTER, entity='FittedDeckBoatEntity')
     E.add_lang(LANG, f'entity.berts_vehicle_pack.{AFTER}')
     E.add_containers(VID, AFTER, land=False)
     E.write_textures(VID, model)

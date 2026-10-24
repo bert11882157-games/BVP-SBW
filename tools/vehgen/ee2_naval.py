@@ -40,7 +40,7 @@ import net.minecraft.world.level.Level;
  * Source-fitted boats and craft (DV15, LCAC): the SBW ship engine and the data-driven seats and weapons, native hull damage
  * and collision (no tank armour resolution, ground mobility limits, track systems or ammo-rack warnings).
  */
-public final class FittedBoatEntity extends UnarmoredMountedWeaponEntity {
+public class FittedBoatEntity extends UnarmoredMountedWeaponEntity {
     public FittedBoatEntity(EntityType<?> type, Level level, String profileId) {
         super(type, level, profileId);
     }
@@ -73,26 +73,30 @@ def slice_boxes(model, ids, x_edges, axis=0):
     return out
 
 
-def register_boat(vid, hitbox, after_vid):
-    """FittedBoatEntity registration and standard-backend renderer, each right after the complete statement of `after_vid`;
-    the entity import goes in after the Ags30Entity import."""
+def register_boat(vid, hitbox, after_vid, entity='FittedBoatEntity'):
+    """FittedBoatEntity (or a subclass: FittedDeckBoatEntity for a craft with a cargo deck) registration and standard-backend
+    renderer, each right after the complete statement of `after_vid`; the entity imports go in after the Ags30Entity import.
+    The registered type stays EntityType<FittedBoatEntity>; only the constructed class changes."""
     const, aconst = E.java_const(vid), E.java_const(after_vid)
     path = os.path.join(vehgen.JAVA, 'init', 'ModEntities.java')
     src = _read(path)
     nl = E._nl(src)
-    imp = 'import com.yourname.berts_vehicle_pack.entity.FittedBoatEntity;'
-    if imp not in src:
-        m = re.search(r'import com\.yourname\.berts_vehicle_pack\.entity\.Ags30Entity;(\r?\n)', src)
-        assert m, 'Ags30Entity import anchor'
-        src = src[:m.end()] + imp + m.group(1) + src[m.end():]
+    for cls in sorted({'FittedBoatEntity', entity}):
+        imp = f'import com.yourname.berts_vehicle_pack.entity.{cls};'
+        if imp not in src:
+            m = re.search(r'import com\.yourname\.berts_vehicle_pack\.entity\.Ags30Entity;(\r?\n)', src)
+            assert m, 'Ags30Entity import anchor'
+            src = src[:m.end()] + imp + m.group(1) + src[m.end():]
     if f'"{vid}"' not in src:
         m = re.search(rf'( *)public static final RegistryObject<EntityType<\w+>> {aconst} =\r?\n.*?;\r?\n', src, re.S)
         ind = m.group(1)
         line = (f'{ind}public static final RegistryObject<EntityType<FittedBoatEntity>> {const} ={nl}'
                 f'{ind}        ENTITIES.register("{vid}", () -> vehicle({nl}'
-                f'{ind}                (type, level) -> new FittedBoatEntity(type, level, "{vid}"),{nl}'
+                f'{ind}                (type, level) -> new {entity}(type, level, "{vid}"),{nl}'
                 f'{ind}                {hitbox[0]}f, {hitbox[1]}f, "{vid}"));{nl}')
         src = src[:m.end()] + line + src[m.end():]
+    else:                                         # already registered: only the constructed class may change
+        src = re.sub(rf'(\(type, level\) -> new )\w+(\(type, level, "{vid}"\))', rf'\g<1>{entity}\g<2>', src)
     _write(path, src)
     path = os.path.join(vehgen.JAVA, 'init', 'ModEntityRenderers.java')
     src = _read(path)
