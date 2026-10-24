@@ -76,6 +76,12 @@ open class RpgRocketTBGEntity : FastThrowableProjectile, BasicGeoProjectileEntit
         }
     }
 
+    /**
+     * The motor adds 3% speed per tick. The client copy restarted that growth from every quantized tracker update
+     * and snapped to each tracker position, so the rocket stuttered; clients now play back the server's flight.
+     */
+    override fun interpolatesFlight(): Boolean = true
+
     override fun tick() {
         super.tick()
         mediumTrail()

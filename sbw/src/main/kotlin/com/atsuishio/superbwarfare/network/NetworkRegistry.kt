@@ -256,4 +256,7 @@ private fun registerPayloads() {
     playToClient<RicochetTracerMessage>(clientSchema(86, PacketLimitProfiles.PRESENTATION,
         delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.ricochet_tracer",
         feature = "cosmetic_ricochet", since = 47))
+    playToClient<MunitionFlightMessage>(clientSchema(87, PacketLimitProfiles.TINY,
+        delivery = LATEST_SNAPSHOT, priority = P1, owner = "projectile.flight_state",
+        feature = "munition_flight_stream", since = 48))
 }
