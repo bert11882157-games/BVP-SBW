@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.api.vehicle.weapon
 
 import net.minecraft.resources.ResourceLocation
+import com.atsuishio.superbwarfare.data.StringOrVec3
 import com.atsuishio.superbwarfare.data.vehicle.subdata.SeatInfo
+import net.minecraft.world.phys.Vec3
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -65,6 +67,14 @@ class VehicleFixedGunBanksTest {
     }
 
     @Test
+    fun `a station-barrel muzzle direction matches its authored vector by value`() {
+        // owner 2026-10-23: station guns (AH-64D M230 and others) never fired on a held click
+        assertTrue(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3(Vec3(0.0, 0.0, 1.0))))
+        assertFalse(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3(Vec3(0.0, 0.1, 1.0))))
+        assertFalse(VehicleFixedGunBanks.sameDirection(Vec3(0.0, 0.0, 1.0), StringOrVec3("Default")))
+    }
+
+    @Test
     fun `assembly rate determines bounded event capacity without projectile multiplication`() {
         assertEquals(1, VehicleFixedGunBanks.eventCapacity(850))
         assertEquals(3, VehicleFixedGunBanks.eventCapacity(3000))
@@ -81,6 +91,16 @@ class VehicleFixedGunBanksTest {
         assertNull(VehicleFixedGunBanks.memberIndices(all, all))
         assertArrayEquals(IntArray(9) { it }, VehicleFixedGunBanks.memberIndices(all, all, 16))
         assertNull(VehicleFixedGunBanks.memberIndices(List(17) { "Pod$it" }, List(17) { "Pod$it" }, 16))
+    }
+
+    @Test fun `the pilot's built-in bank keeps only the guns the pilot can fan together`() {
+        val groups = com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups
+        // Il-10: the gunner's RearCannon is built in but not the pilot's; the four wing cannons still bank
+        val wings = listOf("Gun1", "Gun2", "Gun3", "Gun4")
+        assertEquals(wings, groups.pilotBank(wings + "RearCannon", "Gun3") { it != "RearCannon" })
+        // AH-64D: the pilot selecting the gunner's station gun fires it on its own, not as a refused bank
+        assertNull(groups.pilotBank(listOf("M230"), "M230") { false })
+        assertEquals(listOf("Vulcan"), groups.pilotBank(listOf("Vulcan"), "Vulcan") { true })
     }
 
     @Test fun `group and main trigger resolve disjoint physical schedules for one through four paired fittings`() {

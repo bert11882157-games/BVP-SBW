@@ -384,6 +384,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /** First-entry reload credit is opt-in so native SBW vehicles keep their placement lifecycle. */
     protected open fun initialPassengerReloadProgressPercent(): Int = 0
 
+    /**
+     * Guns spawn with empty magazines. Aircraft (native and addon) arm them on first boarding so the first click
+     * fires; ground vehicles keep their placement lifecycle unless they opt in.
+     */
+    protected open fun armsGunsOnFirstBoarding(): Boolean =
+        com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.isAircraft(this)
+
     private var initialPassengerReloadProgressApplied: Boolean
         get() = persistentStateOwner.initialPassengerReloadProgressApplied
         set(value) {
@@ -972,6 +979,21 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     private fun applyInitialPassengerReloadProgress(passenger: Entity) {
         if (level().isClientSide || initialPassengerReloadProgressApplied) return
         if (passenger !is Player || passenger is FakePlayer) return
+
+        if (armsGunsOnFirstBoarding()) {
+            initialPassengerReloadProgressApplied = true
+            for (weaponName in gunDataMap.keys.toList()) {
+                modifyGunData(weaponName) { data ->
+                    val magazine = data.get(GunProp.MAGAZINE)
+                    if (!data.useBackpackAmmo() && !data.meleeOnly() && data.ammo.get() < magazine) {
+                        data.resetStatus()
+                        data.ammo.set(magazine)
+                    }
+                }
+            }
+            setChanged()
+            return
+        }
 
         val progressPercent = initialPassengerReloadProgressPercent()
         if (progressPercent <= 0) return
@@ -2010,7 +2032,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         vehicleModuleStateService.writeAdditionalSaveData(compound)
         vehicleActionController.writeAdditionalSaveData(compound)
-        if (initialPassengerReloadProgressApplied || initialPassengerReloadProgressPercent() > 0) {
+        if (initialPassengerReloadProgressApplied || initialPassengerReloadProgressPercent() > 0 || armsGunsOnFirstBoarding()) {
             compound.putBoolean("InitialPassengerReloadProgressApplied", initialPassengerReloadProgressApplied)
         }
 
