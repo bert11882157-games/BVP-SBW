@@ -476,7 +476,7 @@ def build(atlas, E):
     g_bot = np.array([E[0], body_top + 0.012, body_z0 + 0.024])    # the reflector frame's foot on the box's aft edge
     g_c = g_bot + g_up * g_h / 2
     g_top = g_c + g_up * g_h / 2
-    m.box(np.array([E[0], body_top + 0.0115, body_z1 - 0.050]), (X, Y, Z), (0.070, 0.0135, 0.050), sw['black'])   # the lens hood at its front
+    m.box(np.array([E[0], body_top + 0.0115, body_z1 - 0.0525]), (X, Y, Z), (0.070, 0.0135, 0.050), sw['black'])   # the lens hood at its front
     m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
     for s in (-1, 1):
         m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
@@ -580,7 +580,7 @@ def build(atlas, E):
     # rudder pedals under the panel
     for s in (1, -1):
         m.box(P(s * 0.12, -0.935, 0.43), (X, H.unit([0, 1, -0.35]), H.unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
-        m.box(P(s * 0.12, -1.000, 0.47), (X, Y, Z), (0.0105, 0.03, 0.06), sw['dgrey'])
+        m.box(P(s * 0.12, -1.000, 0.47), (X, Y, Z), (0.0085, 0.03, 0.06), sw['dgrey'])
 
     # -- the Atar's single throttle lever on the left console
     # The Atar's throttle lever is its own bone (throttle_lever), hinged under the console top, at idle.

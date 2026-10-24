@@ -233,13 +233,17 @@ class Bars:
             n = -n
         self.face(q, n)
 
-    def sweep(self, A, B, C, D):
-        """a bar between four polylines A (top, near), B (top, far), C (bottom, far), D (bottom, near); the open ends are
-        left to the neighbouring member (or are buried)"""
+    def sweep(self, A, B, C, D, caps=(True, True)):
+        """a bar between four polylines A (top, near), B (top, far), C (bottom, far), D (bottom, near); the two ends are closed
+        with a cap each (caps = (start, end)), so the bar is a closed solid and nothing sees into it"""
         for i in range(len(A) - 1):
             ctr = np.mean([L[k] for L in (A, B, C, D) for k in (i, i + 1)], 0)
             for p, q in ((A, B), (D, C), (A, D), (B, C)):
                 self.quad([p[i], p[i + 1], q[i + 1], q[i]], ctr)
+        ctr = np.mean([L[k] for L in (A, B, C, D) for k in range(len(A))], 0)
+        for use, i in zip(caps, (0, len(A) - 1)):
+            if use:
+                self.quad([A[i], B[i], C[i], D[i]], ctr)
 
     def cap(self, pts, inside):
         self.quad(pts, inside)
@@ -267,14 +271,107 @@ def bow_bars(b, z0, z1):
     zc = 0.5 * (z0 + z1)
     sec = section(zc)
     nrm = out_normals(sec)
+    nrm[-1] = np.array([0.0, 1.0])                          # the crown's normal is vertical, so the two halves meet exactly at x 0
     for side in (1, -1):
         def line(z, rad):
             return [V(side * (p[0] + n[0] * rad), p[1] + n[1] * rad, z) for p, n in zip(sec, nrm)]
         A, B, C, D = line(z0, T_OUT), line(z1, T_OUT), line(z1, -T_IN), line(z0, -T_IN)
         for Ln in (A, B, C, D):
             Ln[0] = Ln[0] + np.array([0, -0.012, 0])        # the foot goes into the rail
-        b.sweep(A, B, C, D)
+        b.sweep(A, B, C, D, caps=(True, False))
 
+
+FAIR = None                               # the spine fairing's outline behind its front face: [(x, y)] eye-relative, set in main()
+FAIR_DZ = 0.03                            # read this far behind the front face
+
+
+def fairing_outline(bones, step=0.004):
+    """the highest outline of the two fuselage pieces at a plane FAIR_DZ behind the fairing's front face (read off the faces of
+    the airframe BEFORE the cut), for x from 0 to the wall: the mould the canopy's rear bow has to meet"""
+    zc = zr(Z_FAIR - FAIR_DZ)
+    segs = []
+    for hull in bones:
+        if hull['name'] not in HULLS:
+            continue
+        pm = hull['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for poly in pm['polys']:
+            idx = [v[0] for v in poly]
+            for k in range(1, len(idx) - 1):
+                T = P[[idx[0], idx[k], idx[k + 1]]]
+                s = T[:, 2] - zc
+                pts = []
+                for i in range(3):
+                    a, c = T[i], T[(i + 1) % 3]
+                    if s[i] * s[(i + 1) % 3] < 0:
+                        pts.append(a + (c - a) * (s[i] / (s[i] - s[(i + 1) % 3])))
+                if len(pts) == 2:
+                    segs.append(pts)
+    xs = np.arange(0.0, 0.60, step)
+    out = []
+    for x in xs:
+        best = None
+        for p, q in segs:
+            if (p[0] - x) * (q[0] - x) <= 0 and abs(p[0] - q[0]) > 1e-9:
+                y = p[1] + (q[1] - p[1]) * (x - p[0]) / (q[0] - p[0])
+                if best is None or y > best:
+                    best = y
+        if best is None:
+            break
+        out.append((float(x), float(best) - EY))
+    return out
+
+
+def skin_bones(bones):
+    """the bones the skin is read from: the airframe's own, BEFORE the cut; with MIRAGE_SKIN_REF set (a geo json of the finished
+    airframe, i.e. after the exterior restore) the hull bones of that file instead, so the rails meet the skin as it is finally built"""
+    ref = os.environ.get('MIRAGE_SKIN_REF')
+    if ref and os.path.exists(ref):
+        return json.load(open(ref, encoding='utf-8-sig'))['minecraft:geometry'][0]['bones']
+    return bones
+
+
+def skin_triangles(bones):
+    T = []
+    for hull in bones:
+        if hull['name'] not in HULLS:
+            continue
+        pm = hull['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for poly in pm['polys']:
+            idx = [v[0] for v in poly]
+            for k in range(1, len(idx) - 1):
+                T.append(P[[idx[0], idx[k], idx[k + 1]]])
+    return np.array(T)
+
+
+def fairing_y(x):
+    return float(np.interp(x, [p[0] for p in FAIR], [p[1] for p in FAIR]))
+
+
+def collar_bars(b, z_front, dz=0.03):
+    """the rear bow's skirt: a loft from the bow's outer line (at its rear face) back to the spine fairing's own outline, which is
+    the mould (read off the airframe's faces), so the bow and the fairing form one surface with no step and no slit under the
+    bow's overhang. Its back edge sinks 3 mm under the fairing's skin."""
+    if FAIR is None:
+        return
+    sec = section(0.5 * (Z_RB[0] + Z_RB[1]))
+    nrm = out_normals(sec)
+    nrm[-1] = np.array([0.0, 1.0])
+    x_wall = FAIR[-1][0]
+    for side in (1, -1):
+        front = [V(side * (p[0] + n[0] * T_OUT), p[1] + n[1] * T_OUT, z_front) for p, n in zip(sec, nrm)]
+        back = []
+        for p, n in zip(sec, nrm):
+            xo, yo = p[0] + n[0] * T_OUT, p[1] + n[1] * T_OUT
+            if xo <= x_wall - 0.004:
+                back.append(V(side * xo, fairing_y(xo) - 0.003, z_front - dz))
+            else:
+                back.append(V(side * (x_wall - 0.004), yo, z_front - dz))
+        ctr = V(0, -0.05, z_front - dz / 2)
+        i0 = next(i for i, p in enumerate(sec) if p[1] >= foot_y(Z_FAIR) + 0.02)        # the rail covers the foot
+        for i in range(i0, len(front) - 1):
+            b.quad([front[i], front[i + 1], back[i + 1], back[i]], ctr)
 
 def arch_bars(b):
     """the windscreen arch = canopy front bow: one member, ruled between the shell's end edge on its rear face and the
@@ -290,20 +387,104 @@ def arch_bars(b):
         C = [p - np.array([0, T_ARCH, 0]) for p in Bf]
         D = [p - np.array([0, T_ARCH, 0]) for p in A]
         for Ln in (A, Bf, C, D):
-            Ln[0] = Ln[0] + np.array([0, -0.012, 0])
-        b.sweep(A, Bf, C, D)
+            Ln[0] = Ln[0] + np.array([0, -0.030, 0])                # the foot is buried in the corner block
+        b.sweep(A, Bf, C, D, caps=(True, False))
+
+
+SKIN_T = None                             # triangles of the airframe's two fuselage pieces BEFORE the cut (vehicle blocks), set in main()
+
+
+def skin_x(z, y, x_max=0.46):
+    """the airframe's skin on the left side at eye-relative (z, y): the outermost crossing of the horizontal line through that
+    point with the airframe's faces (below x_max), or None. Read off the faces of the untouched model: it is the mould"""
+    if SKIN_T is None:
+        return None
+    T = SKIN_T
+    zz, yy = zr(z), yr(y)
+    s = T[:, :, 2] - zz
+    cross = (s.min(1) < 0) & (s.max(1) > 0)
+    best = None
+    for t, sv in zip(T[cross], s[cross]):
+        pts = []
+        for i in range(3):
+            a, c = t[i], t[(i + 1) % 3]
+            if sv[i] * sv[(i + 1) % 3] < 0:
+                pts.append(a + (c - a) * (sv[i] / (sv[i] - sv[(i + 1) % 3])))
+        if len(pts) == 2:
+            p, q = pts
+            if (p[1] - yy) * (q[1] - yy) <= 0 and abs(p[1] - q[1]) > 1e-9:
+                x = p[0] + (q[0] - p[0]) * (yy - p[1]) / (q[1] - p[1])
+                if 0.25 < x < x_max and (best is None or x > best):
+                    best = x
+    return best
+
+
+def rail_edge(z, fy):
+    """x of the airframe's skin at the TOP of its wall beside the rail: scanning down from the glass foot line, the first height at
+    which the airframe has a skin to the left of the rail (the wall's top edge, so the rail's outer face stands flush on it)"""
+    for k in range(0, 40):
+        sx = skin_x(z, fy - 0.002 * k, x_max=0.46)
+        if sx is not None:
+            return sx
+    return None
+
+
+RAIL_BOT = -0.456                         # the rails' and the foot block's underside (eye-relative y, 4.4 cm above the fuselage's lower box faces: buried in it)
+
+
+def rail_outer_x(z):
+    """the sill rail's outer face (left side) at z: on the airframe's own skin (2 mm inside it), at most fx + 3 cm, and under the
+    rear bow 5 mm outside its outer line"""
+    zz = min(z, Z_ARCH[0])
+    fx, fy = foot_x(zz), foot_y(zz)
+    sx = rail_edge(z, fy)
+    xo = fx + 0.030 if sx is None else min(fx + 0.030, sx - 0.002)
+    xo = max(xo, fx + 0.008)
+    if z < Z_RB[1] + 0.05:
+        xo = max(xo, fx + T_OUT + 0.016)
+    return xo
 
 
 def rail_bars(b):
-    """the sill rails: 6.5 cm wide, top at the glass foot's line, buried 4.5 cm into the fuselage's sill ridge"""
-    zs = np.linspace(Z_RB[0], Z_ARCH[1], 9)
+    """the sill rails: top at the glass foot's line, the outer face on the airframe's own skin and straight down from there, the
+    underside RAIL_BOT below the foot line inside the fuselage, so no slit can open under or beside the rail"""
+    zs = np.linspace(Z_RB[0], Z_ARCH[0] - 0.005, 29)               # ends inside the corner block
     for side in (1, -1):
-        def line(dx, dy):
-            return [V(side * (foot_x(min(z, Z_ARCH[0])) + dx), foot_y(min(z, Z_ARCH[0])) + dy, z) for z in zs]
-        A, B = line(-0.035, 0.0), line(0.030, 0.0)
-        C, D = line(0.045, -0.075), line(-0.028, -0.075)
+        A, B, C, D = [], [], [], []
+        for z in zs:
+            zz = min(z, Z_ARCH[0])
+            fx, fy = foot_x(zz), foot_y(zz)
+            xo = rail_outer_x(z)
+            d_in = 0.047 - 0.012 * min(1.0, max(0.0, (z - (Z_RB[1] + 0.02)) / 0.10))      # the rail's inner face stays 17 mm off the bow's inner line
+            A.append(V(side * (fx - d_in), fy, z)); B.append(V(side * xo, fy, z))
+            C.append(V(side * xo, RAIL_BOT, z)); D.append(V(side * (fx - d_in + 0.007), RAIL_BOT, z))
         b.sweep(A, B, C, D)
 
+def box_bars(b, lo, hi):
+    """a closed box (eye-relative lo / hi corners)"""
+    x0, y0, z0 = lo
+    x1, y1, z1 = hi
+    c = V((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)
+    for q in ([(x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0)], [(x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)],
+              [(x0, y0, z0), (x0, y1, z0), (x0, y1, z1), (x0, y0, z1)], [(x1, y0, z0), (x1, y1, z0), (x1, y1, z1), (x1, y0, z1)],
+              [(x0, y0, z0), (x1, y0, z0), (x1, y0, z1), (x0, y0, z1)], [(x0, y1, z0), (x1, y1, z0), (x1, y1, z1), (x0, y1, z1)]):
+        b.quad([V(*p) for p in q], c)
+
+
+def foot_blocks(b):
+    """the corner fitting where the sill rail, the arch's foot and the quarter pane's sill strip meet: a block closing the notch
+    between the arch leg's slanted underside and the rail, from the rail's underside up into the arch leg. Its outer face runs
+    from the rail's outer face at the rear to the strip's skirt at the front, so neither end has a step"""
+    z0, z1 = Z_ARCH[0] - 0.020, Z_ARCH[1] + 0.030
+    fx, fy = foot_x(Z_ARCH[0]), foot_y(Z_ARCH[0])
+    top = ys(x_out(Z_ARCH[1]), Z_ARCH[1]) - 0.006         # up into the arch leg
+    xo0, xo1 = rail_outer_x(z0), fx + 0.032
+    for side in (1, -1):
+        A = [V(side * (fx - 0.030), top, z0), V(side * (fx - 0.030), top, z1)]
+        B = [V(side * xo0, top, z0), V(side * xo1, top, z1)]
+        C = [V(side * xo0, RAIL_BOT, z0), V(side * xo1, RAIL_BOT, z1)]
+        D = [V(side * (fx - 0.030), RAIL_BOT, z0), V(side * (fx - 0.030), RAIL_BOT, z1)]
+        b.sweep(A, B, C, D)
 
 def windscreen_bars(b):
     zs = np.linspace(Z_WS[0], Z_WS[1], 9)
@@ -313,12 +494,12 @@ def windscreen_bars(b):
         bot_out = [V(side * POST_OUT, yc(z) - 0.030, z) for z in zs]
         bot_in = [V(side * POST_IN, yc(z) - 0.030, z) for z in zs]
         b.sweep(top_in, top_out, bot_out, bot_in)
-    x0 = POST_OUT + 0.020                                 # the base bar on the deck
+    x0 = POST_OUT + 0.045                                 # the base bar on the deck
     zb0, zb1 = Z_BASE
     A = [V(-x0, yc(zb0) + T_OUT, zb0), V(x0, yc(zb0) + T_OUT, zb0)]
     B = [V(-x0, yc(zb1) + T_OUT, zb1), V(x0, yc(zb1) + T_OUT, zb1)]
-    C = [V(-x0, yc(zb1) - 0.055, zb1), V(x0, yc(zb1) - 0.055, zb1)]
-    D = [V(-x0, yc(zb0) - 0.055, zb0), V(x0, yc(zb0) - 0.055, zb0)]
+    C = [V(-x0, yc(zb1) - 0.075, zb1), V(x0, yc(zb1) - 0.075, zb1)]
+    D = [V(-x0, yc(zb0) - 0.075, zb0), V(x0, yc(zb0) - 0.075, zb0)]
     b.sweep(A, B, C, D)
     ctr = V(0, yc(0.5 * (zb0 + zb1)) - 0.02, 0.5 * (zb0 + zb1))
     for i in (0, 1):
@@ -357,7 +538,7 @@ def mirror_bars(b, seg=14):
         sec = section(zc)
         xs = [p[0] for p in sec]
         ys_ = [p[1] for p in sec]
-        base = float(np.interp(xc, xs[::-1], ys_[::-1])) - 0.004
+        base = float(np.interp(xc, xs[::-1], ys_[::-1])) - 0.012
         c = V(side * xc, base, zc)
         rings = []
         for i in range(5):                               # latitude: 0 at the base rim, up to the dome
@@ -367,7 +548,10 @@ def mirror_bars(b, seg=14):
             ring = []
             for k in range(seg):
                 a = 2 * math.pi * k / seg
-                ring.append(c + np.array([rx * math.cos(a), hh, rz * math.sin(a)]))
+                xk, zk = xc + rx * math.cos(a), zc + rz * math.sin(a)
+                sk = section(zk)                             # the rim follows the glass at every point (12 mm into it)
+                yk = float(np.interp(xk, [q[0] for q in sk][::-1], [q[1] for q in sk][::-1])) - 0.012
+                ring.append(V(side * xk, yk + hh, zk))
             rings.append(ring)
         inside = c + np.array([0, h * 0.2, 0])
         for i in range(len(rings) - 1):
@@ -381,7 +565,9 @@ def mirror_bars(b, seg=14):
 def frame_bars():
     b = Bars(UV_FRAME)
     rail_bars(b)
+    foot_blocks(b)
     bow_bars(b, *Z_RB)
+    collar_bars(b, Z_RB[0])
     arch_bars(b)
     windscreen_bars(b)
     mirror_bars(b)
@@ -431,6 +617,9 @@ def main(argv):
         bars_bone = {'name': BARS_BONE, 'parent': 'hull', 'pivot': list(hull['pivot'])}
         at = next(i for i, b in enumerate(bones) if b['name'] == AFTER_BONE) + 1
         bones.insert(at, bars_bone)
+    global FAIR, SKIN_T
+    FAIR = fairing_outline(bones)
+    SKIN_T = skin_triangles(skin_bones(bones))
     cut = cut_box(bones, False)
     bars = frame_bars()
     bars_bone['poly_mesh'] = bars.mesh()
