@@ -24,7 +24,11 @@
     "gtk": "land/nl_apc_boxer/sounds/gtk_engine_start_idle_stop.wav",
     "vab": "land/fr_apc_vab/sounds/vab_start_idle_stop.wav",
     "uaz": "land/mec_jep_uaz/sounds/mec_jeep_start_idle_stop.wav",
-    "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav"
+    "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav",
+    "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav",
+    "m113": "land/idf_apc_m113/sounds/m113_start_idle_stop.wav",
+    "puma": "land/ger_ifv_puma/sounds/puma_power.wav",
+    "ustruck": "land/us_trk_logistics/sounds/start_idle_stop2.wav"
   },
   "tracks": {
     "t90": "land/ru_tnk_t90/sounds/t90_tracks.wav",
@@ -38,6 +42,7 @@
     "m48": "land/us_tnk_m48a1/sounds/m48a1_tracks.wav",
     "rubber": "land/gb_apc_warrior/sounds/tracks_rubber.wav",
     "tunguska": "land/ru_aav_tunguska/sounds/mono/tracks.wav",
+    "m113": "land/idf_apc_m113/sounds/m113_tracks.wav",
     "puma": "land/ger_ifv_puma/sounds/puma_tracks.wav"
   },
   "turret": {
@@ -99,6 +104,11 @@
       "t72",
       "t90"
     ],
+    "t64bv": [
+      "t72",
+      "t72",
+      "t90"
+    ],
     "t80b_obr1976": [
       "m1a2",
       "t72",
@@ -140,6 +150,26 @@
       "abrams"
     ],
     "m1a1_abrams": [
+      "m1a2",
+      "m1a2",
+      "abrams"
+    ],
+    "puma_ifv": [
+      "puma",
+      "puma",
+      "warrior"
+    ],
+    "m113a3": [
+      "m113",
+      "m113",
+      null
+    ],
+    "pgz_95": [
+      "type98",
+      "tunguska",
+      "tunguska"
+    ],
+    "m1a1_tusk": [
       "m1a2",
       "m1a2",
       "abrams"
@@ -225,6 +255,11 @@
       "bmp"
     ],
     "9p149_shturm": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "strela_10m2": [
       "bmp1",
       "bmp1",
       "bmp"
@@ -324,6 +359,11 @@
       null,
       "warrior"
     ],
+    "zbd_05": [
+      "type98",
+      "bmp3",
+      "bmp"
+    ],
     "zbd_09": [
       "gtk",
       null,
@@ -361,6 +401,31 @@
     ],
     "uaz_469_spg9": [
       "uaz",
+      null,
+      "hmmwv"
+    ],
+    "fv721_fox": [
+      "scimitar",
+      null,
+      "warrior"
+    ],
+    "tos_1a": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "m142_himars": [
+      "ustruck",
+      null,
+      "generic"
+    ],
+    "scud_b": [
+      "t72",
+      null,
+      null
+    ],
+    "gaz_tigr": [
+      "tigr",
       null,
       "hmmwv"
     ]
@@ -538,6 +603,24 @@
       ],
       "auto": true
     },
+    "mg4": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/mg4_coax_fire_1p.wav",
+        "weapons:armament/coaxial_mgs/sounds/mg4_coax_fire_3p.wav",
+        "weapons:common/sounds/distantshots/mg3_distant.ogg",
+        "weapons:common/sounds/distantshots/mg42_distant.ogg"
+      ],
+      "auto": true
+    },
+    "type87_25": {
+      "src": [
+        "land/ch_apc_wz551/sound/wz551_cannon_1p.wav",
+        "land/ch_apc_wz551/sound/wz551_cannon_3p.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_02.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_03.wav"
+      ],
+      "auto": true
+    },
     "china_mg": {
       "src": [
         "weapons:armament/coaxial_mgs/sounds/china_coax_1p_fire.wav",
@@ -560,6 +643,15 @@
       "src": [
         "weapons:armament/missiles/sounds/missile_shot_60rpm_1p_fire.wav",
         "weapons:armament/missiles/sounds/missile_shot_60rpm_3p_fire.wav",
+        "weapons:common/sounds/stationary/distantsounds/at4_distant.ogg",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
+      ],
+      "auto": false
+    },
+    "igla": {
+      "src": [
+        "weapons:stationary/igla_djigit/sounds/igla_fire.ogg",
+        "weapons:stationary/igla_djigit/sounds/igla_fire.ogg",
         "weapons:common/sounds/stationary/distantsounds/at4_distant.ogg",
         "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
       ],
@@ -597,6 +689,42 @@
         "air/us_ahe_apache/sounds/hydra_fire1p.wav",
         "air/us_ahe_apache/sounds/hydra_fire_2_3p.wav",
         "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "m61": {
+      "src": [
+        "air/us_jet_f16/sounds/m61_1p.wav",
+        "air/us_jet_f16/sounds/m61_3p.wav",
+        null,
+        null
+      ],
+      "auto": true
+    },
+    "gau8": {
+      "src": [
+        "air/us_jet_a10a/sounds/autocannon_1p_a10.wav",
+        "air/us_jet_a10a/sounds/autocannon_3p_a10.wav",
+        "air/us_jet_a10a/sounds/distant/gau8_dist_01.ogg",
+        "air/us_jet_a10a/sounds/distant/gau8_dist_01.ogg"
+      ],
+      "auto": true
+    },
+    "rarden_30": {
+      "src": [
+        "land/gb_apc_warrior/sounds/warrior_firing_30mm_90rpm_3p.wav",
+        "land/gb_apc_warrior/sounds/warrior_firing_30mm_90rpm_3p.wav",
+        "weapons:common/sounds/distantshots/30mm_cannon.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "m197": {
+      "src": [
+        "air/us_ahe_ah1z/sounds/mono/auto_cannon_2p.wav",
+        "air/us_ahe_ah1z/sounds/mono/auto_cannon_2p.wav",
+        null,
         null
       ],
       "auto": true
@@ -664,6 +792,11 @@
     "m1128.Missile": "tow",
     "lav25.Missile": "tow",
     "marder_1a5.Missile": "tow",
+    "puma_ifv.MainMachineGun": "mg4",
+    "strela_10m2.Missile": "igla",
+    "strela_10m2.PKMB": "pkt",
+    "m113a3.PassengerMachineGun": "m2hb",
+    "pgz_95.Cannon": "type87_25",
     "leopard_2a4.MachineGun": "mg3",
     "leopard_2a4.PassengerMachineGun": "mg3",
     "gepard.Cannon": "rh202_20",
@@ -692,7 +825,9 @@
     "marder_1a1.MainMachineGun": "mg3",
     "marder_1a5.MainMachineGun": "mg3",
     "leo2a6.MachineGun": "mg3",
-    "leo2a6.PassengerMachineGun": "mg3"
+    "leo2a6.PassengerMachineGun": "mg3",
+    "fv721_fox.Cannon": "rarden_30",
+    "fv721_fox.MachineGun": "m240"
   },
   "_air_doc": "Aircraft (Lizardpyle BF2 archive, objects_vehicles_client/vehicles/...). air_engine: start_idle_stop sets by kind (jet/prop/heli). air_layer: loops by role (boost = low-frequency roar and afterburner, distant = far sound, rotor = blades, interior = cockpit ambience, crew only). aircraft: entity type -> kind, engine set, layers and a pitch factor that tells aircraft sharing a set apart. No interior layer: the BF2 cockpit ambience loops carry radio chatter (owner, 2026-09-28).",
   "air_engine": {
@@ -815,6 +950,10 @@
     "tiger": {
       "kind": "heli",
       "src": "air/ger_ahe_tiger/sounds/tiger_start_idle_stop.wav"
+    },
+    "sa342": {
+      "kind": "heli",
+      "src": "air/fr_ahe_sa342/sounds/sa342_start_idle_stop.wav"
     }
   },
   "air_layer": {
@@ -899,6 +1038,13 @@
       "kind": "jet",
       "engine": "f15",
       "pitch": 0.97,
+      "distant": "jet_far",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_22a": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 0.94,
       "distant": "jet_far",
       "boost": "jet_roar"
     },
@@ -1407,6 +1553,12 @@
       "pitch": 1.0,
       "distant": "huey_far"
     },
+    "berts_vehicle_pack:ah_56a": {
+      "kind": "heli",
+      "engine": "ah1",
+      "pitch": 1.0,
+      "distant": "huey_far"
+    },
     "berts_vehicle_pack:ah_1g_cobra": {
       "kind": "heli",
       "engine": "huey",
@@ -1422,6 +1574,13 @@
     "berts_vehicle_pack:ah_6j": {
       "kind": "heli",
       "engine": "littlebird",
+      "pitch": 1.0,
+      "distant": "kiowa_far",
+      "rotor": "littlebird_rotor"
+    },
+    "berts_vehicle_pack:sa341f_gazelle": {
+      "kind": "heli",
+      "engine": "sa342",
       "pitch": 1.0,
       "distant": "kiowa_far",
       "rotor": "littlebird_rotor"
@@ -1464,6 +1623,20 @@
     "berts_vehicle_pack:mi_24d": {
       "kind": "heli",
       "engine": "mi24",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi_24p": {
+      "kind": "heli",
+      "engine": "mi24",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi_8amtsh": {
+      "kind": "heli",
+      "engine": "mi8",
       "pitch": 1.0,
       "distant": "huey_far",
       "rotor": "mi24_rotor"

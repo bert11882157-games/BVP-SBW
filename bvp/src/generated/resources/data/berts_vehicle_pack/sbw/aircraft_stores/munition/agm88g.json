@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Name": "AGM-88G AARGM-ER · anti-radiation (AI)",
+  "Category": "ANTI_RADIATION",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm88g.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.145,
+    0.5684
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.145,
+      0.0,
+      0.5684
+    ],
+    "Right": [
+      -0.145,
+      0.0,
+      0.5684
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5684
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm88g.png",
+  "Capacity": 1,
+  "MassKg": 467.0,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 4000,
+    "ConeDegrees": 35,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 13,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 40,
+    "Damage": 65,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 21.63
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.145,
+    0.0
+  ]
+}

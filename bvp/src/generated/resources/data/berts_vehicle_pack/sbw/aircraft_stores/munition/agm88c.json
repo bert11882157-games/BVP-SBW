@@ -1,0 +1,54 @@
+{
+  "Schema": 1,
+  "Name": "AGM-88C HARM · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm88.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1955,
+    0.5838
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1955,
+      0.0,
+      0.5838
+    ],
+    "Right": [
+      -0.1955,
+      0.0,
+      0.5838
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5838
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm88.png",
+  "Capacity": 1,
+  "MassKg": 362.9,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 2000,
+    "ConeDegrees": 35,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 35,
+    "Damage": 65,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 21.63
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1955,
+    0.0
+  ]
+}

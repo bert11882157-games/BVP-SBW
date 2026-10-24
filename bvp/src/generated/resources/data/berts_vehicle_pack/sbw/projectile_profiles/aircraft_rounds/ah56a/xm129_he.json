@@ -1,0 +1,54 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:aircraft_guns/xm129",
+    "RoundId": "berts_vehicle_pack:xm129_he",
+    "MunitionType": "berts_vehicle_pack:autocannon_shell",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 40,
+    "DiameterMm": 40,
+    "HullDamageClass": "HE",
+    "HullDamage": 22,
+    "ModuleDamage": 14,
+    "AmmoRackDamage": 60,
+    "PenetrationMm": 50.8,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        79,
+        80,
+        81,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500
+      ],
+      "PenetrationMm": [
+        50.8,
+        50.8,
+        50.8,
+        50.8,
+        50.8
+      ]
+    }
+  },
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_he",
+  "MotionSync": "INHERIT",
+  "Luminance": 0,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

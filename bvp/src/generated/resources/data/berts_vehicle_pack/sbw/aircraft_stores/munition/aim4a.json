@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "AIM-4A Falcon · semi-active radar (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim4d.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0815,
+    0.2828
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0815,
+      0.0,
+      0.2828
+    ],
+    "Right": [
+      -0.0815,
+      0.0,
+      0.2828
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.2828
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim4d.png",
+  "Capacity": 1,
+  "MassKg": 54.4,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 700,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.0
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.4,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 32,
+    "Damage": 20,
+    "BlastRadius": 2.0,
+    "TntEquivalentKg": 4.4
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.0815,
+    0.0
+  ]
+}

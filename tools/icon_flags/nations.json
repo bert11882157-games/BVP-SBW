@@ -1,0 +1,849 @@
+{
+  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB, KR, SU, CN, SE, JP (flags.py draws these). \"guess\": true marks an assignment made without marking evidence (Elite Expansion 2 pack-wide pass, 2026-10-23); the owner may reassign.",
+  "f_16c": {
+    "nation": "US",
+    "note": "F-16C Block 50, USAF (War Thunder f_16c_block_50, USA tree); the model carries USAF markings (AZ tail code)"
+  },
+  "a_10": {
+    "nation": "US",
+    "note": "A-10C Thunderbolt II, USAF (War Thunder USA tree); the model carries USAF markings (EL tail code)"
+  },
+  "f_15c": {
+    "nation": "US",
+    "note": "F-15C, USAF (War Thunder USA tree); the model carries USAF markings"
+  },
+  "a_10a": {
+    "nation": "US",
+    "note": "A-10A Thunderbolt II, USAF (War Thunder a_10a_late, USA tree); European One camouflage, USAF markings"
+  },
+  "f_16a": {
+    "nation": "US",
+    "note": "F-16A, USAF; the supplied model wears the USAF Thunderbirds scheme"
+  },
+  "f_4c": {
+    "nation": "US",
+    "note": "F-4C Phantom II, USAF (War Thunder USA tree); the supplied model wears US Navy markings, also US"
+  },
+  "f_4e": {
+    "nation": "KR",
+    "note": "F-4E Phantom II (ROKAF): owner decision 2026-10-23, a Republic of Korea Air Force airframe (US-built export; War Thunder f-4e stats). The model wears ROKAF style markings (round fuselage roundel, grey camouflage, red stars on the nose); South Korean flag as the exported-to nation"
+  },
+  "f_4d": {
+    "nation": "US",
+    "note": "F-4D Phantom II, USAF (no War Thunder unit; nearest the USA-tree F-4C); the supplied model wears USAF South-East Asia camouflage (FG tail code), also US"
+  },
+  "f_4b": {
+    "nation": "US",
+    "note": "F-4B Phantom II, US Navy (no War Thunder unit); the supplied model wears VF-111 Sundowners markings (USS Coral Sea, NAVY, red sunburst tail), real Navy service markings, also US"
+  },
+  "f_15a": {
+    "nation": "US",
+    "note": "F-15A Eagle, USAF"
+  },
+  "f_15ex": {
+    "nation": "US",
+    "note": "F-15EX Eagle II, USAF; the supplied model wears a South-East Asia camouflage scheme"
+  },
+  "f_22a": {
+    "nation": "US",
+    "note": "F-22A Raptor, USAF (no War Thunder unit); the model carries USAF markings (FF tail code)"
+  },
+  "f_15e": {
+    "nation": "US",
+    "note": "F-15E Strike Eagle, USAF (War Thunder USA tree); the model carries USAF markings"
+  },
+  "fa_18c": {
+    "nation": "US",
+    "note": "F/A-18C Hornet, US Marine Corps (VMFA-323 markings on the supplied model)"
+  },
+  "fa_18e": {
+    "nation": "US",
+    "note": "F/A-18E Super Hornet, US Navy (War Thunder USA tree); the model carries US Navy markings"
+  },
+  "ah1w_super_cobra": {
+    "nation": "US",
+    "note": "AH-1W SuperCobra, US Marine Corps (War Thunder USA tree ah_1w); the model wears USMC MARINES markings"
+  },
+  "sa341f_gazelle": {
+    "nation": "FR",
+    "note": "SA 341F Gazelle, French Army ALAT (War Thunder France tree sa_341f); the model wears the Armee de Terre roundel and woodland camouflage"
+  },
+  "ah_56a": {
+    "nation": "US",
+    "note": "Lockheed AH-56A Cheyenne, US Army (War Thunder USA helicopter tree ah_56a); the model wears US ARMY markings"
+  },
+  "fv721_fox": {
+    "nation": "GB",
+    "note": "FV721 Fox (CVR(W)), British Army (War Thunder Great Britain tree uk_fv721_fox); desert tan model"
+  },
+  "f_14c": {
+    "nation": "US",
+    "note": "F-14C Tomcat (never-built Grumman proposal, US Navy; War Thunder has no F-14C, the F-14D is USA tree); the supplied model wears US Navy markings (black scheme)"
+  },
+  "mig_25pd": {
+    "nation": "SU",
+    "note": "MiG-25PD Foxbat-E interceptor, Soviet Air Defence Forces (War Thunder USSR tree mig_25pd); the supplied model wears Soviet red stars, number 16"
+  },
+  "mirage_3e": {
+    "nation": "FR",
+    "note": "Mirage IIIE, French Air Force (War Thunder mirage_3e, France tree); the supplied model wears French roundels and the 13-QL code. FR was already in flags.py"
+  },
+  "mirage_4a": {
+    "nation": "FR",
+    "note": "Mirage IVA strategic bomber, French Air Force (not in War Thunder); the supplied model wears French roundels and the code BB. FR was already in flags.py"
+  },
+  "vautour_iin": {
+    "nation": "FR",
+    "note": "SNCASO SO-4050 Vautour IIN two-seat all-weather fighter, French Air Force (War Thunder France tree so_4050_vautour_2n and 2n_late); the supplied model wears French roundels and the code 6-QE. FR was already in flags.py"
+  },
+  "vulcan_b2": {
+    "nation": "GB",
+    "note": "Avro Vulcan B.2 strategic bomber, Royal Air Force (not in War Thunder); the supplied model wears RAF roundels and the serial XM607 (the Black Buck 1 aircraft). GB was already in flags.py"
+  },
+  "h_6k": {
+    "nation": "CN",
+    "note": "Xi'an H-6K bomber, People's Liberation Army Air Force (not in War Thunder); the supplied model wears the PLAAF red star and the number 20038. CN was already in flags.py"
+  },
+  "su_15tm": {
+    "nation": "SU",
+    "note": "Su-15TM Flagon-F interceptor, Soviet Air Defence Forces (War Thunder USSR tree su_15tm, not yet in the datamine); the supplied model wears Soviet red stars, number 43"
+  },
+  "yak_38m": {
+    "nation": "SU",
+    "note": "Yak-38M Forger-A VTOL strike fighter, Soviet Naval Aviation (War Thunder USSR tree yak-38m); the supplied model wears Soviet red stars, number 27"
+  },
+  "f_102a": {
+    "nation": "US",
+    "note": "F-102A Delta Dagger, USAF Air Defense Command (War Thunder f_102a_late, USA tree); the supplied model wears US AIR FORCE markings, serial 61188"
+  },
+  "fc_31": {
+    "nation": "CN",
+    "note": "FC-31 Gyrfalcon prototype 31001 (2012), Shenyang / AVIC (not in War Thunder); the supplied model wears the marking 31001. CN flag added to flags.py"
+  },
+  "mi_24p": {
+    "nation": "SU",
+    "note": "Mi-24P Hind-F, Soviet Air Force (War Thunder USSR tree mi_24p); the supplied model wears Soviet red stars and the number 29"
+  },
+  "mi_8amtsh": {
+    "nation": "RU",
+    "note": "Mi-8AMTSh Terminator, Russian Aerospace Forces (War Thunder USSR tree mi_8amtsh, rank VI); the supplied model wears the Russian red-star roundel, the number 69 and the legend VVS ROSSII, so the Russian flag"
+  },
+  "yak_141": {
+    "nation": "SU",
+    "note": "Yak-141 Freestyle (Yak-41M) VTOL fighter prototype, Yakovlev OKB for Soviet Naval Aviation (War Thunder USSR tree yak_141); the supplied model wears Soviet red stars on the fins and the call sign 77, so the Soviet flag"
+  },
+  "m1a1_tusk": {
+    "nation": "US",
+    "note": "M1A1 Abrams with the Tank Urban Survival Kit (TUSK), US Army (War Thunder USA tree us_m1a1_hc_abrams for the data); the supplied model wears US flags on the hull and turret"
+  },
+  "puma_ifv": {
+    "nation": "DE",
+    "note": "Schuetzenpanzer Puma, Bundeswehr (War Thunder Germany tree germ_schutzenpanzer_puma); the supplied model wears the Balkenkreuz and the German flag"
+  },
+  "strela_10m2": {
+    "nation": "SU",
+    "note": "9K35 Strela-10M2 (NATO SA-13 Gopher) on the MT-LB, Soviet Union (War Thunder USSR tree ussr_9a35_m2); the supplied model is plain green with no national markings"
+  },
+  "pgz_95": {
+    "nation": "CN",
+    "note": "PGZ-95 (Type 95) self-propelled anti-aircraft gun, People's Liberation Army (not in War Thunder; its PGZ04A is the nearest unit); the supplied model wears the PLA red star"
+  },
+  "t64bv": {
+    "nation": "UA",
+    "note": "T-64BV obr. 1985 in Ukrainian service (the owner resolved the nation question for the supplied T-64BV model as Ukraine: the model carries the 2UA badges; War Thunder ussr_t_64_b_1984 for the data)"
+  },
+  "m113a3": {
+    "nation": "US",
+    "note": "M113A3 (RISE) in US Army service, the nation of origin (War Thunder USA / Italy tree it_m113a1_tow for the armament; the supplied model wears a woodland camouflage and no national marking, the flag is the nation of origin)"
+  },
+  "zbd_05": {
+    "nation": "CN",
+    "note": "ZBD-05 amphibious IFV, PLA Ground Force (the supplied model wears the PLA marine digital camouflage; War Thunder has no ZBD-05, the nearest unit cn_zbd_04a gives the data)"
+  },
+  "tos_1a": {
+    "nation": "RU",
+    "note": "TOS-1A Solntsepyok (24-tube BM-1 on the T-72A chassis), Russian Ground Forces since 2003; the supplied model carries a Russian flag on the hull side. No War Thunder unit"
+  },
+  "m142_himars": {
+    "nation": "US",
+    "note": "M142 HIMARS, US Army / USMC (nation of origin); the supplied model carries a small US flag on the pod. No War Thunder unit"
+  },
+  "scud_b": {
+    "nation": "RU",
+    "note": "9K72 Elbrus (Scud-B) on the MAZ-543 TEL: Soviet design, the flag is Russia as the Soviet successor like the other Soviet-era vehicles (the supplied model carries no marking). No War Thunder unit"
+  },
+  "gaz_tigr": {
+    "nation": "RU",
+    "note": "GAZ-233014 Tigr, Russian Armed Forces (nation of origin); the supplied model wears a digital camouflage on its doors and no national marking. No War Thunder unit confirmed"
+  },
+  "dv15": {
+    "nation": "FR",
+    "note": "DV15 fast interceptor boat, designed and built by CMN (Cherbourg, France): the nation of origin; the supplied model carries a French flag on the bridge side. Export users (Qatar, UAE, Yemen) are not used. No War Thunder unit"
+  },
+  "lcac": {
+    "nation": "US",
+    "note": "LCAC (Landing Craft Air Cushion), US Navy (nation of origin); the supplied model carries LCAC-888 hull markings and no flag. No War Thunder unit"
+  },
+  "a_7d": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "b_47e": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "c_130h": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "ch_46e": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_100c": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_111f": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_14a": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_14d": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_16b": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_84f": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_8h": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f2h_2": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f3h": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f8f_1": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f9f_2": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "p_51d": {
+    "nation": "US",
+    "note": "US-designed and US-operated (USAF / US Navy / USMC); nation of origin"
+  },
+  "f_86k": {
+    "nation": "US",
+    "note": "US-designed (North American / Northrop); nation of origin. The F-86D Sabre Dog is a USAF interceptor; the F-5A is the US-designed export fighter, flagged as nation of origin"
+  },
+  "f_5a": {
+    "nation": "US",
+    "note": "US-designed (North American / Northrop); nation of origin. The F-86D Sabre Dog is a USAF interceptor; the F-5A is the US-designed export fighter, flagged as nation of origin"
+  },
+  "f_104g": {
+    "nation": "US",
+    "note": "Lockheed F-104G Starfighter: US design, nation of origin (the G model was built for NATO export users)",
+    "guess": true
+  },
+  "sabre_mk_6": {
+    "nation": "US",
+    "note": "Sabre Mk.6: the North American F-86 design, nation of origin US (Canadair-built; no Canadian flag drawn, owner can reassign)",
+    "guess": true
+  },
+  "ah_1f": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "ah_1g_cobra": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "ah1g_cobra": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "ah_6j": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "ah6j": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "ah_64d": {
+    "nation": "US",
+    "note": "US Army attack/light helicopter (AH-1F, AH-1G, AH-6J, AH-64D); nation of origin"
+  },
+  "essex": {
+    "nation": "US",
+    "note": "Essex-class carrier (SCB-27C), US Navy"
+  },
+  "lav_ad": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "lav25": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m1128": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m1_abrams_elite": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m1a1_abrams": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m1a2_abrams_sep_v2": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m2_bradley": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m48a3_elite": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m551a1": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m60a1": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "m109a7_paladin": {
+    "nation": "US",
+    "note": "US Army / USMC ground vehicle; nation of origin"
+  },
+  "browning_tripod": {
+    "nation": "US",
+    "note": "US-designed weapon on a tripod (M2 Browning / BGM-71 TOW); nation of origin"
+  },
+  "tow_tripod": {
+    "nation": "US",
+    "note": "US-designed weapon on a tripod (M2 Browning / BGM-71 TOW); nation of origin"
+  },
+  "challenger_2": {
+    "nation": "GB",
+    "note": "Challenger 2, British Army"
+  },
+  "meteor_f_8": {
+    "nation": "GB",
+    "note": "Gloster Meteor F.8 / Supermarine Spitfire (Griffon), Royal Air Force"
+  },
+  "supermarine_spitfire_griffon": {
+    "nation": "GB",
+    "note": "Gloster Meteor F.8 / Supermarine Spitfire (Griffon), Royal Air Force"
+  },
+  "eurofighter_typhoon": {
+    "nation": "GB",
+    "note": "Eurofighter Typhoon: four-nation programme (UK, Germany, Italy, Spain); GB chosen as the RAF Typhoon FGR4 is the primary operator, no marking evidence on the icon",
+    "guess": true
+  },
+  "leclerc_s1": {
+    "nation": "FR",
+    "note": "French Army (AMX Leclerc S1, VBCI)"
+  },
+  "vbci": {
+    "nation": "FR",
+    "note": "French Army (AMX Leclerc S1, VBCI)"
+  },
+  "md_450_ouragan": {
+    "nation": "FR",
+    "note": "Dassault aircraft, French Air Force; nation of origin (the Mirage 5 and Mirage F1 also served many export users)"
+  },
+  "super_mystere": {
+    "nation": "FR",
+    "note": "Dassault aircraft, French Air Force; nation of origin (the Mirage 5 and Mirage F1 also served many export users)"
+  },
+  "mirage_5": {
+    "nation": "FR",
+    "note": "Dassault aircraft, French Air Force; nation of origin (the Mirage 5 and Mirage F1 also served many export users)"
+  },
+  "mirage_f1": {
+    "nation": "FR",
+    "note": "Dassault aircraft, French Air Force; nation of origin (the Mirage 5 and Mirage F1 also served many export users)"
+  },
+  "rafale": {
+    "nation": "FR",
+    "note": "Dassault aircraft, French Air Force; nation of origin (the Mirage 5 and Mirage F1 also served many export users)"
+  },
+  "milan_tripod": {
+    "nation": "FR",
+    "note": "MILAN ATGM, Euromissile (France/Germany); France as the lead nation",
+    "guess": true
+  },
+  "eurocopter_tiger": {
+    "nation": "DE",
+    "note": "EC-665 Tiger UHT (Unterstuetzungshubschrauber Tiger is the Bundeswehr designation), German Army"
+  },
+  "panavia_tornado_ids_marineflieger": {
+    "nation": "DE",
+    "note": "Tornado IDS of the Marineflieger (German Navy), per the name"
+  },
+  "ho_229": {
+    "nation": "DE",
+    "note": "Luftwaffe aircraft of the Second World War (Horten Ho 229 V3, Junkers Ju 87 B-2)"
+  },
+  "ju_87_b2": {
+    "nation": "DE",
+    "note": "Luftwaffe aircraft of the Second World War (Horten Ho 229 V3, Junkers Ju 87 B-2)"
+  },
+  "begleitpanzer": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "gepard": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "leopard_1a1a1": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "leopard_2a4": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "leo2a6": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "leopard_2a7": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "marder_1a1": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "marder_1a2": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "marder_1a5": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "pzh_2000": {
+    "nation": "DE",
+    "note": "Bundeswehr ground vehicle"
+  },
+  "fiat_g_91": {
+    "nation": "IT",
+    "note": "Fiat G.91 R/3, Italian Air Force (also Luftwaffe); Italian design"
+  },
+  "saab_29_tunnan": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "saab_32_lansen": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "saab_35_draken": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "saab_37_viggen": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "saab_j_21a_1": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "saab_jas_39_gripen": {
+    "nation": "SE",
+    "note": "Saab aircraft, Swedish Air Force"
+  },
+  "j_26": {
+    "nation": "SE",
+    "note": "J 26 is the Swedish Air Force designation of the P-51D Mustang (Flygvapnet); the model id is j_26, not a Chinese J-series fighter",
+    "guess": true
+  },
+  "strv_103": {
+    "nation": "SE",
+    "note": "Swedish Army (Strv 103C, CV 9040C)"
+  },
+  "cv9040_no_net": {
+    "nation": "SE",
+    "note": "Swedish Army (Strv 103C, CV 9040C)"
+  },
+  "cheonma_2": {
+    "nation": "KR",
+    "note": "Republic of Korea Army (Cheonma-2, K2A1 Black Panther)"
+  },
+  "k2a1_black_panther": {
+    "nation": "KR",
+    "note": "Republic of Korea Army (Cheonma-2, K2A1 Black Panther)"
+  },
+  "type_90": {
+    "nation": "JP",
+    "note": "Type 90 main battle tank, Japan Ground Self-Defense Force"
+  },
+  "toyota_jihad_bmp1": {
+    "nation": "JP",
+    "note": "Improvised Toyota pickup \"technical\": the flag is the nation of origin of the chassis (Toyota, Japan); the irregular operator has no flag drawn. Owner may prefer another nation or no flag",
+    "guess": true
+  },
+  "toyota_jihad_dshk": {
+    "nation": "JP",
+    "note": "Improvised Toyota pickup \"technical\": the flag is the nation of origin of the chassis (Toyota, Japan); the irregular operator has no flag drawn. Owner may prefer another nation or no flag",
+    "guess": true
+  },
+  "toyota_jihad_s5": {
+    "nation": "JP",
+    "note": "Improvised Toyota pickup \"technical\": the flag is the nation of origin of the chassis (Toyota, Japan); the irregular operator has no flag drawn. Owner may prefer another nation or no flag",
+    "guess": true
+  },
+  "toyota_jihad_spg9": {
+    "nation": "JP",
+    "note": "Improvised Toyota pickup \"technical\": the flag is the nation of origin of the chassis (Toyota, Japan); the irregular operator has no flag drawn. Owner may prefer another nation or no flag",
+    "guess": true
+  },
+  "j_10a": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "j_11a": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "j_15d": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "j_2": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "j_5": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "q_5": {
+    "nation": "CN",
+    "note": "People's Liberation Army Air Force / Navy aircraft (J-10A, J-11A, J-15D, J-2 MiG-15 copy, J-5 MiG-17 copy, Q-5)"
+  },
+  "qn_506model": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "vt_4a1": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "zbd_09": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "zsl_92": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "ztl_09": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "ztz99a": {
+    "nation": "CN",
+    "note": "People's Liberation Army ground vehicle (QN506, VT-4A1 export MBT of Chinese design, ZBD-09, ZSL-92, ZTL-09, ZTZ-99A)"
+  },
+  "m_50a": {
+    "nation": "SU",
+    "note": "Myasishchev M-50A Bounder bomber, Soviet Air Force; the model wears red stars"
+  },
+  "an_12b": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "il_10": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "il_76m": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_9": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_15bis": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_19s": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_21bis": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_23mld": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mig_29": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "su_17": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "su_24": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "su_25": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "su_27": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "su_9": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "tu_22m": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "tu_95ms": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "yak_15p": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "yak_3": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "yak_9u": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mi_24a": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mi_24d": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mi24v": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "mi_26": {
+    "nation": "SU",
+    "note": "Soviet Air Force / Naval Aviation aircraft or helicopter; the Soviet-era type is flagged SU like the other Soviet aircraft"
+  },
+  "kiev": {
+    "nation": "SU",
+    "note": "Kiev-class carrier (Project 1143), Soviet Navy"
+  },
+  "9k22_tunguska": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "tunguska": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "9p148": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "9p149_shturm": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "bmd_1": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "btr_60pb": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "btr152": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "btr_zd": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "pt76b": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "zsu23_4": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "zu23_2": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "spg9_tripod": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "uaz_469_spg9": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "bmp2": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t_62a": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t64a": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t64b_obr1976": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t72a": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t72b": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t80b_obr1976": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t80u_obr1985": {
+    "nation": "SU",
+    "note": "Soviet-era ground vehicle (flagged SU like the Strela-10M2 and MiG-25PD)"
+  },
+  "t55a_2_0": {
+    "nation": "SU",
+    "note": "T-55A 2.0 (modernised T-55A): Soviet design; the modernisation is not tied to one operator",
+    "guess": true
+  },
+  "bmp_1am": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "bmp2m": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "bmp3m_elite": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "bmpt": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "btr_90": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "btr80a": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "gaz_3937_vodnik_aa": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "kord_tripod": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t14_armata": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t72b3": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t72b3_ubh_cope": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t80bvm_obr2022": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t90a": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "t90m": {
+    "nation": "RU",
+    "note": "Russian Ground Forces (modernised or post-1991 design)"
+  },
+  "ka50": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "mi28n": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "su_30": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "su_35": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "su_39": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "su_57": {
+    "nation": "RU",
+    "note": "Russian Aerospace Forces (post-1991 type)"
+  },
+  "b_1b": {
+    "nation": "US",
+    "note": "B-1B Lancer strategic bomber, USAF; nation of origin"
+  }
+}

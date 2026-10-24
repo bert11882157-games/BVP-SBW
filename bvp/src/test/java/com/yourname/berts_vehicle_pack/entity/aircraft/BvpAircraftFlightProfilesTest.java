@@ -47,6 +47,23 @@ public final class BvpAircraftFlightProfilesTest {
                 identity.getAsJsonObject("engineering").addProperty("pitotCasCalibrationFactor", 1);
                 check(decode(identity).equals(binding), id + " omitted calibration retains exact identity");
             }
+            if (!engineering.has("thrustVectoring")) {
+                check(h.getThrustVectoring() == null, id + " fixed nozzle without the option");
+                JsonObject vectored = resource.deepCopy();
+                JsonObject option = new JsonObject();
+                option.addProperty("pitchDeg", 20);
+                option.addProperty("armM", 7.5);
+                option.addProperty("gyrationM", 2.8);
+                vectored.getAsJsonObject("engineering").add("thrustVectoring", option);
+                var tv = decode(vectored).handling().getThrustVectoring();
+                check(tv != null && tv.getPitchDegrees() == 20 && tv.getArmMetres() == 7.5
+                        && tv.getGyrationRadiusMetres() == 2.8, id + " thrust vectoring parsed unscaled");
+                reject(vectored, value -> value.getAsJsonObject("engineering").getAsJsonObject("thrustVectoring").addProperty("pitchDeg", 0));
+                reject(vectored, value -> value.getAsJsonObject("engineering").getAsJsonObject("thrustVectoring").addProperty("pitchDeg", 90));
+                reject(vectored, value -> value.getAsJsonObject("engineering").getAsJsonObject("thrustVectoring").remove("armM"));
+                reject(vectored, value -> value.getAsJsonObject("engineering").getAsJsonObject("thrustVectoring").addProperty("extra", 1));
+                reject(vectored, value -> value.getAsJsonObject("engineering").addProperty("thrustVectoring", 20));
+            }
             near(h.getDryAccelerationMps2(), engineering.get("staticOrEquivalentThrustNewtons").getAsDouble()
                     / binding.reference().getMassKg() * 0.25, 1e-10, id + " acceleration scaled once");
             reject(resource, value -> value.addProperty("lengthScale", 1.0));

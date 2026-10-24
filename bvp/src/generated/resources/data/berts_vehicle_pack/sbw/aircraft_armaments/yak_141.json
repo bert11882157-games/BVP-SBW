@@ -1,0 +1,152 @@
+{
+  "Schema": 1,
+  "Name": "Yak-141 Freestyle",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [
+    "Ub32Outer",
+    "B8Outer",
+    "B13Outer",
+    "S24Outer",
+    "Ub32Inner",
+    "B8Inner",
+    "B13Inner",
+    "S24Inner",
+    "UpkOuter",
+    "UpkInner"
+  ],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Stations 1/5 Â· outer wing pylons",
+      "Left": [
+        2.9,
+        1.65,
+        -2.6
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.9,
+            1.65,
+            -2.6
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.9,
+        1.65,
+        -2.6
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.9,
+            1.65,
+            -2.6
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:r73",
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t",
+        "berts_vehicle_pack:munition/ub32a_24",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:munition/b13l",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:munition/ofab100_x4",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/zb500",
+        "berts_vehicle_pack:gun_pod/upk23_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub32a_24": "Ub32Outer",
+        "berts_vehicle_pack:su25_s8ko_pod": "B8Outer",
+        "berts_vehicle_pack:munition/b13l": "B13Outer",
+        "berts_vehicle_pack:munition/s24b": "S24Outer",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter"
+      }
+    },
+    {
+      "Id": "inner",
+      "Name": "Stations 2/4 Â· inner wing pylons",
+      "Left": [
+        2.05,
+        1.775,
+        -1.9
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.05,
+            1.775,
+            -1.9
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.05,
+        1.775,
+        -1.9
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.05,
+            1.775,
+            -1.9
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:r73",
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t",
+        "berts_vehicle_pack:munition/r27er",
+        "berts_vehicle_pack:munition/r27et",
+        "berts_vehicle_pack:munition/ub32a_24",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:munition/b13l",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:munition/ofab100_x4",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/zb500",
+        "berts_vehicle_pack:gun_pod/upk23_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub32a_24": "Ub32Inner",
+        "berts_vehicle_pack:su25_s8ko_pod": "B8Inner",
+        "berts_vehicle_pack:munition/b13l": "B13Inner",
+        "berts_vehicle_pack:munition/s24b": "S24Inner",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 3000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": []
+}

@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "UB-32A-24 · 32 x S-5KP rockets (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ub32a_24.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.224,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.2,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ub32a_24.png",
+  "Capacity": 32,
+  "Scale": 1,
+  "MassKg": 8.42,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.224,
+    0.0
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "1,700 l drop tank",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_1700l.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2647,
+    0.5099
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2647,
+      0.0,
+      0.5099
+    ],
+    "Right": [
+      -0.2647,
+      0.0,
+      0.5099
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5099
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_1700l.png",
+  "Capacity": 1,
+  "MassKg": 1470.0,
+  "LaunchOffset": [
+    0.0,
+    -0.2647,
+    0.0
+  ]
+}

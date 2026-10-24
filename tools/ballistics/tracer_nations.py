@@ -29,17 +29,17 @@ EAST_VEHICLES = {
     # tanks, IFVs, APCs, AA, launchers, technicals with Soviet weapons
     '9k22_tunguska', '9p148', '9p149_shturm', 'bmd_1', 'bmp2', 'bmp2m', 'bmp3m_elite', 'bmp_1am', 'bmpt', 'btr80a',
     'btr_60pb', 'btr_90', 'btr_zd', 'gaz_3937_vodnik_aa', 'kord_tripod', 'qn_506model', 't14_armata', 't55a_2_0',
-    't64b_obr1976', 't72a', 't72b', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90a', 't90m',
+    't64b_obr1976', 't64bv', 't72a', 't72b', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90a', 't90m',
     't_62a', 'toyota_jihad_bmp1', 'toyota_jihad_dshk', 'toyota_jihad_s5', 'toyota_jihad_spg9', 'vt_4a1',
-    'zbd_09', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'zu23_2', 'uaz_469_spg9', 'ags_30',
+    'pgz_95', 'zbd_05', 'zbd_09', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'zu23_2', 'uaz_469_spg9', 'ags_30',
     # helicopters
-    'ka50', 'mi24v', 'mi28n', 'mi_24a', 'mi_24d',
+    'ka50', 'mi24v', 'mi28n', 'mi_24a', 'mi_24d', 'mi_24p',
     # aircraft
     'an_12b', 'il_10', 'il_76m', 'j_10a', 'j_11a', 'j_15d', 'j_2', 'j_26', 'j_5', 'mig_15bis', 'mig_19s',
     'mig_21bis', 'mig_23mld', 'mig_29', 'mig_9', 'q_5', 'su_17', 'su_24', 'su_25', 'su_27', 'su_30', 'su_35', 'su_39',
     'su_57', 'tu_22m', 'tu_95ms', 'yak_15p', 'yak_3', 'yak_9u',
 }
-EAST_GUN_FAMILIES = {'a127', 'am23', 'gsh23l', 'gsh23m', 'gsh301', 'gsh302', 'n37d', 'nr23', 'nr30', 'ns23', 'ns23_1946',
+EAST_GUN_FAMILIES = {'a127', 'am23', 'gsh23l', 'gsh23m', 'gsh301', 'gsh302', 'gsh302k', 'guv', 'n37d', 'nr23', 'nr30', 'ns23', 'ns23_1946',
                      'shvak', 'ubs', 'yakb'}
 REDS = {'RED', 'LIGHT_RED', 'DARK_RED', 'BRIGHT_RED'}
 GREEN_RGB = [72, 255, 96]

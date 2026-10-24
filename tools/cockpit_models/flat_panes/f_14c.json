@@ -1,0 +1,20 @@
+{
+  "why": "F-14C windscreen (the real F-14's, shared by the A/B/D): a flat bulletproof centre pane between two posts and a flat side pane each side, in one rigid frame (owner's description for this pass); the glass is a plane and the frame is built round it. The one blown canopy over both crew (its two halves either side of the bow between the crews) is curved and is not listed. Boxes: the centre pane |x| <= 0.145, z 5.12..6.03, plane y = 3.165 - 0.4316 (z - 5.12); each side pane |x| 0.19..0.43, same z range, plane y = 3.165 - 0.4316 (z - 5.12) - 1.2 (|x| - 0.19). The HUD combiner (z 4.95..5.02) lies outside the boxes.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "box": [
+        [-0.16, 2.70, 5.10],
+        [0.16, 3.30, 6.08]
+      ]
+    },
+    {
+      "name": "side windscreen",
+      "box": [
+        [0.17, 2.70, 5.10],
+        [0.47, 3.30, 6.08]
+      ],
+      "mirror": true
+    }
+  ]
+}

@@ -1,13 +1,110 @@
 {
   "Schema": 1,
-  "Name": "F-22A",
+  "Name": "F-22A Raptor",
   "BuiltInWeapons": [
     "Vulcan"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "wing_pylon",
+      "Name": "Stations 3/7 · wing pylons (600 gal tank)",
+      "Left": [
+        3.3439,
+        1.3782,
+        -1.5207
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.3439,
+            1.3782,
+            -1.5207
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.3439,
+        1.3782,
+        -1.5207
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.3439,
+            1.3782,
+            -1.5207
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_600gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2268
+    },
+    {
+      "Id": "wing_shoulders",
+      "Name": "Stations 3/7 · pylon beam AAM rails",
+      "Left": [
+        3.7273,
+        1.5906,
+        -1.3691
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.7273,
+            1.5906,
+            -1.3691
+          ],
+          "Face": "left"
+        },
+        {
+          "Point": [
+            2.9605,
+            1.5906,
+            -1.3691
+          ],
+          "Face": "right"
+        }
+      ],
+      "Right": [
+        -3.7273,
+        1.5906,
+        -1.3691
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.7273,
+            1.5906,
+            -1.3691
+          ],
+          "Face": "right"
+        },
+        {
+          "Point": [
+            -2.9605,
+            1.5906,
+            -1.3691
+          ],
+          "Face": "left"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim120c5",
+        "berts_vehicle_pack:munition/aim120d",
+        "berts_vehicle_pack:munition/aim9x"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 350
+    }
+  ],
   "StoreGroups": {},
-  "MaxPayloadKg": 1381,
+  "MaxPayloadKg": 6000,
   "Radar": {
     "Enabled": true,
     "Range": 2000
@@ -16,20 +113,91 @@
   "MaxWeaponsPerPylon": 12,
   "Singles": [
     {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Id": "bay_main",
+      "Name": "Main bay · 6 AIM-120",
       "Position": [
-        0,
-        0.5,
-        0.814
+        0.0,
+        1.0393,
+        -3.1947
       ],
       "Internal": true,
-      "MaxPylonMassKg": 1381,
       "AllowedStores": [
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+        "berts_vehicle_pack:munition/aim120c5",
+        "berts_vehicle_pack:munition/aim120d"
       ],
+      "MaxPylonMassKg": 1000,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_bombs",
+        "bay_aam_pair"
+      ]
+    },
+    {
+      "Id": "bay_bombs",
+      "Name": "Main bay · 2 GBU-32 JDAM or 8 GBU-39 SDB",
+      "Position": [
+        0.0,
+        1.0393,
+        -3.1947
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/gbu32",
+        "berts_vehicle_pack:munition/gbu39_x4"
+      ],
+      "MaxPylonMassKg": 1000,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_main"
+      ]
+    },
+    {
+      "Id": "bay_aam_pair",
+      "Name": "Main bay · 2 AIM-120 with the bombs",
+      "Position": [
+        0.0,
+        1.0393,
+        -3.1947
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim120c5",
+        "berts_vehicle_pack:munition/aim120d"
+      ],
+      "MaxPylonMassKg": 330,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_main"
+      ]
+    },
+    {
+      "Id": "side_bay_left",
+      "Name": "Left side bay · AIM-9X",
+      "Position": [
+        1.7171,
+        1.5364,
+        1.55
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9x"
+      ],
+      "MaxPylonMassKg": 90,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "side_bay_right",
+      "Name": "Right side bay · AIM-9X",
+      "Position": [
+        -1.7171,
+        1.5364,
+        1.55
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9x"
+      ],
+      "MaxPylonMassKg": 90,
       "QuantitySelectable": true
     }
   ]

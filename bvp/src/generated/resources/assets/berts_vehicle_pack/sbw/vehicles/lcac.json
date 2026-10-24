@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:lcac",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/lcac",
+    "Model": "berts_vehicle_pack:geo/native_fallback/lcac.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/lcac.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/lcac.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

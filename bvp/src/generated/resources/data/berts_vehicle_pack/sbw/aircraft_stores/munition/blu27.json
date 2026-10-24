@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "BLU-27/B · 750 lb fire bomb (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu27.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.259,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.235,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.235,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu27.png",
+  "Capacity": 1,
+  "MassKg": 401.4,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 9,
+    "TntEquivalentKg": 70,
+    "BlastDamage": 300
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu27",
+  "LaunchOffset": [
+    0.0,
+    -0.259,
+    0.0
+  ]
+}

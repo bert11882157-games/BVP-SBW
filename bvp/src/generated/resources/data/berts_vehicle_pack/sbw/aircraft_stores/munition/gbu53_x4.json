@@ -1,0 +1,103 @@
+{
+  "Schema": 1,
+  "Name": "GBU-53/B StormBreaker · BRU-61 quad rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu53.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.113,
+    0.045
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.089,
+      0.0,
+      0.045
+    ],
+    "Right": [
+      -0.089,
+      0.0,
+      0.045
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.045
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu53.png",
+  "Capacity": 1,
+  "MassKg": 92.5,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 3.5,
+    "TntEquivalentKg": 12.43,
+    "BlastDamage": 145,
+    "LiftToDrag": 7,
+    "BestGlideSpeed": 5,
+    "MaxG": 2.5
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu53",
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_bru61_x4.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/f16c_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.075,
+          -0.125,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.075,
+          -0.125,
+          0.0
+        ],
+        "Face": "right"
+      },
+      {
+        "Point": [
+          -0.075,
+          -0.445,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.075,
+          -0.445,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.3,
+    0.3,
+    0
+  ],
+  "RackMassKg": 147.1,
+  "LaunchOffset": [
+    0.0,
+    -0.113,
+    0.0
+  ]
+}

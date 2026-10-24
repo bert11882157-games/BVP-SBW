@@ -1,0 +1,52 @@
+{
+  "Schema": 1,
+  "Name": "LS-6-500 · 500 kg GPS/INS glide bomb (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ls6_500.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.209,
+    -0.15
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.185,
+      0.0,
+      -0.15
+    ],
+    "Right": [
+      -0.185,
+      0.0,
+      -0.15
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.15
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ls6_500.png",
+  "Capacity": 1,
+  "MassKg": 520.0,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 272.43,
+    "BlastDamage": 650,
+    "LiftToDrag": 8,
+    "BestGlideSpeed": 6,
+    "MaxG": 3
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/ls6_500",
+  "LaunchOffset": [
+    0.0,
+    -0.209,
+    0.0
+  ]
+}

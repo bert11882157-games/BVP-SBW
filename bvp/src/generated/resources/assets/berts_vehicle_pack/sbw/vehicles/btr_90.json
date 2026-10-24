@@ -6,7 +6,10 @@
     "Texture": "berts_vehicle_pack:textures/entity/btr_90.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/btr_90.png"
   },
-  "MouseSpeed": [0.2, 0.2],
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
   "FittedGroundRig": {
     "Schema": 1,
     "Frame": "RUNTIME_MODEL_PIXELS",
@@ -92,19 +95,11 @@
     "Parent": "HULL",
     "Origins": [
       {
-        "Id": "fitted_exhaust_face_000",
+        "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -1.51984,
-          1.47923,
-          -4.5169
-        ]
-      },
-      {
-        "Id": "fitted_exhaust_face_001",
-        "Position": [
-          1.51984,
-          1.47923,
-          -4.5169
+          0.0,
+          2.26187,
+          3.6625
         ]
       }
     ]

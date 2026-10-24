@@ -1,0 +1,63 @@
+{
+  "id": "strela_10m2",
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [
+    {
+      "name": "launcherreload_tube",
+      "center": [
+        -0.0201,
+        3.59306,
+        1.15457
+      ],
+      "half_size": [
+        1.25492,
+        0.38134,
+        1.35444
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_arm",
+      "center": [
+        -0.08202,
+        2.83699,
+        1.25977
+      ],
+      "half_size": [
+        1.06491,
+        0.93135,
+        0.97176
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "launcherreload"
+    }
+  ],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [],
+  "authoring_state": "PENDING_AUTHORING",
+  "launcher_weapon": "Missile"
+}

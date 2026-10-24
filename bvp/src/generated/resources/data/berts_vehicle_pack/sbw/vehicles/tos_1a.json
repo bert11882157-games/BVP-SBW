@@ -1,0 +1,1195 @@
+{
+  "ID": "berts_vehicle_pack:tos_1a",
+  "MaxHealth": 232,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "HasCCIP": true,
+  "HasFCS": true,
+  "EngineSoundMode": "CUSTOM",
+  "TrackSoundMode": "NATIVE",
+  "CustomSoundProfileId": "berts_vehicle_pack:tap_engine_t72engine__t72idle",
+  "OBB": [
+    {
+      "Size": [
+        1.925,
+        0.7425,
+        4.0425
+      ],
+      "Position": [
+        0.0,
+        1.15375,
+        0.0275
+      ]
+    },
+    {
+      "Size": [
+        1.155,
+        0.55,
+        1.0725
+      ],
+      "Position": [
+        0.0,
+        1.07125,
+        -2.7225
+      ],
+      "Part": "MainEngine"
+    },
+    {
+      "Size": [
+        1.65,
+        0.3025,
+        1.98
+      ],
+      "Position": [
+        0.0,
+        0.3025,
+        -0.33
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Part": "Turret"
+    },
+    {
+      "Size": [
+        1.3475,
+        0.7975,
+        1.925
+      ],
+      "Position": [
+        0.0,
+        0.5775,
+        0.385
+      ],
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Part": "Turret"
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        -0.44,
+        -1.3,
+        0.44
+      ],
+      "BodyAttachment": "Turret",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.45,
+          -5.315
+        ]
+      },
+      "Weapons": [
+        "Rocket"
+      ],
+      "MinPitch": 0.0,
+      "MaxPitch": 60.0,
+      "Sensitivity": [
+        0.45,
+        0.52,
+        0.8
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "Barrel",
+        "Direction": "Barrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "rocketMuzzle_1",
+        "ZoomDirectionAttachment": "rocketMuzzle_1",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.0,
+        0.48625,
+        2.75
+      ],
+      "BodyAttachment": "Vehicle",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.45,
+          -5.315
+        ]
+      },
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        0.44,
+        -1.3,
+        0.44
+      ],
+      "BodyAttachment": "Turret",
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.45,
+          -5.315
+        ]
+      },
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "commander_camera",
+        "ZoomEyeAttachment": "commander_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    }
+  ],
+  "Weapons": {
+    "Rocket": {
+      "Name": "weapon.berts_vehicle_pack.tos_1a_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 70.0
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 24,
+      "NormalReloadTime": 1200,
+      "EmptyReloadTime": 1200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:tos_1a/rocket/default"
+      },
+      "Spread": 0.6,
+      "RPM": 120,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 10,
+      "TntEquivalentKg": 70.0,
+      "Gravity": 0.06,
+      "Velocity": 6.0,
+      "ProjectileLife": 160,
+      "ShellType": "HE",
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:tap_bm21fire",
+        "Fire3P": "berts_vehicle_pack:tap_bm21fire",
+        "Fire3PFar": "berts_vehicle_pack:tap_bm21fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_bm21fire",
+        "Fire1PGain": 0.8,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Volume": 1.4,
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile"
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:tos_1a/rocket/default",
+        "ProjectileLife": 160
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -0.16844,
+            3.48208,
+            2.3265
+          ],
+          [
+            0.16844,
+            3.48208,
+            2.3265
+          ],
+          [
+            -0.50531,
+            3.48208,
+            2.3265
+          ],
+          [
+            0.50531,
+            3.48208,
+            2.3265
+          ],
+          [
+            -0.84219,
+            3.48208,
+            2.3265
+          ],
+          [
+            0.84219,
+            3.48208,
+            2.3265
+          ],
+          [
+            -1.17906,
+            3.48208,
+            2.3265
+          ],
+          [
+            1.17906,
+            3.48208,
+            2.3265
+          ],
+          [
+            -0.16844,
+            3.13375,
+            2.3265
+          ],
+          [
+            0.16844,
+            3.13375,
+            2.3265
+          ],
+          [
+            -0.50531,
+            3.13375,
+            2.3265
+          ],
+          [
+            0.50531,
+            3.13375,
+            2.3265
+          ],
+          [
+            -0.84219,
+            3.13375,
+            2.3265
+          ],
+          [
+            0.84219,
+            3.13375,
+            2.3265
+          ],
+          [
+            -1.17906,
+            3.13375,
+            2.3265
+          ],
+          [
+            1.17906,
+            3.13375,
+            2.3265
+          ],
+          [
+            -0.16844,
+            2.78542,
+            2.3265
+          ],
+          [
+            0.16844,
+            2.78542,
+            2.3265
+          ],
+          [
+            -0.50531,
+            2.78542,
+            2.3265
+          ],
+          [
+            0.50531,
+            2.78542,
+            2.3265
+          ],
+          [
+            -0.84219,
+            2.78542,
+            2.3265
+          ],
+          [
+            0.84219,
+            2.78542,
+            2.3265
+          ],
+          [
+            -1.17906,
+            2.78542,
+            2.3265
+          ],
+          [
+            1.17906,
+            2.78542,
+            2.3265
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.16844,
+          3.48208,
+          2.3265
+        ],
+        "MuzzleAttachments": [
+          "rocketMuzzle_1",
+          "rocketMuzzle_2",
+          "rocketMuzzle_3",
+          "rocketMuzzle_4",
+          "rocketMuzzle_5",
+          "rocketMuzzle_6",
+          "rocketMuzzle_7",
+          "rocketMuzzle_8",
+          "rocketMuzzle_9",
+          "rocketMuzzle_10",
+          "rocketMuzzle_11",
+          "rocketMuzzle_12",
+          "rocketMuzzle_13",
+          "rocketMuzzle_14",
+          "rocketMuzzle_15",
+          "rocketMuzzle_16",
+          "rocketMuzzle_17",
+          "rocketMuzzle_18",
+          "rocketMuzzle_19",
+          "rocketMuzzle_20",
+          "rocketMuzzle_21",
+          "rocketMuzzle_22",
+          "rocketMuzzle_23",
+          "rocketMuzzle_24"
+        ],
+        "MuzzleDirectionAttachments": [
+          "rocketMuzzle_1",
+          "rocketMuzzle_2",
+          "rocketMuzzle_3",
+          "rocketMuzzle_4",
+          "rocketMuzzle_5",
+          "rocketMuzzle_6",
+          "rocketMuzzle_7",
+          "rocketMuzzle_8",
+          "rocketMuzzle_9",
+          "rocketMuzzle_10",
+          "rocketMuzzle_11",
+          "rocketMuzzle_12",
+          "rocketMuzzle_13",
+          "rocketMuzzle_14",
+          "rocketMuzzle_15",
+          "rocketMuzzle_16",
+          "rocketMuzzle_17",
+          "rocketMuzzle_18",
+          "rocketMuzzle_19",
+          "rocketMuzzle_20",
+          "rocketMuzzle_21",
+          "rocketMuzzle_22",
+          "rocketMuzzle_23",
+          "rocketMuzzle_24"
+        ],
+        "EffectAttachments": [
+          "rocketMuzzle_1",
+          "rocketMuzzle_2",
+          "rocketMuzzle_3",
+          "rocketMuzzle_4",
+          "rocketMuzzle_5",
+          "rocketMuzzle_6",
+          "rocketMuzzle_7",
+          "rocketMuzzle_8",
+          "rocketMuzzle_9",
+          "rocketMuzzle_10",
+          "rocketMuzzle_11",
+          "rocketMuzzle_12",
+          "rocketMuzzle_13",
+          "rocketMuzzle_14",
+          "rocketMuzzle_15",
+          "rocketMuzzle_16",
+          "rocketMuzzle_17",
+          "rocketMuzzle_18",
+          "rocketMuzzle_19",
+          "rocketMuzzle_20",
+          "rocketMuzzle_21",
+          "rocketMuzzle_22",
+          "rocketMuzzle_23",
+          "rocketMuzzle_24"
+        ],
+        "EffectDirectionAttachments": [
+          "rocketMuzzle_1",
+          "rocketMuzzle_2",
+          "rocketMuzzle_3",
+          "rocketMuzzle_4",
+          "rocketMuzzle_5",
+          "rocketMuzzle_6",
+          "rocketMuzzle_7",
+          "rocketMuzzle_8",
+          "rocketMuzzle_9",
+          "rocketMuzzle_10",
+          "rocketMuzzle_11",
+          "rocketMuzzle_12",
+          "rocketMuzzle_13",
+          "rocketMuzzle_14",
+          "rocketMuzzle_15",
+          "rocketMuzzle_16",
+          "rocketMuzzle_17",
+          "rocketMuzzle_18",
+          "rocketMuzzle_19",
+          "rocketMuzzle_20",
+          "rocketMuzzle_21",
+          "rocketMuzzle_22",
+          "rocketMuzzle_23",
+          "rocketMuzzle_24"
+        ],
+        "BoundUpWithAmmoAmount": true
+      },
+      "ShootShake": [
+        8,
+        10,
+        60
+      ],
+      "ApDurability": 40
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "InertiaRotateRate": 1.2,
+  "ParkingBrakeWhenUnoccupied": true,
+  "EngineType": "Track",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.13636,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.72727,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.72,
+    "MaxBackwardSpeedRate": 0.048,
+    "Increment": 0.007123809523809524,
+    "Decrement": 0.009894179894179895,
+    "SteeringSpeed": 0.075,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0.0,
+    1.89625,
+    -0.0
+  ],
+  "BarrelPos": [
+    0.0,
+    0.495,
+    -0.0
+  ],
+  "TurretTurnSpeed": [
+    4.3478,
+    8.6957
+  ],
+  "TurretPitchRange": [
+    0.0,
+    60.0
+  ],
+  "HasDecoy": false,
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 3.02062,
+  "Mass": 45.3,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.3",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -1.00721,
+    1.74266,
+    5.80888
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/tos_1a.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleContainerType": "Medium",
+  "Type": "Tank",
+  "CollisionLevel": {
+    "Level": 4,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0.1,
+        0.05,
+        false
+      ],
+      [
+        1,
+        0.3,
+        false
+      ]
+    ]
+  },
+  "EngineSound": "berts_vehicle_pack:tank_engine_silent",
+  "HudType": "@Land",
+  "TerrainCompat": [
+    [
+      1.485,
+      0.0,
+      2.3925
+    ],
+    [
+      1.485,
+      0.0,
+      1.4575
+    ],
+    [
+      1.485,
+      0.0,
+      0.5225
+    ],
+    [
+      1.485,
+      0.0,
+      -0.4125
+    ],
+    [
+      1.485,
+      0.0,
+      -1.3475
+    ],
+    [
+      1.485,
+      0.0,
+      -2.2825
+    ],
+    [
+      -1.485,
+      0.0,
+      2.3925
+    ],
+    [
+      -1.485,
+      0.0,
+      1.4575
+    ],
+    [
+      -1.485,
+      0.0,
+      0.5225
+    ],
+    [
+      -1.485,
+      0.0,
+      -0.4125
+    ],
+    [
+      -1.485,
+      0.0,
+      -1.3475
+    ],
+    [
+      -1.485,
+      0.0,
+      -2.2825
+    ]
+  ],
+  "Attachments": {
+    "gunnerCamera": {
+      "Parent": "Barrel",
+      "Position": [
+        0.88,
+        1.4575,
+        2.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "commander_camera": {
+      "Parent": "Turret",
+      "Position": [
+        0.77,
+        0.22,
+        1.815
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.89625,
+        -0.0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0.0,
+        0.495,
+        -0.0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_1": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.16844,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_2": {
+      "Parent": "Barrel",
+      "Position": [
+        0.16844,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_3": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.50531,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_4": {
+      "Parent": "Barrel",
+      "Position": [
+        0.50531,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_5": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.84219,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_6": {
+      "Parent": "Barrel",
+      "Position": [
+        0.84219,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_7": {
+      "Parent": "Barrel",
+      "Position": [
+        -1.17906,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_8": {
+      "Parent": "Barrel",
+      "Position": [
+        1.17906,
+        1.09083,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_9": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.16844,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_10": {
+      "Parent": "Barrel",
+      "Position": [
+        0.16844,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_11": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.50531,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_12": {
+      "Parent": "Barrel",
+      "Position": [
+        0.50531,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_13": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.84219,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_14": {
+      "Parent": "Barrel",
+      "Position": [
+        0.84219,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_15": {
+      "Parent": "Barrel",
+      "Position": [
+        -1.17906,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_16": {
+      "Parent": "Barrel",
+      "Position": [
+        1.17906,
+        0.7425,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_17": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.16844,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_18": {
+      "Parent": "Barrel",
+      "Position": [
+        0.16844,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_19": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.50531,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_20": {
+      "Parent": "Barrel",
+      "Position": [
+        0.50531,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_21": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.84219,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_22": {
+      "Parent": "Barrel",
+      "Position": [
+        0.84219,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_23": {
+      "Parent": "Barrel",
+      "Position": [
+        -1.17906,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "rocketMuzzle_24": {
+      "Parent": "Barrel",
+      "Position": [
+        1.17906,
+        0.39417,
+        2.3265
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        0.88,
+        3.84875,
+        2.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "DeathChargeKg": 18.1,
+  "DamageClass": "MBT_CHASSIS",
+  "TurretControllerIndex": 0
+}

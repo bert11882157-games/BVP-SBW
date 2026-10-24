@@ -1,0 +1,66 @@
+{
+  "Schema": 1,
+  "Name": "SA 341F Gazelle",
+  "BuiltInWeapons": [
+    "GiatM621"
+  ],
+  "SuspendedWeapons": [
+    "Aero6aLeft"
+  ],
+  "Pairs": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 400,
+  "MaxPylonMassKg": 200,
+  "MaxWeaponsPerPylon": 2,
+  "Singles": [
+    {
+      "Id": "left",
+      "Name": "Left pylon (WT slots 1 / 2)",
+      "Position": [
+        1.4472,
+        1.0079,
+        1.7908
+      ],
+      "Stations": [
+        {
+          "Point": [
+            1.4472,
+            1.0079,
+            1.7908
+          ],
+          "Face": "right",
+          "Stores": [
+            "berts_vehicle_pack:gazelle/hot_x2",
+            "berts_vehicle_pack:gazelle/hot2_x2",
+            "berts_vehicle_pack:ah1w/hydra7"
+          ]
+        },
+        {
+          "Point": [
+            1.2922,
+            0.8528,
+            1.7908
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:gazelle/hot_x2",
+        "berts_vehicle_pack:gazelle/hot2_x2",
+        "berts_vehicle_pack:gazelle/atam_x2",
+        "berts_vehicle_pack:ah1w/hydra7"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 200,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:ah1w/hydra7": "Aero6aLeft"
+      }
+    }
+  ],
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
+}

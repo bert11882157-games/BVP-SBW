@@ -1,0 +1,401 @@
+{
+  "id": "m113a3",
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [
+    {
+      "name": "glacis",
+      "center": [
+        -0.0,
+        1.47265,
+        -2.2253
+      ],
+      "half_size": [
+        0.93415,
+        0.03125,
+        0.60457
+      ],
+      "rotation": [
+        -42.01,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 38
+    },
+    {
+      "name": "front_lower",
+      "center": [
+        -0.0,
+        0.96095,
+        -2.52578
+      ],
+      "half_size": [
+        0.96985,
+        0.1071,
+        0.14875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 38
+    },
+    {
+      "name": "front_block_left",
+      "center": [
+        -1.40718,
+        1.5619,
+        -2.10928
+      ],
+      "half_size": [
+        0.03868,
+        0.49385,
+        0.56525
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 44
+    },
+    {
+      "name": "front_block_right",
+      "center": [
+        1.40718,
+        1.5619,
+        -2.10928
+      ],
+      "half_size": [
+        0.03868,
+        0.49385,
+        0.56525
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 44
+    },
+    {
+      "name": "side_left",
+      "center": [
+        -1.39825,
+        1.5619,
+        0.3927
+      ],
+      "half_size": [
+        0.0476,
+        0.49385,
+        1.93673
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 44
+    },
+    {
+      "name": "side_right",
+      "center": [
+        1.39825,
+        1.5619,
+        0.3927
+      ],
+      "half_size": [
+        0.0476,
+        0.49385,
+        1.93673
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 44
+    },
+    {
+      "name": "rear_ramp",
+      "center": [
+        -0.0,
+        1.27927,
+        2.41867
+      ],
+      "half_size": [
+        0.92225,
+        0.71102,
+        0.22015
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 38
+    },
+    {
+      "name": "rear_post_left",
+      "center": [
+        -1.12752,
+        1.44885,
+        2.4514
+      ],
+      "half_size": [
+        0.22313,
+        0.6069,
+        0.13982
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 38
+    },
+    {
+      "name": "rear_post_right",
+      "center": [
+        1.12752,
+        1.44885,
+        2.4514
+      ],
+      "half_size": [
+        0.22313,
+        0.6069,
+        0.13982
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 38
+    },
+    {
+      "name": "roof_front",
+      "center": [
+        -0.00298,
+        2.00815,
+        -0.9639
+      ],
+      "half_size": [
+        1.35363,
+        0.0476,
+        0.58013
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 28
+    },
+    {
+      "name": "roof_rear",
+      "center": [
+        -0.00298,
+        2.00815,
+        1.4756
+      ],
+      "half_size": [
+        1.35363,
+        0.0476,
+        1.11562
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 28
+    },
+    {
+      "name": "belly",
+      "center": [
+        -0.00298,
+        0.6575,
+        -0.0952
+      ],
+      "half_size": [
+        0.96687,
+        0.19635,
+        2.49008
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 28
+    },
+    {
+      "name": "sponson_floor_left",
+      "center": [
+        -1.16322,
+        1.23168,
+        -0.02678
+      ],
+      "half_size": [
+        0.19338,
+        0.03125,
+        2.4395
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 28
+    },
+    {
+      "name": "sponson_floor_right",
+      "center": [
+        1.15727,
+        1.23168,
+        -0.02678
+      ],
+      "half_size": [
+        0.19338,
+        0.03125,
+        2.4395
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 28
+    },
+    {
+      "name": "spall_liner_left",
+      "center": [
+        -1.28817,
+        1.59165,
+        0.3332
+      ],
+      "half_size": [
+        0.03125,
+        0.3451,
+        1.87723
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "spall_liner_right",
+      "center": [
+        1.28817,
+        1.59165,
+        0.3332
+      ],
+      "half_size": [
+        0.03125,
+        0.3451,
+        1.87723
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "spall_liner_rear",
+      "center": [
+        -0.0,
+        1.3953,
+        2.11225
+      ],
+      "half_size": [
+        1.2495,
+        0.54145,
+        0.03125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "spall_liner_roof",
+      "center": [
+        -0.0,
+        1.90997,
+        0.85382
+      ],
+      "half_size": [
+        1.2495,
+        0.03125,
+        1.2376
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_core_00",
+      "center": [
+        0.60987,
+        1.57975,
+        -2.01408
+      ],
+      "half_size": [
+        0.69912,
+        0.357,
+        0.476
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

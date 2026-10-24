@@ -1,0 +1,42 @@
+{
+  "Schema": 1,
+  "Name": "M279 · 2 × AGM-114B Hellfire (AI)",
+  "Category": "LASER_GUIDED",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ah1w_m279_x2.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    -0.2933,
+    0.0861,
+    -0.2385
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1704,
+      -0.0613,
+      -0.2385
+    ],
+    "Right": [
+      -0.4161,
+      -0.0613,
+      -0.2385
+    ]
+  },
+  "MountAxis": [
+    -0.2933,
+    -0.0613,
+    -0.2385
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ah1w_m279_x2.png",
+  "Capacity": 2,
+  "Scale": 1,
+  "MassKg": 64.15,
+  "AmmoItem": "superbwarfare:small_atgm",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm114b_ah1w",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm114b_ah1w",
+  "LaunchOffset": [
+    0.0,
+    -0.1474,
+    0.0
+  ]
+}

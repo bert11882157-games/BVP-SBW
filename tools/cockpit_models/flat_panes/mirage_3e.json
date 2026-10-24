@@ -1,0 +1,9 @@
+{
+  "why": "Mirage III / IIIE: a fixed windscreen frame whose front pane is flat, thick and armoured (bullet-resistant), steeply raked (about 33 degrees here) and narrow, between two posts; behind it ONE blown (curved) canopy hinged at the rear, whose front bow is the windscreen's arch. Reference used: the owner's note that the armoured front pane is flat, plus the airframe model's own frame lines (two posts about 17 cm apart falling from the top bow to the nose deck, one open tub behind). Web searches for a drawing or photo description of the Mirage III windscreen (kit reviews, flight-sim pages) found no text on the pane shapes, so the quarter panes beside the front pane are built as flat planes but are NOT listed (no reference shows them flat or curved), and the curved canopy is not listed. UNVERIFIED against War Thunder / DCS views (not reachable here). The pane is the centre strip between the posts (|x| < 0.085, one plane y = E_y + 0.105 - 0.64 (z - E_z - 0.63) from the front bow to the base bar); the box holds only the triangles whose centroid lies on it.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "box": [[-0.095, 1.971, 4.355], [0.095, 2.426, 5.065]]
+    }
+  ]
+}

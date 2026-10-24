@@ -1,0 +1,592 @@
+{
+  "id": "mirage_3e",
+  "name": "Mirage IIIE",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "mirage_5",
+  "source": "Dassault Mirage IIIE.mtb",
+  "note": "New vehicle (Elite Expansion 2): Dassault Mirage IIIE.mtb (French Air Force camouflage, 13-QL, two wing tanks, centreline tank and two missiles baked in) on the mirage_5 airframe data (single Atar, delta wing, elevons, one rudder). See work/elite_expansion_2/mirage3e/NOTES.md. Scale 0.7059 px/unit: length 15.4 m and span 8.0 m (real 15.03 / 8.22 m, so no uniform scale hits both; each is within 2.5 %). Baked stores cut out (3 x 1,700 l tank, 2 x missile; pylons stay). The model has no canopy (windscreen frame only), nothing to close.",
+  "yaw180": true,
+  "scale": 0.7059,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "parts": [
+        3
+      ],
+      "yMax": 13.0
+    },
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "absXMin": 31.0,
+      "yMax": 18.0
+    }
+  ],
+  "fuselageCuts": [
+    -62.2,
+    0.0,
+    61.5
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "2": "fuselage",
+    "3": "fuselage",
+    "4": [
+      {
+        "bone": "side:wreck_wing_left__elevon_left,wreck_wing_right__elevon_right",
+        "if": {
+          "frame": "source",
+          "zMin": 100,
+          "absXMax": 40
+        }
+      },
+      {
+        "bone": "side:wreck_wing_left__hull,wreck_wing_right__hull",
+        "if": {}
+      }
+    ],
+    "5": [
+      {
+        "bone": "side:wreck_wing_left__elevon_left,wreck_wing_right__elevon_right",
+        "if": {
+          "frame": "source",
+          "zMin": 100,
+          "absXMax": 40
+        }
+      },
+      {
+        "bone": "side:wreck_wing_left__hull,wreck_wing_right__hull",
+        "if": {}
+      }
+    ],
+    "7": [
+      {
+        "bone": "wreck_fuselage_3__rudder",
+        "if": {
+          "frame": "source",
+          "yMin": 40
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__control_stick_pitch",
+        "if": {}
+      }
+    ],
+    "10": "side:wreck_wing_left__elevon_left,wreck_wing_right__elevon_right",
+    "11": "side:wreck_wing_left__elevon_left,wreck_wing_right__elevon_right",
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "absXMax": 1.6,
+          "zMin": -67.5,
+          "zMax": -55,
+          "yMax": 0
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "absXMin": 36,
+          "absXMax": 40.5,
+          "yMax": 5.2,
+          "zMin": 34,
+          "zMax": 51
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 36,
+          "absXMax": 40.5,
+          "yMax": 5.2,
+          "zMin": 34,
+          "zMax": 51
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ]
+  },
+  "keepTemplateBones": [],
+  "addBones": [
+    {
+      "name": "gear_wheel_2",
+      "parent": "gear_steer_0",
+      "pivot": [
+        0.0,
+        3.1765,
+        -42.4598
+      ]
+    },
+    {
+      "name": "wreck_fuselage_1__gear_wheel_2",
+      "parent": "gear_wheel_2",
+      "pivot": [
+        0.0,
+        3.1765,
+        -42.4598
+      ]
+    }
+  ],
+  "rigAdd": {
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "gear_steer_0",
+        "Pivot": [
+          0.0,
+          3.1765,
+          -42.4598
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 288.615
+      }
+    ]
+  },
+  "sweeps": {
+    "elevon_left": {
+      "pivot": [
+        35.295,
+        22.5888,
+        68.0136
+      ],
+      "axis": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "maxDegrees": 20
+    },
+    "elevon_right": {
+      "pivot": [
+        -35.295,
+        22.5888,
+        68.0136
+      ],
+      "axis": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "maxDegrees": 20
+    },
+    "rudder": {
+      "pivot": [
+        0.0,
+        42.354,
+        97.6614
+      ],
+      "axis": [
+        0.0,
+        0.8462,
+        0.5328
+      ],
+      "maxDegrees": 25
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        26.8242,
+        5.2942,
+        31.6597
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        -26.8242,
+        5.2942,
+        31.6597
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        0.0,
+        3.1765,
+        -42.4598
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0.0,
+        10.5885,
+        -47.0481
+      ]
+    },
+    "control_stick_roll": {
+      "pivot": [
+        0.0,
+        21.8123,
+        -62.7897
+      ]
+    },
+    "control_stick_pitch": {
+      "pivot": [
+        0.0,
+        21.8123,
+        -62.7897
+      ]
+    }
+  },
+  "clientSet": {
+    "AircraftRig.GearDoors": [],
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 173.169,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 173.169,
+    "AfterburnerPresentation.Outlets.0.Position": [
+      0.0,
+      1.80887,
+      -7.33916
+    ],
+    "AfterburnerPresentation.Outlets.0.NozzleRadiusBlocks": 0.46,
+    "EngineExhaust.Origins.0.Position": [
+      0.0,
+      1.80887,
+      7.33916
+    ],
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          -0.013,
+          1.859,
+          -7.305
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.337
+      }
+    ]
+  },
+  "removeClientKeys": [
+    "CockpitGauges"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0.0,
+      37.0598,
+      -59.7543
+    ],
+    "gun1_muzzle": [
+      7.059,
+      25.4124,
+      -65.4015
+    ],
+    "gun2_muzzle": [
+      -7.059,
+      25.4124,
+      -65.4015
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0.0,
+      11.7598,
+      -59.7543
+    ]
+  },
+  "addSeats": [],
+  "dataSet": {
+    "AircraftSurfaceTransforms": {
+      "rudder": {
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          2.647125,
+          -6.103837
+        ],
+        "Axis": [
+          0.0,
+          -0.846233,
+          0.532813
+        ],
+        "ControlWeights": [
+          0,
+          0,
+          1
+        ],
+        "MaxDeflectionDegrees": 25
+      },
+      "elevon_left": {
+        "Parent": "hull",
+        "Pivot": [
+          2.205938,
+          1.4118,
+          -4.250849
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "ControlWeights": [
+          1,
+          1,
+          0
+        ],
+        "MaxDeflectionDegrees": 20
+      },
+      "elevon_right": {
+        "Parent": "hull",
+        "Pivot": [
+          -2.205938,
+          1.4118,
+          -4.250849
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "ControlWeights": [
+          1,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 20
+      }
+    },
+    "Weapons.Gun1.Magazine": 125,
+    "Weapons.Gun2.Magazine": 125,
+    "Weapons.Gun1.ShootPos.Positions": [
+      [
+        0.44119,
+        1.58827,
+        4.08759
+      ]
+    ],
+    "Weapons.Gun1.ShootPos.ViewPosition": [
+      0.44119,
+      1.58827,
+      4.08759
+    ],
+    "Weapons.Gun2.ShootPos.Positions": [
+      [
+        -0.44119,
+        1.58827,
+        4.08759
+      ]
+    ],
+    "Weapons.Gun2.ShootPos.ViewPosition": [
+      -0.44119,
+      1.58827,
+      4.08759
+    ],
+    "Mass": 7.32,
+    "AircraftTerrainContact.LandingGear": {
+      "Min": [
+        -1.985344,
+        0.0,
+        -2.309624
+      ],
+      "Max": [
+        1.985344,
+        1.367681,
+        3.249338
+      ]
+    }
+  },
+  "flightReference": {
+    "maximumTrueAirspeedKmh": 2096,
+    "referenceAltitudeMetres": 12000,
+    "climbMetresPerSecond": 109.3,
+    "turnSeconds": 29.8,
+    "takeoffRunMetres": 750,
+    "baseMassKg": 7320,
+    "mainFuelMassKg": 1900,
+    "fullFuelWingLoadingKgPerSquareMetre": 284,
+    "maximumIndicatedAirspeedKmh": 1460,
+    "negativeGLimit": -4,
+    "positiveGLimit": 11,
+    "dryThrustKgfPerEngine": 4280.0,
+    "afterburnerThrustKgfPerEngine": 6200.0
+  },
+  "armamentOverrides": {
+    "Name": "Mirage IIIE",
+    "MaxPayloadKg": 3500,
+    "MaxPylonMassKg": 1500,
+    "MaxWeaponsPerPylon": 2,
+    "BuiltInWeapons": [
+      "Gun1",
+      "Gun2"
+    ],
+    "SuspendedWeapons": [
+      "Lau32Outer",
+      "Jl100rInner"
+    ],
+    "Pairs": [
+      {
+        "Id": "outer",
+        "Name": "Stations 1/7 · outer wing pylons",
+        "Left": [
+          3.2207,
+          0.9927,
+          -3.6773
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.2207,
+              0.9927,
+              -3.6773
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.2207,
+          0.9927,
+          -3.6773
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.2207,
+              0.9927,
+              -3.6773
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9b",
+          "berts_vehicle_pack:munition/r550_magic",
+          "berts_vehicle_pack:munition/lau32_fz49"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau32_fz49": "Lau32Outer"
+        }
+      },
+      {
+        "Id": "inner",
+        "Name": "Stations 2/6 · inner wing pylons",
+        "Left": [
+          2.3383,
+          1.0589,
+          -2.6626
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.3383,
+              1.0589,
+              -2.6626
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.3383,
+          1.0589,
+          -2.6626
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.3383,
+              1.0589,
+              -2.6626
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/tank_1700l",
+          "berts_vehicle_pack:munition/jl100r"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1500,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/jl100r": "Jl100rInner"
+        }
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "centerline",
+        "Name": "Station 4 · centreline",
+        "Position": [
+          0.0,
+          0.8603,
+          -0.589
+        ],
+        "Stations": [
+          {
+            "Point": [
+              0.0,
+              0.8603,
+              -0.589
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/r530",
+          "berts_vehicle_pack:munition/r530_radar",
+          "berts_vehicle_pack:munition/as30",
+          "berts_vehicle_pack:munition/samp25_x2",
+          "berts_vehicle_pack:munition/samp21_x2",
+          "berts_vehicle_pack:munition/samp25_200_x2",
+          "berts_vehicle_pack:munition/samp21_200_x2"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 900
+      }
+    ],
+    "StoreGroups": {},
+    "Radar": {
+      "Enabled": true,
+      "Range": 2000
+    }
+  }
+}

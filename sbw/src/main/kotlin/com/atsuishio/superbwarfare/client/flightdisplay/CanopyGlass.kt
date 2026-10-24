@@ -49,6 +49,12 @@ object CanopyGlass {
     private var batch = FloatArray(VERTEX_FLOATS * 4096)
     private var vertexCount = 0
 
+    /** The glass colour (r, g, b, 0-255): the resource's optional "Tint", else the pack-wide default. */
+    internal fun tintOf(resource: DefaultVehicleResource.CanopyGlassResource): IntArray {
+        val t = resource.tint
+        return if (t != null && t.size == 3 && t.all { it in 0..255 }) t else intArrayOf(TINT_R, TINT_G, TINT_B)
+    }
+
     private fun mesh(resource: DefaultVehicleResource.CanopyGlassResource): Mesh? = cache.getOrPut(resource) {
         if (resource.frame != "VEHICLE_LOCAL_BLOCKS") return@getOrPut null
         val local = when (resource.schema) {
@@ -120,7 +126,8 @@ object CanopyGlass {
         val matrix = pose.pose()
         val normalMatrix = pose.normal()
         val light = brightness(packedLight)
-        val r = TINT_R / 255f * light; val g = TINT_G / 255f * light; val b = TINT_B / 255f * light
+        val tint = tintOf(resource)
+        val r = tint[0] / 255f * light; val g = tint[1] / 255f * light; val b = tint[2] / 255f * light
         val p = mesh.points; val nm = mesh.normals
         val pos = Vector4f(); val nrm = Vector3f()
         var o = vertexCount * VERTEX_FLOATS

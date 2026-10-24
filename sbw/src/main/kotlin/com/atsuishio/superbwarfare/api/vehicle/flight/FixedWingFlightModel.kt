@@ -122,6 +122,16 @@ class FixedWingFlightModel(
         private set
     var yawRateDegreesPerSecond = 0.0
         private set
+    /**
+     * Pitch thrust vectoring (only with [FixedWingHandlingProfile.thrustVectoring]): the nozzle angle, nose-up
+     * positive, which is the actuated elevator times the vectoring range. The published elevator is the visual rig's
+     * input, so the animation and the physics share this one angle. Reported on the ground too; it only acts airborne.
+     */
+    var thrustVectorAngleDegrees = 0.0
+        private set
+    /** Filtered pitch rate the vectored thrust adds on top of [pitchRateDegreesPerSecond] (not limited by AoA protection). */
+    var thrustVectorPitchRateDegreesPerSecond = 0.0
+        private set
     var airflowAuthority = 0.0
         private set
     var sideslipDegrees = 0.0
@@ -232,6 +242,8 @@ class FixedWingFlightModel(
         aileron = 0.0
         rudder = 0.0
         airbrake = 0.0
+        thrustVectorAngleDegrees = 0.0
+        thrustVectorPitchRateDegreesPerSecond = 0.0
         wheelBrakeActive = false
         effectiveEnginePower = 0.0
         poweredGroundTicks = 0
@@ -495,6 +507,21 @@ class FixedWingFlightModel(
         // the forward axis preserves upright/inverted force symmetry and pitch protection.
         val buffet = if (grounded) 0.0 else FixedWingSpeedEffects.buffetDegrees(speed, handling)
         val time = serverTick * DT
+        // Thrust vectoring: the nozzle angle is the actuated elevator, so the rig shows exactly this angle. Its pitch
+        // moment is thrust x sin(angle) x arm over the pitch inertia, a rate-command model's steady rate being that
+        // acceleration over the angular damping. It scales with thrust, not with airflow, so it keeps working as the
+        // surfaces fade at low speed and is only reduced past the AoA where a nose-up push would run away.
+        val vectoring = handling.thrustVectoring
+        val nozzleDegrees = if (vectoring != null) vectoring.nozzleAngleDegrees(elevator) else 0.0
+        thrustVectorAngleDegrees = nozzleDegrees
+        val vectoringActive = vectoring != null && !grounded
+        val vectorTarget = if (vectoring != null && vectoringActive) {
+            vectoring.pitchAccelerationRadPerS2(thrustAccelerationMps2 / handling.simulationLengthScale, nozzleDegrees) *
+                FixedWingThrustVectoring.alphaAuthority(
+                    previousAlpha, nozzleDegrees, pitchAirflow, handling.stallAngleDegrees) /
+                RADIANS / handling.angularResponsePerSecond
+        } else 0.0
+        thrustVectorPitchRateDegreesPerSecond += (vectorTarget - thrustVectorPitchRateDegreesPerSecond) * response(handling.angularResponsePerSecond)
         pitchRateDegreesPerSecond +=
             (desiredPitch - pitchRateDegreesPerSecond) * angularResponse
         rollRateDegreesPerSecond +=
@@ -515,7 +542,7 @@ class FixedWingFlightModel(
         }
         val groundYaw = surfaces?.groundYaw == true
         rotate(
-            -pitchRateDegreesPerSecond * RADIANS * DT,
+            -(pitchRateDegreesPerSecond + thrustVectorPitchRateDegreesPerSecond) * RADIANS * DT,
             if (groundYaw) 0.0 else yawRateDegreesPerSecond * RADIANS * DT,
             -rollRateDegreesPerSecond * RADIANS * DT,
         )
@@ -551,9 +578,15 @@ class FixedWingFlightModel(
         // Runway-only assistance is horizontal. It uses the existing kick/work ledger,
         // never a vertical launch impulse, velocity assignment, extra gravity or extra move.
         val assistScale = if (horizontalForward > EPSILON) groundAssist / horizontalForward else 0.0
-        val thrustX = forwardX * (thrustAccelerationMps2 + assistScale)
-        val thrustY = forwardY * thrustAccelerationMps2
-        val thrustZ = forwardZ * (thrustAccelerationMps2 + assistScale)
+        // Vectored thrust tilts in the body pitch plane: exhaust up (nose-up nozzle) pushes the tail down, losing
+        // 1 - cos(angle) of forward thrust and adding a sin(angle) down force. Airborne only; assist is ground-only.
+        val thrustDirection = if (vectoringActive) FixedWingThrustVectoring.thrustDirection(nozzleDegrees) else null
+        val thrustX = if (thrustDirection == null) forwardX * (thrustAccelerationMps2 + assistScale)
+            else (forwardX * thrustDirection[0] + upX * thrustDirection[1]) * thrustAccelerationMps2
+        val thrustY = if (thrustDirection == null) forwardY * thrustAccelerationMps2
+            else (forwardY * thrustDirection[0] + upY * thrustDirection[1]) * thrustAccelerationMps2
+        val thrustZ = if (thrustDirection == null) forwardZ * (thrustAccelerationMps2 + assistScale)
+            else (forwardZ * thrustDirection[0] + upZ * thrustDirection[1]) * thrustAccelerationMps2
         val runwayLaunch = poweredGroundTicks == 2 && speed < 50.0 / 3.6
         runwayContactAdmitted = poweredGroundTicks == 2
         runwayBaseHorizontalThrustMps2 = sqrt(thrustX * thrustX + thrustZ * thrustZ)
@@ -904,6 +937,8 @@ class FixedWingFlightModel(
         dragAccelerationMps2 = 0.0
         maneuverDragAccelerationMps2 = 0.0
         thrustAccelerationMps2 = 0.0
+        thrustVectorAngleDegrees = 0.0
+        thrustVectorPitchRateDegreesPerSecond = 0.0
         runwayLaunchMultiplier = 1.0
         runwayContactAdmitted = false
         runwayBaseHorizontalThrustMps2 = 0.0

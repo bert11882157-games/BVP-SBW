@@ -1,0 +1,1481 @@
+{
+  "ID": "berts_vehicle_pack:su_15tm",
+  "Gravity": 0.024516625,
+  "Mass": 10.874,
+  "UpStep": 0,
+  "InertiaRotateRate": 0,
+  "RotateOffsetHeight": 2.0,
+  "MaxHealth": 667,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "OBB": [
+    {
+      "Size": [
+        4.98712,
+        1.42058,
+        0.57428
+      ],
+      "Position": [
+        0.0,
+        2.21398,
+        -8.28937
+      ]
+    },
+    {
+      "Size": [
+        1.63215,
+        1.55659,
+        0.98231
+      ],
+      "Position": [
+        0.0,
+        2.14597,
+        -7.49597
+      ]
+    },
+    {
+      "Size": [
+        1.8135,
+        1.55659,
+        0.90675
+      ],
+      "Position": [
+        0.0,
+        2.00996,
+        -6.53633
+      ]
+    },
+    {
+      "Size": [
+        1.8135,
+        1.73794,
+        0.95209
+      ],
+      "Position": [
+        0.0,
+        2.07041,
+        -5.51623
+      ]
+    },
+    {
+      "Size": [
+        1.71275,
+        1.94196,
+        0.70273
+      ],
+      "Position": [
+        0.0,
+        1.92307,
+        -4.53014
+      ]
+    },
+    {
+      "Size": [
+        1.66238,
+        1.4508,
+        0.40804
+      ],
+      "Position": [
+        0.0,
+        1.88151,
+        -3.56672
+      ]
+    },
+    {
+      "Size": [
+        1.66238,
+        1.63215,
+        0.94453
+      ],
+      "Position": [
+        0.0,
+        1.70016,
+        -2.4824
+      ]
+    },
+    {
+      "Size": [
+        1.66237,
+        1.63215,
+        0.98735
+      ],
+      "Position": [
+        0.0,
+        1.70016,
+        -1.50134
+      ]
+    },
+    {
+      "Size": [
+        1.6926,
+        1.62459,
+        0.43071
+      ],
+      "Position": [
+        0.0,
+        1.69638,
+        -0.76713
+      ]
+    },
+    {
+      "Size": [
+        1.76313,
+        1.40546,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.79839,
+        0.40031
+      ]
+    },
+    {
+      "Size": [
+        1.78328,
+        1.54903,
+        0.51382
+      ],
+      "Position": [
+        0.0,
+        1.88528,
+        1.60931
+      ]
+    },
+    {
+      "Size": [
+        1.51125,
+        1.67749,
+        0.98987
+      ],
+      "Position": [
+        0.0,
+        1.94951,
+        2.50473
+      ]
+    },
+    {
+      "Size": [
+        0.93698,
+        1.64726,
+        0.74807
+      ],
+      "Position": [
+        0.0,
+        1.9344,
+        3.38125
+      ]
+    },
+    {
+      "Size": [
+        1.04095,
+        1.48858,
+        0.79341
+      ],
+      "Position": [
+        0.0,
+        1.6057,
+        4.59025
+      ]
+    },
+    {
+      "Size": [
+        1.0881,
+        1.38279,
+        0.74807
+      ],
+      "Position": [
+        0.0,
+        1.59815,
+        5.3761
+      ]
+    },
+    {
+      "Size": [
+        0.87652,
+        1.01254,
+        0.75563
+      ],
+      "Position": [
+        0.0,
+        1.64726,
+        6.50576
+      ]
+    },
+    {
+      "Size": [
+        0.63473,
+        0.75563,
+        0.68006
+      ],
+      "Position": [
+        0.0,
+        1.60948,
+        7.46541
+      ]
+    },
+    {
+      "Size": [
+        0.2418,
+        0.2418,
+        0.86141
+      ],
+      "Position": [
+        0.0,
+        1.54903,
+        8.43261
+      ]
+    },
+    {
+      "Size": [
+        0.09068,
+        0.09068,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.54148,
+        9.52826
+      ]
+    },
+    {
+      "Size": [
+        0.09068,
+        0.09068,
+        0.3627
+      ],
+      "Position": [
+        0.0,
+        1.54148,
+        10.37456
+      ]
+    },
+    {
+      "Size": [
+        0.15113,
+        1.40546,
+        0.70273
+      ],
+      "Position": [
+        0.0,
+        4.12571,
+        -8.42917
+      ]
+    },
+    {
+      "Size": [
+        0.15113,
+        1.39791,
+        0.96216
+      ],
+      "Position": [
+        0.0,
+        4.12193,
+        -7.50604
+      ]
+    },
+    {
+      "Size": [
+        0.15113,
+        0.71029,
+        0.78585
+      ],
+      "Position": [
+        0.0,
+        3.77813,
+        -6.59678
+      ]
+    },
+    {
+      "Size": [
+        0.09068,
+        0.55916,
+        0.86141
+      ],
+      "Position": [
+        0.0,
+        3.29453,
+        -5.47089
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.22669,
+        4.57909
+      ],
+      "Position": [
+        1.14099,
+        1.49614,
+        -1.84389
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.49116,
+        3.19629
+      ],
+      "Position": [
+        1.79083,
+        1.33368,
+        -2.53529
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.18135,
+        2.08553
+      ],
+      "Position": [
+        2.44067,
+        1.47347,
+        -3.09068
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.27203,
+        3.2643
+      ],
+      "Position": [
+        3.09051,
+        1.51881,
+        -2.50129
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.51382,
+        2.35755
+      ],
+      "Position": [
+        3.74034,
+        1.27701,
+        -2.95466
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.13601,
+        1.0881
+      ],
+      "Position": [
+        4.39018,
+        1.4508,
+        -3.58939
+      ]
+    },
+    {
+      "Size": [
+        0.88408,
+        0.13601,
+        0.86141
+      ],
+      "Position": [
+        1.16744,
+        1.72283,
+        -8.00979
+      ]
+    },
+    {
+      "Size": [
+        0.88408,
+        0.13601,
+        0.83119
+      ],
+      "Position": [
+        2.05152,
+        1.63215,
+        -8.65963
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.22669,
+        4.57909
+      ],
+      "Position": [
+        -1.14099,
+        1.49614,
+        -1.84389
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.49116,
+        3.19629
+      ],
+      "Position": [
+        -1.79083,
+        1.33368,
+        -2.53529
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.18135,
+        2.08553
+      ],
+      "Position": [
+        -2.44067,
+        1.47347,
+        -3.09068
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.27203,
+        1.94951
+      ],
+      "Position": [
+        -3.09051,
+        1.51881,
+        -3.15868
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.51382,
+        2.22154
+      ],
+      "Position": [
+        -3.74034,
+        1.27701,
+        -3.02267
+      ]
+    },
+    {
+      "Size": [
+        0.64984,
+        0.13601,
+        1.0881
+      ],
+      "Position": [
+        -4.39018,
+        1.4508,
+        -3.58939
+      ]
+    },
+    {
+      "Size": [
+        0.88408,
+        0.13601,
+        0.86141
+      ],
+      "Position": [
+        -1.16744,
+        1.72283,
+        -8.00979
+      ]
+    },
+    {
+      "Size": [
+        0.88408,
+        0.13601,
+        0.83119
+      ],
+      "Position": [
+        -2.05152,
+        1.63215,
+        -8.65963
+      ]
+    },
+    {
+      "Size": [
+        0.15,
+        0.7301,
+        0.6801
+      ],
+      "Position": [
+        2.6749,
+        0.365,
+        -3.0
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.15,
+        0.7301,
+        0.6801
+      ],
+      "Position": [
+        -2.6749,
+        0.365,
+        -3.0
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.12,
+        0.5941,
+        0.5441
+      ],
+      "Position": [
+        0,
+        0.297,
+        2.9165
+      ],
+      "LandingGear": true
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.0,
+        1.00299,
+        2.68986
+      ],
+      "Weapons": [
+        "UpkPods"
+      ],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          2.9,
+          -15.5
+        ],
+        "EyeAttachment": "pilot_eye",
+        "ZoomEyeAttachment": "pilot_eye",
+        "DirectionAttachment": "pilot_eye",
+        "ZoomDirectionAttachment": "pilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          8.1,
+          0.2,
+          3.04486
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "UpkPods": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "UPK-23-250 · 23 mm GSh-23L (fuselage pylons) (AI)",
+      "RPM": 3400,
+      "Magazine": 500,
+      "Damage": 191.66666666666669,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mig_23mld_gun_gsh23shoot",
+        "Fire3P": "berts_vehicle_pack:mig_23mld_gun_gsh23shoot",
+        "Fire3PFar": "berts_vehicle_pack:mig_23mld_gun_gsh23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:mig_23mld_gun_gsh23shoot",
+        "Volume": 0.85
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+      },
+      "ShellType": "HE",
+      "Velocity": 44.6875,
+      "ApDurability": 4,
+      "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+            },
+            "ShellType": "HE",
+            "Velocity": 44.6875,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gsh23l_air_game",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23l_ground_game",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.6875,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gsh23l_ground_game",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23l_air_game",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.4534,
+            0.7825,
+            0.1688
+          ],
+          [
+            -0.4534,
+            0.7825,
+            0.1688
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.4534,
+          0.7825,
+          0.1688
+        ],
+        "MuzzleAttachments": [
+          "UpkPods_0",
+          "UpkPods_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "UpkPods_0",
+          "UpkPods_1"
+        ],
+        "EffectAttachments": [
+          "UpkPods_0",
+          "UpkPods_1"
+        ],
+        "EffectDirectionAttachments": [
+          "UpkPods_0",
+          "UpkPods_1"
+        ]
+      },
+      "BeltFed": true,
+      "OverheatEnabled": false
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "HudType": "@Aircraft",
+  "EngineType": "Empty",
+  "EngineInfo": {
+    "EngineStartSound": "berts_vehicle_pack:su_27_engine_start",
+    "EngineSoundVolume": 0.7,
+    "HasGear": true
+  },
+  "HasDecoy": false,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    0.7,
+    1.4,
+    5
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/su_15tm.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
+  "VehicleContainerType": "Large",
+  "Type": "Airplane",
+  "Afterburner": true,
+  "TerrainCompat": [],
+  "Attachments": {
+    "pilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        2.58424,
+        2.68986
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "UpkPods_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.4534,
+        0.7825,
+        0.1688
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "UpkPods_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.4534,
+        0.7825,
+        0.1688
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "EngineSound": "berts_vehicle_pack:su_27_engine_loop",
+  "EngineSoundMode": "CUSTOM",
+  "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/su_27/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 8,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.6,
+      1.7,
+      -6.514
+    ],
+    "FlareRightPos": [
+      -0.6,
+      1.7,
+      -6.514
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -0.8661,
+        0.8841,
+        -4.2
+      ],
+      "Max": [
+        0.8661,
+        2.7883,
+        4.6
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.175,
+        0,
+        -3.6
+      ],
+      "Max": [
+        3.175,
+        1.4,
+        3.317
+      ]
+    },
+    "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.8661,
+          0.8841,
+          -4.2
+        ],
+        "Max": [
+          0.8661,
+          2.7883,
+          4.6
+        ]
+      },
+      {
+        "Min": [
+          -0.60627,
+          0.8841,
+          4.6
+        ],
+        "Max": [
+          0.60627,
+          2.50947,
+          10.5559
+        ]
+      },
+      {
+        "Min": [
+          -0.8661,
+          0.8841,
+          -8.5765
+        ],
+        "Max": [
+          0.8661,
+          2.7883,
+          -4.2
+        ]
+      },
+      {
+        "Min": [
+          0.81607,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          1.46591,
+          1.60948,
+          0.44565
+        ]
+      },
+      {
+        "Min": [
+          1.46591,
+          1.0881,
+          -4.13344
+        ],
+        "Max": [
+          2.11575,
+          1.57926,
+          -0.93714
+        ]
+      },
+      {
+        "Min": [
+          2.11575,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          2.76559,
+          1.56414,
+          -2.04791
+        ]
+      },
+      {
+        "Min": [
+          2.76559,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          3.41543,
+          1.65482,
+          -0.86914
+        ]
+      },
+      {
+        "Min": [
+          3.41543,
+          1.02009,
+          -4.13344
+        ],
+        "Max": [
+          4.06526,
+          1.53392,
+          -1.77589
+        ]
+      },
+      {
+        "Min": [
+          4.06526,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          4.7151,
+          1.51881,
+          -3.04534
+        ]
+      },
+      {
+        "Min": [
+          -1.46591,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          -0.81607,
+          1.60948,
+          0.44565
+        ]
+      },
+      {
+        "Min": [
+          -2.11575,
+          1.0881,
+          -4.13344
+        ],
+        "Max": [
+          -1.46591,
+          1.57926,
+          -0.93714
+        ]
+      },
+      {
+        "Min": [
+          -2.76559,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          -2.11575,
+          1.56414,
+          -2.04791
+        ]
+      },
+      {
+        "Min": [
+          -3.41543,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          -2.76559,
+          1.65482,
+          -2.18392
+        ]
+      },
+      {
+        "Min": [
+          -4.06526,
+          1.02009,
+          -4.13344
+        ],
+        "Max": [
+          -3.41543,
+          1.53392,
+          -1.9119
+        ]
+      },
+      {
+        "Min": [
+          -4.7151,
+          1.38279,
+          -4.13344
+        ],
+        "Max": [
+          -4.06526,
+          1.51881,
+          -3.04534
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          2.6749,
+          0,
+          -3.0
+        ],
+        "Bounds": {
+          "Min": [
+            2.5249,
+            0,
+            -3.34
+          ],
+          "Max": [
+            2.8249,
+            0.307164,
+            -2.66
+          ]
+        }
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.6749,
+          0,
+          -3.0
+        ],
+        "Bounds": {
+          "Min": [
+            -2.8249,
+            0,
+            -3.34
+          ],
+          "Max": [
+            -2.5249,
+            0.307164,
+            -2.66
+          ]
+        }
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.9165
+        ],
+        "Bounds": {
+          "Min": [
+            -0.12,
+            0,
+            2.6445
+          ],
+          "Max": [
+            0.12,
+            0.175522,
+            3.1886
+          ]
+        }
+      }
+    ],
+    "WreckSections": [
+      {
+        "Min": [
+          -0.51382,
+          0.90675,
+          5.07008
+        ],
+        "Max": [
+          0.51382,
+          2.28954,
+          10.55591
+        ]
+      },
+      {
+        "Min": [
+          -0.86141,
+          0.86141,
+          1.3524
+        ],
+        "Max": [
+          0.86141,
+          2.78826,
+          5.09274
+        ]
+      },
+      {
+        "Min": [
+          -0.87652,
+          0.88408,
+          -4.17878
+        ],
+        "Max": [
+          0.87652,
+          2.65224,
+          1.3524
+        ]
+      },
+      {
+        "Min": [
+          -2.3311,
+          0.95209,
+          -8.78053
+        ],
+        "Max": [
+          2.3311,
+          4.82844,
+          -3.63472
+        ]
+      }
+    ]
+  },
+  "AircraftSurfaceModules": [
+    {
+      "Id": "superbwarfare:wing_left",
+      "MaxHealthFraction": 0.4,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            0.81607,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            1.46591,
+            1.62948,
+            0.46565
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            1.46591,
+            1.0681,
+            -4.15344
+          ],
+          "Max": [
+            2.11575,
+            1.59926,
+            -0.91714
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            2.11575,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            2.76559,
+            1.58414,
+            -2.02791
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            2.76559,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            3.41543,
+            1.67482,
+            -0.84914
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            3.41543,
+            1.00009,
+            -4.15344
+          ],
+          "Max": [
+            4.06526,
+            1.55392,
+            -1.75589
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            4.06526,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            4.7151,
+            1.53881,
+            -3.02534
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:wing_right",
+      "MaxHealthFraction": 0.4,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            -1.46591,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            -0.81607,
+            1.62948,
+            0.46565
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -2.11575,
+            1.0681,
+            -4.15344
+          ],
+          "Max": [
+            -1.46591,
+            1.59926,
+            -0.91714
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -2.76559,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            -2.11575,
+            1.58414,
+            -2.02791
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -3.41543,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            -2.76559,
+            1.67482,
+            -2.16392
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -4.06526,
+            1.00009,
+            -4.15344
+          ],
+          "Max": [
+            -3.41543,
+            1.55392,
+            -1.8919
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -4.7151,
+            1.36279,
+            -4.15344
+          ],
+          "Max": [
+            -4.06526,
+            1.53881,
+            -3.02534
+          ]
+        }
+      ]
+    }
+  ],
+  "AircraftSurfaceTransforms": {
+    "aileron_left": {
+      "Parent": "hull",
+      "Pivot": [
+        2.674913,
+        1.428131,
+        -3.680063
+      ],
+      "Axis": [
+        0.9999,
+        0.0147,
+        -0.0
+      ],
+      "ControlWeights": [
+        0,
+        1,
+        0
+      ],
+      "MaxDeflectionDegrees": 20
+    },
+    "aileron_right": {
+      "Parent": "hull",
+      "Pivot": [
+        -2.674913,
+        1.428131,
+        -3.680063
+      ],
+      "Axis": [
+        0.9999,
+        -0.0147,
+        0.0
+      ],
+      "ControlWeights": [
+        0,
+        -1,
+        0
+      ],
+      "MaxDeflectionDegrees": 20
+    },
+    "stabilator_left": {
+      "Parent": "hull",
+      "Pivot": [
+        0.7254,
+        1.745494,
+        -7.873781
+      ],
+      "Axis": [
+        1.0,
+        -0.0,
+        0.0
+      ],
+      "ControlWeights": [
+        1,
+        0.2,
+        0
+      ],
+      "MaxDeflectionDegrees": 25
+    },
+    "stabilator_right": {
+      "Parent": "hull",
+      "Pivot": [
+        -0.7254,
+        1.745494,
+        -7.873781
+      ],
+      "Axis": [
+        1.0,
+        -0.0,
+        0.0
+      ],
+      "ControlWeights": [
+        1,
+        -0.2,
+        0
+      ],
+      "MaxDeflectionDegrees": 25
+    },
+    "rudder": {
+      "Parent": "hull",
+      "Pivot": [
+        0.0,
+        2.788256,
+        -6.9897
+      ],
+      "Axis": [
+        -0.0,
+        -0.8046,
+        0.5939
+      ],
+      "ControlWeights": [
+        0,
+        0,
+        1
+      ],
+      "MaxDeflectionDegrees": 25
+    }
+  },
+  "DamageClass": "AIRPLANE",
+  "DeathChargeKg": 38.7
+}

@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "Matra 104 bay pack · 112 x SNEB 68 mm (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/matra104.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.024,
+    -0.178
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.014,
+      0.007,
+      -0.178
+    ],
+    "Right": [
+      -0.014,
+      0.007,
+      -0.178
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.007,
+    -0.178
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/matra104.png",
+  "Capacity": 112,
+  "Scale": 1,
+  "MassKg": 5.05,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.017,
+    0.0
+  ]
+}

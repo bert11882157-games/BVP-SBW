@@ -1,0 +1,113 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:aircraft_stores/apkws",
+    "RoundId": "berts_vehicle_pack:munition/lau131_apkws",
+    "MunitionType": "berts_vehicle_pack:atgm",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 70,
+    "DiameterMm": 70,
+    "HullDamageClass": "HE",
+    "HullDamage": 60,
+    "ModuleDamage": 40,
+    "AmmoRackDamage": 100,
+    "PenetrationMm": 40,
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:authored_missile",
+  "ImpactVisualProfile": "berts_vehicle_pack:atgm",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.08,
+    "Height": 0.08
+  },
+  "Luminance": 9,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "GuidedPropulsion": {
+    "InitialSpeed": 2,
+    "MaxSpeed": 9,
+    "AccelerationPerTick": 0.14,
+    "ThrustDurationTicks": 60,
+    "MaxTurnRateDegreesPerSecond": 60,
+    "GuidanceLookAheadTicks": 10,
+    "IgnitionDelayTicks": 4,
+    "EjectionSpeed": 2,
+    "EjectionGravityPerTick": 0.0125
+  },
+  "Extensions": {
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/apkws.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/apkws.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0
+    },
+    "superbwarfare:guided_maneuver_v1": {
+      "MaxLoadFactorG": 10,
+      "SeekerConeDegrees": 30,
+      "SeekerRateDegreesPerSecond": 32,
+      "BodyTurnLimitScale": 2
+    },
+    "superbwarfare:warhead_fragments_v1": {
+      "Count": 24,
+      "Range": 1,
+      "Damage": 3,
+      "MaxHitsPerTarget": 2
+    },
+    "superbwarfare:heavy_warhead_blast_v1": {
+      "InnerRadius": 0.4,
+      "OuterRadius": 0.9,
+      "HeavyDamageFraction": 0.1,
+      "LightDamageFraction": 0.2
+    },
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 40,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.2,
+            "Orbit": null
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 40,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 0.8,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "medium",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

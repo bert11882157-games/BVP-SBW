@@ -46,6 +46,9 @@ SPECS = {
             {'frame': 'Turret', 'at': [-10.7, 42.0, 16.6]},      # commander, under the cupola
             {'frame': 'Turret', 'at': [10.6, 40.0, 7.7]},        # loader, left
         ],
+        # the two louvred AGT-1500 grilles on the rear plate (outer face z 76.547 px, panel centres x -12.99 / 11.13,
+        # y 24.25), model px of the finished model, +Z = rear; the origin sits 0.25 px outside the louvres
+        'exhaust': [[-12.99, 24.25, 76.8], [11.13, 24.25, 76.8]],
         'muzzleRename': {'roof_coax_muzzle': 'coax_muzzle'},
         'dropData': ['RoofCoaxPitch'],
         'rounds': {'m829a2_apfsds': {'id': 'm829a1_apfsds', 'combat': {'PenetrationMm': 600}}},
@@ -191,6 +194,9 @@ SPECS = {
         'muzzles': {'Missile': ['missileMuzzle_1']},
         # one missile on the launcher arm, reloaded from inside after every shot (wt_reloads.py sets the reload)
         'weaponSet': {'Missile': {'Magazine': 1, 'RPM': 60}},
+        # MT-LB: engine front right, outlet on the right (-x) hull side face forward (model px, +Z = rear; exhaust_check.py EXITS).
+        # The model has no visible outlet there: a placed point, UNVERIFIED
+        'exhaust': [[-23.75, 27.0, -17.0]],
         'obb': [
             {'bone': 'hull'},
             {'box': [[-8.0, 12.0, -50.0], [8.0, 32.0, -30.0]], 'part': 'MainEngine'},

@@ -1,0 +1,90 @@
+{
+  "Schema": 1,
+  "Name": "ATAM Ã‚Â· 2 Ãƒâ€” Mistral (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gazelle_mistral.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0517,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0517,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.0517,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gazelle_mistral.png",
+  "Capacity": 1,
+  "MassKg": 18.7,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 50,
+    "Range": 750,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 90,
+    "Damage": 30,
+    "BlastRadius": 3,
+    "TntEquivalentKg": 1.61
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_atam_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/rack_atam_x2.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.0517,
+          -0.069,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0517,
+          -0.069,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.207,
+    0.35,
+    0
+  ],
+  "RackMassKg": 12.0,
+  "LaunchOffset": [
+    0.0,
+    -0.0517,
+    0.0
+  ]
+}

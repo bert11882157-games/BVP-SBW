@@ -2,7 +2,43 @@
   "_doc": "Per-mount overrides for attach.py. layout: blade | arm | crossbar | shoulders | skin (auto when absent); skip: reason string.",
   "aircraft": {
     "f_15c": {
-      "wing_shoulders": {"layout": "shoulders"}
+      "wing_shoulders": {
+        "skip": "hand-set on the launcher rail faces at the model's own AIM-9 axis (elite_expansion_2/tools/f15c_shoulders.py)"
+      }
+    },
+    "f_15ex": {
+      "wing_shoulders": {
+        "skip": "hand-set on the launcher rail faces at the model's own AIM-9 axis (elite_expansion_2/tools/f15ex_armament.py)"
+      },
+      "wing_outer": {
+        "skip": "hand-set on the outboard pylon launcher rail faces (elite_expansion_2/tools/f15ex_armament.py)"
+      }
+    },
+    "f_22a": {
+      "wing_pylon": {
+        "skip": "hand-set on the model's own wing pylon bottom (elite_expansion_2/f22a/f22a_armament.py)"
+      },
+      "wing_shoulders": {
+        "skip": "hand-set on the model's own AAM axes beside the pylon beam (elite_expansion_2/f22a/f22a_armament.py)"
+      }
+    },
+    "f_16c": {
+      "inlet_left": {
+        "layout": "skin",
+        "bottom_override": [
+          0.4,
+          0.96,
+          1.6
+        ]
+      },
+      "inlet_right": {
+        "layout": "skin",
+        "bottom_override": [
+          -0.4,
+          0.96,
+          1.6
+        ]
+      }
     }
   }
 }

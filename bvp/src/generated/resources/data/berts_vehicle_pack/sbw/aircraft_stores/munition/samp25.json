@@ -1,0 +1,50 @@
+{
+  "Schema": 1,
+  "Name": "SAMP Type 25 250 kg (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/samp25.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.186,
+    -0.06
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.162,
+      0.0,
+      -0.06
+    ],
+    "Right": [
+      -0.162,
+      0.0,
+      -0.06
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.06
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/samp25.png",
+  "Capacity": 1,
+  "MassKg": 247.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 123.5,
+    "BlastDamage": 470
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/samp25",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.186,
+    0.0
+  ]
+}

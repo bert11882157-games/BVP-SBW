@@ -1,0 +1,69 @@
+{
+  "why": "H-6K flight deck: a solid radome nose and a flight deck set back under a stepped, raised windscreen of flat panes (the Tu-16 family uses flat armoured glass: a centre post between two front panes either side, then side windows). The model's own window band is the frame layout (canopy_h_6k.py): per side a front pane and a quarter pane either side of the centre / corner posts and two side panes before and behind a side post, each one exact plane (the best fit through its frame corners). The pane count and sizes are the model's line, UNVERIFIED against photographs of the real H-6K. The roof is metal and closed: no overhead panes.",
+  "panes": [
+    {
+      "name": "flat front pane",
+      "box": [
+        [
+          0.0308,
+          3.6945,
+          13.7146
+        ],
+        [
+          0.248,
+          3.9435,
+          13.8952
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "flat quarter pane",
+      "box": [
+        [
+          0.2021,
+          3.6937,
+          13.5784
+        ],
+        [
+          0.56,
+          3.9435,
+          13.87
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "flat side a pane",
+      "box": [
+        [
+          0.5578,
+          3.6919,
+          13.1211
+        ],
+        [
+          0.7776,
+          3.9502,
+          13.7422
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "flat side b pane",
+      "box": [
+        [
+          0.6367,
+          3.6935,
+          12.7717
+        ],
+        [
+          0.8395,
+          3.9442,
+          13.0835
+        ]
+      ],
+      "mirror": true
+    }
+  ]
+}
