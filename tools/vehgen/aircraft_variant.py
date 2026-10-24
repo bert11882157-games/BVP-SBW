@@ -265,6 +265,18 @@ def main(argv):
     for name, at in spec.get('attachments', {}).items():
         data['Attachments'][name] = {'Parent': 'Vehicle', 'Position': r5(mtbgeo.geo_to_data(np.array(at))),
                                      'Direction': [0, 0, 1]}
+    # a gun's Vehicle-frame shoot positions sit exactly on its muzzle attachments (SBW's fixed gun bank refuses the
+    # gun otherwise); the template's positions belong to the template's gun ports
+    for weapon in data.get('Weapons', {}).values():
+        shoot = weapon.get('ShootPos') or {}
+        if shoot.get('Transform') != 'Vehicle':
+            continue
+        for i, muzzle in enumerate(shoot.get('MuzzleAttachments', [])):
+            frame = data['Attachments'].get(muzzle)
+            if frame and frame.get('Parent') == 'Vehicle' and i < len(shoot.get('Positions', [])):
+                shoot['Positions'][i] = list(frame['Position'])
+                if i == 0 and 'ViewPosition' in shoot:
+                    shoot['ViewPosition'] = list(frame['Position'])
     for i, at in spec.get('seatPositions', {}).items():
         data['Seats'][int(i)]['Position'] = r5(mtbgeo.geo_to_data(np.array(at)))
     for seat in spec.get('addSeats', []):
