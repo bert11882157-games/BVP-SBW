@@ -169,7 +169,7 @@
     "Rotors": [
       {
         "Bone": "gear_wheel_0",
-        "Parent": "landing_gear_0",
+        "Parent": "gear_slide_0",
         "Pivot": [
           -3.19609,
           11.98536,
@@ -186,7 +186,7 @@
       },
       {
         "Bone": "gear_wheel_1",
-        "Parent": "landing_gear_0",
+        "Parent": "gear_slide_0",
         "Pivot": [
           5.99268,
           11.98536,
@@ -203,7 +203,7 @@
       },
       {
         "Bone": "gear_wheel_2",
-        "Parent": "landing_gear_1",
+        "Parent": "gear_slide_1",
         "Pivot": [
           3.19609,
           11.98536,
@@ -220,7 +220,7 @@
       },
       {
         "Bone": "gear_wheel_3",
-        "Parent": "landing_gear_1",
+        "Parent": "gear_slide_1",
         "Pivot": [
           -5.99268,
           11.98536,
@@ -273,11 +273,67 @@
     "Gear": [
       {
         "Bone": "landing_gear_0",
-        "Parent": "hull"
+        "Parent": "hull",
+        "Retract": {
+          "Pivot": [
+            1.3983,
+            42.29872,
+            -125.44673
+          ],
+          "Axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "AngleDegrees": 100.0,
+          "Slide": {
+            "Bone": "gear_slide_0",
+            "Pivot": [
+              1.3983,
+              11.98536,
+              -125.44673
+            ],
+            "Direction": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "DistancePx": 0.0,
+            "TwistDegrees": 90.0
+          }
+        }
       },
       {
         "Bone": "landing_gear_1",
-        "Parent": "hull"
+        "Parent": "hull",
+        "Retract": {
+          "Pivot": [
+            -1.3983,
+            33.66243,
+            40.75021
+          ],
+          "Axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "AngleDegrees": 90.0,
+          "Slide": {
+            "Bone": "gear_slide_1",
+            "Pivot": [
+              -1.3983,
+              11.98536,
+              40.75021
+            ],
+            "Direction": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "DistancePx": 0.0,
+            "TwistDegrees": 90.0
+          }
+        }
       },
       {
         "Bone": "landing_gear_2",
@@ -289,7 +345,69 @@
       }
     ],
     "Flaps": [],
-    "Sweeps": []
+    "Sweeps": [],
+    "GearDoors": [
+      {
+        "Bone": "gear_door_0",
+        "Parent": "hull",
+        "Pivot": [
+          -11.0,
+          35.88828,
+          -147.0
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": -90.0
+      },
+      {
+        "Bone": "gear_door_1",
+        "Parent": "hull",
+        "Pivot": [
+          14.0,
+          36.73422,
+          -147.0
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": 90.0
+      },
+      {
+        "Bone": "gear_door_2",
+        "Parent": "hull",
+        "Pivot": [
+          -14.0,
+          25.53248,
+          24.0
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": -90.0
+      },
+      {
+        "Bone": "gear_door_3",
+        "Parent": "hull",
+        "Pivot": [
+          11.0,
+          24.86506,
+          24.0
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": 90.0
+      }
+    ]
   },
   "DefensiveStationPresentation": {
     "Schema": 1,

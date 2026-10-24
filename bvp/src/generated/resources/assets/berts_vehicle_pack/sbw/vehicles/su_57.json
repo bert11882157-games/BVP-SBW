@@ -336,7 +336,7 @@
       },
       {
         "Bone": "gear_wheel_2",
-        "Parent": "landing_gear_14",
+        "Parent": "gear_slide_1",
         "Pivot": [
           40.4,
           7.2,
@@ -353,7 +353,7 @@
       },
       {
         "Bone": "gear_wheel_3",
-        "Parent": "landing_gear_15",
+        "Parent": "gear_slide_2",
         "Pivot": [
           -40.4,
           7.2,
@@ -372,15 +372,96 @@
     "Gear": [
       {
         "Bone": "landing_gear_12",
-        "Parent": "hull"
+        "Parent": "hull",
+        "Retract": {
+          "Pivot": [
+            0.0,
+            29.58565,
+            -42.69821
+          ],
+          "Axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "AngleDegrees": -102.875,
+          "Slide": {
+            "Bone": "gear_slide_0",
+            "Pivot": [
+              0.0,
+              4.8,
+              -39.6
+            ],
+            "Direction": [
+              0.0,
+              0.992278,
+              -0.124035
+            ],
+            "DistancePx": 2.0
+          }
+        }
       },
       {
         "Bone": "landing_gear_14",
-        "Parent": "hull"
+        "Parent": "hull",
+        "Retract": {
+          "Pivot": [
+            40.4,
+            32.37619,
+            54.0
+          ],
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "AngleDegrees": -90.0,
+          "Slide": {
+            "Bone": "gear_slide_1",
+            "Pivot": [
+              40.4,
+              7.2,
+              54.0
+            ],
+            "Direction": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "DistancePx": 8.0
+          }
+        }
       },
       {
         "Bone": "landing_gear_15",
-        "Parent": "hull"
+        "Parent": "hull",
+        "Retract": {
+          "Pivot": [
+            -40.4,
+            32.41419,
+            54.0
+          ],
+          "Axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "AngleDegrees": 90.0,
+          "Slide": {
+            "Bone": "gear_slide_2",
+            "Pivot": [
+              -40.4,
+              7.2,
+              54.0
+            ],
+            "Direction": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "DistancePx": 8.0
+          }
+        }
       }
     ],
     "Flaps": [],
@@ -388,7 +469,7 @@
     "NoseSteering": [
       {
         "Bone": "gear_steer_0",
-        "Parent": "landing_gear_12",
+        "Parent": "gear_slide_0",
         "Pivot": [
           0.0,
           4.8,
@@ -400,6 +481,98 @@
           0
         ],
         "MaxDeflectionDegrees": 45.0
+      }
+    ],
+    "GearDoors": [
+      {
+        "Bone": "gear_door_0",
+        "Parent": "hull",
+        "Pivot": [
+          -5.0,
+          27.83077,
+          -29.5
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": -90.0
+      },
+      {
+        "Bone": "gear_door_1",
+        "Parent": "hull",
+        "Pivot": [
+          5.0,
+          27.83077,
+          -29.5
+        ],
+        "Axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "OpenAngleDegrees": 90.0
+      },
+      {
+        "Bone": "gear_door_2",
+        "Parent": "hull",
+        "Pivot": [
+          28.5,
+          22.14811,
+          46.0
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "OpenAngleDegrees": 90.0
+      },
+      {
+        "Bone": "gear_door_3",
+        "Parent": "hull",
+        "Pivot": [
+          28.5,
+          22.33823,
+          62.0
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "OpenAngleDegrees": -90.0
+      },
+      {
+        "Bone": "gear_door_4",
+        "Parent": "hull",
+        "Pivot": [
+          -28.5,
+          22.14811,
+          46.0
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "OpenAngleDegrees": 90.0
+      },
+      {
+        "Bone": "gear_door_5",
+        "Parent": "hull",
+        "Pivot": [
+          -28.5,
+          22.33823,
+          62.0
+        ],
+        "Axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "OpenAngleDegrees": -90.0
       }
     ]
   },
