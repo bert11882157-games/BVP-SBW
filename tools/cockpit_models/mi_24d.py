@@ -8,8 +8,8 @@ size). The pilot's eye is main's (0, 3.56, 5.75); the operator's (0, 2.678, 7.75
     with the old sight on its top, the bulkhead behind the operator from 1.0 ahead;
   * operator: walls at x +-0.62 under the sill (about y -0.30), the nose narrowing to +-0.38 ahead of him, the floor
     at y -1.05, the old sight's column 0.5 ahead.
-The model's canopies are bare frames: glaze fits a flat pane in every opening between them (the Mi-24D's flat
-armoured windscreens and side panes).
+The model's canopies are bare frames; canopy_mi_24d.py (run after this) cuts them out and remakes both canopies to
+their exact shape, framed and glazed (bert, 2026-10-23).
 Built (the Mi-24D's cockpits as photographed and described): as the Mi-24V's (mi24v.py): the pilot's instruments and
 the ASP-17V gunsight (live for the pilot), the operator's KPS-53AV sight with its reflector glass (live for the
 operator), the Raduga-F guidance panel, standby instruments, the rounds counter; consoles, armoured seats, controls.
@@ -27,7 +27,6 @@ import free_atlas as FA   # noqa: E402
 import heli_station as HS  # noqa: E402
 
 VID = 'mi_24d'
-PANE_FILL = '0,1'               # (run_heli.ps1: a flat pane in every window the crew sees out of with no glass)
 L.INTERIOR_BONES.add('hull')
 FA.also_used(VID, 'ad56207c', 'suspended_')
 
@@ -146,7 +145,7 @@ def operator_details(m, atlas, st):
 
 def stations(ac):
     pilot = dict(seat=0, E=ac.eye(0), S=1.25, colours=COLOURS, layout=PILOT_LAYOUT, consoles=CONSOLES_PILOT,
-                 PANEL_Z=0.66, LEAN=12, HINGE=0.30, WING=25, WALL_X=0.49, TOP_C=-0.300, TOP_W=-0.320,
+                 PANEL_Z=0.66, LEAN=12, HINGE=0.30, WING=25, WALL_X=0.45, TOP_C=-0.300, TOP_W=-0.320,
                  BOT_C=-0.860, BOT_W=-0.840, FRONT_Z=0.76, FRONT_Y_C=-0.300, FRONT_Y_W=-0.320, COAMING_X=0.40,
                  CONSOLE_Y=-0.700, CONSOLE_IN=0.33, CONSOLE_OUT=0.48, CONSOLE_FRONT=0.42, CONSOLE_FOOT=-1.08,
                  CONSOLE_BACK=-0.25, CUSHION_Y=-0.84, SEAT_Z=0.05, SEAT_FOOT=-1.10, BACK_TOP=0.04,
@@ -191,7 +190,7 @@ def main(argv):
     HS.bezels(m, atlas, pilot)
     HS.bezels(m, atlas, operator)
     huds[1] = operator_details(m, atlas, operator)
-    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
+    pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1], glaze=False)
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
           f'{len(displays)} displays, {len([h for h in huds if h])} sights; {line}')
     if not dry:

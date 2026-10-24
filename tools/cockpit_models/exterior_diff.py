@@ -9,7 +9,8 @@ face missing from the current geo is reported (bert's rule: the exterior never c
 Faces inside the new canopy (a fighter's old canopy frames and glass, removed on purpose) are exempt: a removed face
 whose centre is within --exempt metres of the new canopy glass, or under it, counts as the canopy area.
 
-Usage: exterior_diff.py VID ORIG.geo.json [--write LIST.json] [--exempt 0.06]
+Usage: exterior_diff.py VID ORIG.geo.json [--write LIST.json] [--exempt 0.06] [--glass-blocks [--blockers GLASS.json]]
+       (--glass-blocks: the canopy glass stops the rays too; GLASS.json is frame_glaze.py --report's output)
        (LIST.json is restore_exterior.py's restore list: the faces with their own positions, normals and uvs)
 """
 import json, os, sys
@@ -65,6 +66,12 @@ def main():
             T.append(V[[0, k, k + 1]])
     T = np.array(T)
     G = np.array((ac.asset.get('CanopyGlass') or {}).get('Triangles', []), float).reshape(-1, 3, 3)
+    if '--glass-blocks' in sys.argv:
+        # (a model whose canopy is bare frames: through its open windows every face of the old cockpit "escapes";
+        # with the glass in the openings only the outside does. --blockers adds glass not yet in the asset)
+        extra = [np.array(json.load(open(arg('--blockers')))['triangles'], float).reshape(-1, 3, 3)] \
+            if arg('--blockers') else []
+        T = np.concatenate([T, G] + extra)
     Gp = np.concatenate([G.reshape(-1, 3), G.mean(1)]) if len(G) else np.zeros((0, 3))
     ext = []
     for k, (name, P, N, U) in gone:

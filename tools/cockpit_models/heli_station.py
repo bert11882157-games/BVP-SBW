@@ -622,10 +622,11 @@ def repaint_floor(ac, atlas, colour, boxes):
     return n
 
 
-def install(ac, mesh, gauges, displays, hud, eyes):
+def install(ac, mesh, gauges, displays, hud, eyes, glaze=True):
     """the cockpit bone into the hull, every seat's instruments (replacing whatever the asset held for any seat), the
     HUDs and sights (one dict or a list, one per seat: the first is "HeadUpDisplay", the others "HeadUpDisplays"), then
-    the windows' glass (model_glass.glaze) and the combiners' glass; returns (poly mesh, glaze summary)"""
+    the windows' glass (model_glass.glaze; glaze=False leaves the windows to the hand-fitted glass_<vid>.py, run after
+    the script) and the combiners' glass; returns (poly mesh, glaze summary)"""
     import model_glass as MG
     huds = [h for h in (hud if isinstance(hud, list) else [hud]) if h]
     first = huds[0] if huds else None
@@ -648,7 +649,11 @@ def install(ac, mesh, gauges, displays, hud, eyes):
         a['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays}
     else:
         a.pop('FlightDisplays', None)
-    line, _ = MG.glaze(ac)
+    if glaze:
+        line, _ = MG.glaze(ac)
+    else:
+        a.pop('CanopyGlass', None)
+        line = 'windows left to the hand-fitted glass'
     comb = a.pop('CombinerGlass', None) or []
     if comb:
         L.add_glass(a, comb)
