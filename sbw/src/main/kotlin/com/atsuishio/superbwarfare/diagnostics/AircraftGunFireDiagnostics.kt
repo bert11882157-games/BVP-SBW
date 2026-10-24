@@ -33,9 +33,10 @@ import java.nio.file.Path
  * Opt-in private-server check that every aircraft gun fires through the same path as a held fire click (owner
  * 2026-10-23: "some aircraft autocannons were not firing when i would click fire"). Each crewed seat's native
  * weapons are selected in turn and held through the weapon scheduler, first as spawned (no magazine fill, no
- * creative ammo box, as a creative player first climbs in) and then with a filled magazine and a creative ammo box.
- * Every attempt records what the client gates on, the accepted shot count and, when nothing fired, each admission
- * the shot needs. The report (aircraft-gun-fire.json) lists every silent gun.
+ * creative ammo box, as a creative player first climbs in) and then loaded (a creative ammo box and the magazine
+ * left by a completed reload). The landing gear is held up, as in flight. Every attempt records what the client
+ * gates on, the accepted shot count, the scheduler decisions while held and, when nothing fired, each admission the
+ * shot needs. The report (aircraft-gun-fire.json) lists every silent gun.
  */
 @EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID)
 object AircraftGunFireDiagnostics {
@@ -69,6 +70,12 @@ object AircraftGunFireDiagnostics {
         run?.finish(IllegalStateException("Server stopped during test")); run = null
     }
 
+    /**
+     * Ticks between selecting a seat and weapon and pressing the trigger. The test client sees the selection change
+     * and sends its own trigger release (ClientEventHandler.handleVehicleFire), which used to land on the first held
+     * tick and leave the gun silent; the press waits it out, and the hold is re-asserted every tick.
+     */
+    private const val SETTLE_TICKS = 4
     private const val HOLD_TICKS = 14
     private const val SLOT_TICKS = 24
 
@@ -90,6 +97,8 @@ object AircraftGunFireDiagnostics {
         var attempt = JsonObject()
         var sequence = 0L
         var ammoBefore = 0
+        var firstShotTick = -1
+        val decisions = JsonArray()
         var age = 0
         var tested = 0
 
@@ -142,29 +151,57 @@ object AircraftGunFireDiagnostics {
             current.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent { ItemHandlerHelper.insertItem(it, box.copy(), false) }
         }
 
-        fun begin(next: Case) {
+        /** Select the seat and weapon; the trigger is pressed [SETTLE_TICKS] later. */
+        fun select(next: Case) {
             val current = vehicle!!
             case = next
             if (next.supplied) supply(current)
             val seated = current.getSeatIndex(player) == next.seat || current.changeSeat(player, next.seat)
             current.setWeaponIndex(next.seat, next.index)
-            val data = current.getGunData(next.weapon)
-            if (next.supplied) current.modifyGunData(next.weapon) { it.ammo.set(it.get(GunProp.MAGAZINE)) }
-            sequence = current.getWeaponScheduleSnapshot(next.seat, next.index)?.acceptedSequence ?: 0L
-            ammoBefore = data?.let { current.getAmmo(it) } ?: 0
+            // every gun as a completed reload leaves it, bank members included: idle, full magazine, cool (a refill
+            // alone left the reload the first pass started running, so the gun read as reloading with a full magazine)
+            if (next.supplied) for (name in current.gunDataMap.keys.toList()) current.modifyGunData(name) {
+                if (!it.useBackpackAmmo()) {
+                    it.resetStatus(); it.ammo.set(it.get(GunProp.MAGAZINE)); it.heat.set(0.0); it.overHeat.set(false)
+                }
+            }
             attempt = JsonObject().also {
                 it.addProperty("seat", next.seat); it.addProperty("weapon", next.weapon)
-                it.addProperty("pass", if (next.supplied) "filled magazine + creative ammo box" else "as spawned")
+                it.addProperty("pass", if (next.supplied) "loaded" else "as spawned")
                 it.addProperty("seated", seated)
-                it.addProperty("selected", current.getGunName(next.seat) == next.weapon)
-                it.addProperty("hasGunData", data != null)
-                // what the client checks before it sends the fire click at all
-                it.addProperty("clientSendsClick", current.banHand(player) && current.hasWeapon(next.seat) &&
-                    current.getGunData(next.seat, next.index) != null)
-                it.addProperty("ammoBefore", ammoBefore)
-                if (data != null) it.addProperty("backpackAmmo", data.useBackpackAmmo())
-                it.addProperty("triggerAccepted", current.updateScheduledWeaponTrigger(player, true, null, null))
             }
+        }
+
+        fun press() {
+            val current = vehicle!!
+            val next = case!!
+            val data = current.getGunData(next.weapon)
+            sequence = current.getWeaponScheduleSnapshot(next.seat, next.index)?.acceptedSequence ?: 0L
+            ammoBefore = data?.let { current.getAmmo(it) } ?: 0
+            firstShotTick = -1
+            while (decisions.size() > 0) decisions.remove(0)
+            attempt.addProperty("selected", current.getGunName(next.seat) == next.weapon)
+            attempt.addProperty("hasGunData", data != null)
+            // what the client checks before it sends the fire click at all
+            attempt.addProperty("clientSendsClick", current.banHand(player) && current.hasWeapon(next.seat) &&
+                current.getGunData(next.seat, next.index) != null)
+            attempt.addProperty("ammoBefore", ammoBefore)
+            if (data != null) {
+                attempt.addProperty("backpackAmmo", data.useBackpackAmmo())
+                attempt.addProperty("reloadingBefore", data.reloading())
+            }
+            attempt.addProperty("triggerAccepted", current.updateScheduledWeaponTrigger(player, true, null, null))
+        }
+
+        /** Keep the trigger held, as the fire key is, and note each scheduler decision and the first shot. */
+        fun hold(held: Int) {
+            val current = vehicle!!
+            val now = case!!
+            current.updateScheduledWeaponTrigger(player, true, null, null)
+            val snapshot = current.getWeaponScheduleSnapshot(now.seat, now.index)
+            val decision = snapshot?.lastDecision ?: "no schedule"
+            if (decisions.size() == 0 || decisions[decisions.size() - 1].asString != decision) decisions.add(decision)
+            if (firstShotTick < 0 && (snapshot?.acceptedSequence ?: 0L) > sequence) firstShotTick = held
         }
 
         fun conclude() {
@@ -177,6 +214,8 @@ object AircraftGunFireDiagnostics {
             attempt.addProperty("shots", shots)
             attempt.addProperty("ammoAfter", data?.let { current.getAmmo(it) } ?: 0)
             attempt.addProperty("lastDecision", snapshot?.lastDecision ?: "no schedule")
+            attempt.add("decisions", decisions.deepCopy())
+            attempt.addProperty("firstShotTick", firstShotTick)
             if (shots <= 0) {
                 // the direct path, then every admission it needs
                 val direct = current.vehicleShootResult(player, now.weapon)
@@ -197,6 +236,7 @@ object AircraftGunFireDiagnostics {
                     it.addProperty("aircraft", report["aircraft"].asString); it.addProperty("seat", now.seat)
                     it.addProperty("weapon", now.weapon); it.addProperty("pass", attempt["pass"].asString)
                     it.addProperty("lastDecision", attempt["lastDecision"].asString)
+                    it.add("decisions", decisions.deepCopy())
                     it.addProperty("directShot", attempt["directShot"].asString)
                 })
             }
@@ -205,7 +245,10 @@ object AircraftGunFireDiagnostics {
             case = null
         }
 
-        /** Per aircraft: settle 20 ticks aloft, then one gun every [SLOT_TICKS]: hold [HOLD_TICKS], release, cool. */
+        /**
+         * Per aircraft: settle 20 ticks aloft, then one gun every [SLOT_TICKS]: select, settle [SETTLE_TICKS], hold
+         * [HOLD_TICKS], release, cool.
+         */
         fun tick(): Boolean {
             if (vehicle == null) {
                 val next = queue.removeFirstOrNull() ?: return true
@@ -216,14 +259,20 @@ object AircraftGunFireDiagnostics {
             age++
             current.deltaMovement = Vec3.ZERO
             current.setPos(origin.x, origin.y, origin.z)
+            // gear up, as in flight: guns that need it retracted (MiG-23MLD, Su-17 GSh-23L) refuse otherwise
+            current.gearUp = true
+            current.synchedGearRot = 1F
             if (age < 20) return false
             val slotAge = (age - 20) % SLOT_TICKS
             when {
                 slotAge == 0 -> {
                     val next = cases.removeFirstOrNull()
-                    if (next == null) end() else begin(next)
+                    if (next == null) end() else select(next)
                 }
-                slotAge == HOLD_TICKS && case != null -> conclude()
+                case == null -> Unit
+                slotAge == SETTLE_TICKS -> press()
+                slotAge in SETTLE_TICKS + 1 until SETTLE_TICKS + HOLD_TICKS -> hold(slotAge - SETTLE_TICKS)
+                slotAge == SETTLE_TICKS + HOLD_TICKS -> conclude()
             }
             return false
         }
