@@ -344,7 +344,8 @@ class Gear:
                 for n in part:
                     if n not in self.wheel_bones:
                         part[n] = [self._squash(p) for p in part[n]]
-        self._parts[key] = (upper, lower)
+        if self.sq is None:      # thinned variants are one per candidate: caching them all would fill memory
+            self._parts[key] = (upper, lower)
         return upper, lower
 
     def sq_key(self):
@@ -393,7 +394,8 @@ class Gear:
                 lp = (lp - c) @ rot([0, 1.0, 0], tw).T + c
             lp = lp + np.asarray(u, float) * D
         pts = np.concatenate([x for x in (pts, lp) if len(x)])
-        self._pts[key] = pts
+        if self.sq is None or len(self._pts) < 2000:
+            self._pts[key] = pts
         return pts
 
     def points(self, trim_y=None, H=None):
@@ -483,8 +485,10 @@ class Skin:
             h = h[np.concatenate([[True], np.diff(h) > 0.05])]
         return h
 
-    def column(self, x, z, y0=-200.0, which='tris'):
+    def column(self, x, z, y0=-200.0, which='tris', cache=True):
         """Heights at which a vertical line at (x, z) crosses the skin (or the `fixed` parts), bottom first."""
+        if not cache:
+            return self._dedupe(y0 + M.ray_hits(getattr(self, which), [x, y0, z], [0, 1.0, 0]))
         key = (round(float(x), 4), round(float(z), 4), y0, which)
         cache = self.__dict__.setdefault('_columns', {})
         if key not in cache:
@@ -691,13 +695,11 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
 
 def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u=(0.0, 1.0, 0.0)):
     m = g.m
-    # every stowed point (the planner only sampled them) must sit above the skin, judged by the highest skin on the
-    # lattice around it, so no tyre edge pokes out through a curved belly
-    q = 0.25
+    # every stowed point (the planner only sampled them) must sit above the skin right over it, so no tyre edge
+    # pokes out through a curved belly (the finished model is checked for any gear showing from below as well)
     for p in st:
-        x0, z0 = np.floor(p[0] / q) * q, np.floor(p[2] / q) * q
-        ys = [skin.skin_y(x, z) for x in (x0, x0 + q) for z in (z0, z0 + q)]
-        if any(y is None or p[1] < y + DOOR_CLEAR for y in ys):
+        col = skin.column(p[0], p[2], cache=False)
+        if not len(col) or p[1] < col[0] + 0.05:
             return None, f'the stowed gear pokes out of the skin at ({p[0]:.1f},{p[1]:.1f},{p[2]:.1f})'
     s_axis = 2 if abs(s[2]) > 0.5 else 0           # the well runs along the swing
     c_axis = 2 - s_axis
@@ -1124,7 +1126,7 @@ def _run(vid, cfg, do_write, out_dir):
         twin = mirror_of(g)
         reasons, chosen, pair = [], None, None
         # struts as modelled first; then thinned (like the tyres) where they are thicker than the wing
-        for k in cfg.get('strut_ks', [1.0, 0.6, 0.4]):
+        for k in cfg.get('strut_ks', [1.0, 0.6, 0.4, 0.25]):
             ck = dict(cfg, strut_k=k)
             reasons = []
             for d in preferences(g, ck):
