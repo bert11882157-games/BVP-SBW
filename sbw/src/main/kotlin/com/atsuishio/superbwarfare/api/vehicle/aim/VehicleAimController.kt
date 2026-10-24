@@ -647,8 +647,13 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             profile.maxPitch,
             profile.softPitchLimitDegrees,
         )
-        val nextYaw = VehicleAimMath.applyYawRange(previousYaw + yawChange, profile.minYaw, profile.maxYaw)
-        val nextPitch = Mth.clamp(previousPitch + pitchChange, profile.minPitch, profile.maxPitch)
+        val rangedYaw = VehicleAimMath.applyYawRange(previousYaw + yawChange, profile.minYaw, profile.maxYaw)
+        val rangedPitch = Mth.clamp(previousPitch + pitchChange, profile.minPitch, profile.maxPitch)
+        // A hull station's mechanical stops hold traverse (or lift the gun) rather than slew it into the airframe.
+        val stopped = if (profile.channel == VehicleAimChannel.PASSENGER_WEAPON && !parentedToTurret)
+            vehicle.stopPassengerWeaponSlew(previousYaw, previousPitch, rangedYaw, rangedPitch) else null
+        val nextYaw = stopped?.get(0) ?: rangedYaw
+        val nextPitch = stopped?.get(1) ?: rangedPitch
         val actualAppliedYaw = actualAppliedYaw(previousYaw, nextYaw, profile.minYaw, profile.maxYaw)
         val actualAppliedPitch = nextPitch - previousPitch
         val lockYawDelta = yawDelta

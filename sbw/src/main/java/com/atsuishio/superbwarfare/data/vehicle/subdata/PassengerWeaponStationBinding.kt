@@ -78,6 +78,13 @@ class PassengerWeaponStationBinding {
     @SerialName("FireExclusions")
     var fireExclusions: List<PassengerWeaponFireExclusion> = emptyList()
 
+    /**
+     * Mechanical stops (the AH-56A belly turret's cams off its own gear): zones, in the FireExclusions convention,
+     * the station can never slew into. Exclusions only block fire; these also block the motion.
+     */
+    @SerialName("SlewStops")
+    var slewStops: List<PassengerWeaponFireExclusion> = emptyList()
+
     @SerialName("WeaponKind")
     var weaponKind: PassengerWeaponStationWeaponKind? = PassengerWeaponStationWeaponKind.UNSPECIFIED
 
@@ -92,6 +99,7 @@ class PassengerWeaponStationBinding {
         schema == SCHEMA && parent != null && weaponId.isNotBlank() &&
             baseYawDegrees.isFinite() && baseYawDegrees in -180F..180F &&
             hasValidWeaponIds() && fireExclusions.size <= 8 && fireExclusions.all { it.valid() } &&
+            slewStops.size <= 8 && slewStops.all { it.valid() } &&
             weaponKind != null && weaponKind != PassengerWeaponStationWeaponKind.UNSPECIFIED
 
     fun containsWeapon(name: String): Boolean = hasTypedIdentity() &&
@@ -101,6 +109,31 @@ class PassengerWeaponStationBinding {
         hasTypedIdentity() && (fireExclusions.isEmpty() ||
             (yawDegrees.isFinite() && pitchDegrees.isFinite() &&
                 fireExclusions.none { it.contains(yawDegrees, pitchDegrees) }))
+
+    /**
+     * The pose the station reaches stepping from (previousYaw, previousPitch) toward (yaw, pitch), in the authored
+     * convention: traverse holds at a stop while elevation carries on, and a pose already inside a stop leaves it
+     * by elevation, towards level. Returns [yaw, pitch].
+     */
+    fun stopSlew(previousYaw: Float, previousPitch: Float, yaw: Float, pitch: Float): FloatArray {
+        if (slewStops.isEmpty() || !hasTypedIdentity()) return floatArrayOf(yaw, pitch)
+        fun stopped(y: Float, p: Float) = slewStops.any { it.contains(y, p) }
+        if (!stopped(yaw, pitch)) return floatArrayOf(yaw, pitch)
+        if (!stopped(previousYaw, pitch)) return floatArrayOf(previousYaw, pitch)
+        var escaped = pitch
+        repeat(slewStops.size) {
+            val stop = slewStops.firstOrNull { it.contains(yaw, escaped) } ?: return floatArrayOf(yaw, escaped)
+            val low = stop.pitch[0]
+            val high = stop.pitch[1]
+            // Just past the edge: the zones are closed ranges.
+            escaped = when {
+                high <= 0F -> high + STOP_CLEARANCE
+                low >= 0F -> low - STOP_CLEARANCE
+                else -> if (high - escaped <= escaped - low) high + STOP_CLEARANCE else low - STOP_CLEARANCE
+            }
+        }
+        return if (stopped(yaw, escaped)) floatArrayOf(previousYaw, previousPitch) else floatArrayOf(yaw, escaped)
+    }
 
     private fun hasValidWeaponIds(): Boolean {
         if (weaponIds.isEmpty()) return true
@@ -115,6 +148,7 @@ class PassengerWeaponStationBinding {
 
     companion object {
         const val SCHEMA = "berts_vehicle_pack:passenger_bed_weapon_station/v1"
+        private const val STOP_CLEARANCE = 0.01F
         private val WEAPON_ID = Regex("[A-Za-z][A-Za-z0-9_.-]{0,95}")
     }
 }
