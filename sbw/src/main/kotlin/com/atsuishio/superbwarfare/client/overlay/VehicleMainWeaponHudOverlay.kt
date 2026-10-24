@@ -91,12 +91,13 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return
 
-        val type: String = vehicle.computed().hudType
-        if (type == EMPTY) return
+        val authoredType: String = vehicle.computed().hudType
+        if (authoredType == EMPTY) return
+        val type = if (HelicopterHud.handles(vehicle, authoredType)) HelicopterHud.ID else authoredType
 
         val gunData = vehicle.getGunData(player)
         // Flight instruments belong to the aircraft, not to an optional selected weapon.
-        if (gunData == null && type != AircraftHud.ID) return
+        if (gunData == null && type != AircraftHud.ID && type != HelicopterHud.ID) return
 
         val poseStack = guiGraphics.pose()
         poseStack.pushPose()
@@ -495,9 +496,10 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         data: GunData,
         font: Font
     ) {
-        // Ground vehicles use the authored 3x3 text panel.  Do not re-add the old
-        // crosshair-adjacent ammo/count label; aircraft and helicopter HUDs retain theirs.
-        if (vehicle.computed().hudType == LandVehicleHud.ID) return
+        // Ground vehicles and helicopters list their weapons in the bottom-right systems panel.  Do not
+        // re-add the old crosshair-adjacent ammo/count label for them; fixed-wing aircraft HUDs retain theirs.
+        val hudType = vehicle.computed().hudType
+        if (hudType == LandVehicleHud.ID || HelicopterHud.handles(vehicle, hudType)) return
         if (!vehicle.hasWeapon()) return
 
         val heat = vehicle.getWeaponHeat(player) / 100f

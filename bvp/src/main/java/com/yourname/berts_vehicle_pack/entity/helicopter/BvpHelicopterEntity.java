@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.entity.helicopter;
 
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
 import com.atsuishio.superbwarfare.api.vehicle.camera.VehicleCameraMode;
+import com.atsuishio.superbwarfare.api.vehicle.flight.RotorcraftControlGauges;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInputContext;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInstrumentSnapshot;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategy;
@@ -21,7 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
-public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implements VehicleFlightStrategyProvider {
+public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity
+        implements VehicleFlightStrategyProvider, RotorcraftControlGauges {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FORCE_LOG_INTERVAL_TICKS =
             Math.max(1, Integer.getInteger("bvp.debug.forceLogIntervalTicks", 5));
