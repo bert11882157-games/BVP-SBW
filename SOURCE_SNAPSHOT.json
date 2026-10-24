@@ -19493,8 +19493,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/AircraftRigAnimator.java",
-      "size": 41055,
-      "sha256": "6913c18fd5c9d1a183a0e6fc9768fd682783d6cd73b271dedc315a0124bfe538"
+      "size": 44521,
+      "sha256": "3d907120153eb6141ebdb1ddb3a00dc1f73476f5de69b972df5c2f35a8b16a10"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/ArmorDebugRenderer.java",
@@ -24058,8 +24058,8 @@
     },
     {
       "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/AircraftRigAnimatorTest.java",
-      "size": 47118,
-      "sha256": "d6b7cbcbd94052cdbcc64b1c1285e9a417aafb7b2ef6bf4b589bcebfcebca8b9"
+      "size": 49606,
+      "sha256": "fdb6af90295dbedcfba125c7e9772f14f4c64217b58f2ca3d4f725e328342131"
     },
     {
       "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/GeneratedAircraftRigBindTest.java",
@@ -33243,8 +33243,8 @@
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/PassengerWeaponStationBinding.kt",
-      "size": 4350,
-      "sha256": "61f41097cff6b4c41adc7d178753f98ced2d64a20460c448819059200e73355f"
+      "size": 6207,
+      "sha256": "a79f661292373b6bfea196d7750253d19735d9d2e4d3e1eebff2051572b48b09"
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/SeatInfo.kt",
@@ -34583,8 +34583,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/aim/VehicleAimController.kt",
-      "size": 59754,
-      "sha256": "97e63d28b04ec92c3ddbc9a76c6e6eaca5680d873e3016d411fb6a224c69bdf5"
+      "size": 60188,
+      "sha256": "3eb2f7bc4eac643bd980003d7ce2a5c0a951f41d9407ad09f4ad5376b357cad8"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/aim/VehicleAimDirectionFrame.kt",
@@ -38593,8 +38593,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 342447,
-      "sha256": "49d1161d2c339480e0b60ca63ba662df9d724e8ce4184acb583b9206d839c962"
+      "size": 343512,
+      "sha256": "a352599c6a7ff17c0981a1cd684d6becd82bd5ce106aa2f6e9345c9c524efa69"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -53575,6 +53575,11 @@
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/PassengerWeaponFireExclusionTest.kt",
       "size": 1423,
       "sha256": "0823f6bd234a2f071e56e83e3d6326487389a69c86476e2b59ee694ea372b55c"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/PassengerWeaponSlewStopTest.kt",
+      "size": 1868,
+      "sha256": "e38f13b8c66295694e52481e3c4068db0f41882772cc59a7cc6438ad2000c6a2"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleCollisionBoxesTest.kt",
