@@ -383,8 +383,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /** First-entry reload credit is opt-in so native SBW vehicles keep their placement lifecycle. */
     protected open fun initialPassengerReloadProgressPercent(): Int = 0
 
-    /** Aircraft guns spawn with empty magazines; opting in arms them on first boarding so the first click fires. */
-    protected open fun armsGunsOnFirstBoarding(): Boolean = false
+    /**
+     * Guns spawn with empty magazines. Aircraft (native and addon) arm them on first boarding so the first click
+     * fires; ground vehicles keep their placement lifecycle unless they opt in.
+     */
+    protected open fun armsGunsOnFirstBoarding(): Boolean =
+        com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.isAircraft(this)
 
     private var initialPassengerReloadProgressApplied: Boolean
         get() = persistentStateOwner.initialPassengerReloadProgressApplied

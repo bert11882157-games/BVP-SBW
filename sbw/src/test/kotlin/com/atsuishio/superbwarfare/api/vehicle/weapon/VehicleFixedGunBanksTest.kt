@@ -93,6 +93,16 @@ class VehicleFixedGunBanksTest {
         assertNull(VehicleFixedGunBanks.memberIndices(List(17) { "Pod$it" }, List(17) { "Pod$it" }, 16))
     }
 
+    @Test fun `the pilot's built-in bank keeps only the guns the pilot can fan together`() {
+        val groups = com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups
+        // Il-10: the gunner's RearCannon is built in but not the pilot's; the four wing cannons still bank
+        val wings = listOf("Gun1", "Gun2", "Gun3", "Gun4")
+        assertEquals(wings, groups.pilotBank(wings + "RearCannon", "Gun3") { it != "RearCannon" })
+        // AH-64D: the pilot selecting the gunner's station gun fires it on its own, not as a refused bank
+        assertNull(groups.pilotBank(listOf("M230"), "M230") { false })
+        assertEquals(listOf("Vulcan"), groups.pilotBank(listOf("Vulcan"), "Vulcan") { true })
+    }
+
     @Test fun `group and main trigger resolve disjoint physical schedules for one through four paired fittings`() {
         val groups = com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups
         for (count in 1..4) {

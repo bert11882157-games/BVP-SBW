@@ -221,15 +221,17 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
         intent: TriggerIntent,
         slot: VehicleWeaponSlot,
     ): Boolean {
-        val expanded = VehicleFixedGunBanks.expand(anchor, slot == VehicleWeaponSlot.PRIMARY)
+        var refusal = ""
+        val expanded = VehicleFixedGunBanks.expand(anchor, slot == VehicleWeaponSlot.PRIMARY) { refusal = it }
         if (expanded == null) {
             VehicleWeaponShotDiagnostics.recordBoundary(
                 vehicle,
                 anchor.selection.controller,
                 anchor.selection.weaponName,
                 VehicleWeaponShotDiagnostics.Boundary.SCHEDULER,
-                "INVALID_FIXED_GUN_BANK",
+                "INVALID_FIXED_GUN_BANK: $refusal",
             )
+            warnRefusedBank(anchor.selection, refusal)
             return false
         }
 
@@ -256,6 +258,15 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             }
         }
         return true
+    }
+
+    /** A refused bank never fires on a held trigger: say why once per vehicle type, weapon and reason. */
+    private fun warnRefusedBank(selection: VehicleWeaponSelection, reason: String) {
+        val type = net.minecraft.world.entity.EntityType.getKey(vehicle.type)
+        if (refusedBanks.add("$type/${selection.seatIndex}/${selection.weaponName}/$reason")) {
+            Mod.LOGGER.warn("Fixed gun bank of {} seat {} weapon {} cannot fire: {}",
+                type, selection.seatIndex, selection.weaponName, reason)
+        }
     }
 
     private fun isCurrent(trigger: ActiveTrigger): Boolean {
@@ -463,6 +474,8 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     internal companion object {
         /** How long a released seat trigger is remembered for its presentation (longer than any release grace). */
         private const val SEAT_HOLD_MEMORY_TICKS = 40
+
+        private val refusedBanks: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 
         /**
          * The physical weapon a schedule key fires: its channel name. Every seat that lists the channel fires the

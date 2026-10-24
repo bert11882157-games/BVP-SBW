@@ -49,13 +49,35 @@ object AircraftGunPodGroups {
         if (selection.seatIndex != 0) return null
         val builtIn = definition.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: emptyList()
         val bank = members(selection.weaponName, builtIn, emptyList()) ?: return null
-        // A turret gun (Barrel / Turret: a helicopter's chin gun, aimed by its turret) fires on its own; the bank only
-        // fans hull-fixed and station guns (VehicleFixedGunBanks.validGun refuses the others, which left the Ka-50,
-        // Mi-24V and Mi-28N pilots unable to fire their built-in gun at all).
-        return bank.takeIf { members -> members.all { fixedBankable(vehicle, it) } }
+        val own = vehicle.getWeaponIds(0)
+        return pilotBank(bank, selection.weaponName) { name ->
+            val index = own.indexOf(name)
+            index >= 0 && pilotBankable(vehicle, index, name)
+        }
     }
-    private fun fixedBankable(vehicle: VehicleEntity, name: String): Boolean =
-        vehicle.gunDataMap[name]?.get(GunProp.SHOOT_POS)?.transform.let { it == "Vehicle" || it == "WeaponStationBarrel" }
+
+    /**
+     * The built-in guns the pilot's trigger fans together: those [bankable] from the pilot's seat, or none when the
+     * selected gun is not one of them (it then fires on its own). A built-in gun the pilot cannot bank used to refuse
+     * the whole bank, so the trigger never fired: the Il-10's RearCannon (listed only on the gunner's seat) silenced
+     * its four wing cannons, and a gunner's station gun selected by the pilot (AH-64D M230, AH-1F, Mi-24A/D) never
+     * fired from the pilot's seat.
+     */
+    internal fun pilotBank(builtIn: List<String>, selected: String, bankable: (String) -> Boolean): List<String>? =
+        builtIn.filter(bankable).takeIf { selected in it }
+
+    /**
+     * A turret gun (Barrel / Turret: a helicopter's chin gun, aimed by its turret) fires on its own, as does a station
+     * gun on a seat that does not control the station; the bank fans hull-fixed guns, and station guns of the seat
+     * that aims them ([com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleFixedGunBanks] refuses the others).
+     */
+    private fun pilotBankable(vehicle: VehicleEntity, index: Int, name: String): Boolean =
+        when (vehicle.gunDataMap[name]?.get(GunProp.SHOOT_POS)?.transform) {
+            "Vehicle" -> true
+            "WeaponStationBarrel" -> vehicle.isHullParentedPassengerWeaponStation() &&
+                vehicle.isPassengerWeaponStationWeapon(0, index)
+            else -> false
+        }
     internal fun members(trigger: String, builtIn: List<String>, pods: List<String>): List<String>? = when {
         trigger == GROUP -> pods.distinct()
         trigger in builtIn -> builtIn.distinct()
