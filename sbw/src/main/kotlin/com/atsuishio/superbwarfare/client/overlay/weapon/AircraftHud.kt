@@ -91,6 +91,8 @@ object AircraftHud {
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return
         if (vehicle.computed().hudType != ID) return
+        // Helicopters render HelicopterHud's weapon panel instead, so they need no HUD range trace either.
+        if (HelicopterHud.handles(vehicle, ID)) return
         // The minimal aircraft cue follows the body, so it needs no muzzle raycast.
         if (vehicle.isFixedWingFlightVehicle() ||
             vehicle.vehicleType == com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) return
