@@ -90,27 +90,33 @@ def corner(d):
 
 
 def periscope_fin(m, sh, E, out, dark):
-    """the periscope fairing on the hood's top: a fin rising aft from its foot, the square mirror housing on its back,
-    the mirror's window dark on top (the reference's side and top views)"""
-    # side profile: (z, height over the hood's top): from a seventh of the hood back from the arch to nearly half way
-    prof = [(0.14, 0.0), (-0.07, 0.09), (-0.115, 0.09), (-0.14, 0.0)]
-    half = 0.022
-    pts = []
-    for z, h in prof:
-        y = sh.point(z, 1.0)[1] - 0.012                 # (its foot sunk through the glass)
-        pts.append((z, y + h + 0.012 * (h > 0)))
-    L_ = [E + np.array([half, y, z]) for z, y in pts]
-    R_ = [E + np.array([-half, y, z]) for z, y in pts]
-    up = E + np.array([0, pts[1][1] + 0.5, -0.05])
-    m.flat(L_, out, toward=E + np.array([1.0, pts[1][1], -0.05]))
-    m.flat(R_, out, toward=E + np.array([-1.0, pts[1][1], -0.05]))
-    for i in range(len(pts) - 1):
-        m.flat([L_[i], L_[i + 1], R_[i + 1], R_[i]], out, toward=up)
-    # the mirror housing: a square box on the fin's back, its window on top
-    z, y = -0.095, pts[1][1]
+    """the periscope fairing on the hood's centre bar (the reference's top and side views, 2026-10-24 check): from
+    above a shield, pointed at both ends and widest a little behind its middle, about 0.18 wide and 0.42 long on the
+    bar (about a fifth of the hood's width, as the reference), from a tenth of the hood back from the arch; from the side a low fin rising aft to its mirror housing, the
+    mirror's window dark on top"""
+    # (z, half width, height over the hood's top): the shield's plan and the fin's side profile together
+    prof = [(0.17, 0.012, 0.0), (0.10, 0.06, 0.03), (0.02, 0.085, 0.06), (-0.07, 0.09, 0.09), (-0.13, 0.075, 0.09),
+            (-0.20, 0.04, 0.05), (-0.25, 0.012, 0.0)]
+    secs = []
+    for z, w, h in prof:
+        base = sh.point(z, 1.0)[1] - 0.03               # (its foot sunk through the bar and the glass)
+        top = sh.point(z, 1.0)[1] + h + 0.004
+        secs.append((z, w, base, top))
+    up = E + np.array([0, secs[3][3] + 0.5, -0.05])
+    for i in range(len(secs) - 1):
+        (z0, w0, b0, t0), (z1, w1, b1, t1) = secs[i], secs[i + 1]
+        m.flat([E + np.array([w0, t0, z0]), E + np.array([w1, t1, z1]), E + np.array([-w1, t1, z1]),
+                E + np.array([-w0, t0, z0])], out, toward=up)
+        for sg in (1, -1):
+            m.flat([E + np.array([sg * w0, b0, z0]), E + np.array([sg * w1, b1, z1]), E + np.array([sg * w1, t1, z1]),
+                    E + np.array([sg * w0, t0, z0])], out, toward=E + np.array([sg * 1.0, t0, (z0 + z1) / 2]))
+    for z, w, b, t in (secs[0], secs[-1]):
+        m.flat([E + np.array([w, b, z]), E + np.array([w, t, z]), E + np.array([-w, t, z]), E + np.array([-w, b, z])],
+               out, toward=E + np.array([0, t, z + (1.0 if z > 0 else -1.0)]))
+    # the mirror housing's window, dark, on the shield's back
+    z, y = -0.095, secs[3][3]
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    m.box(E + np.array([0, y + 0.006, z]), (X, Y, Z), (0.03, 0.012, 0.03), out)
-    m.box(E + np.array([0, y + 0.019, z]), (X, Y, Z), (0.017, 0.002, 0.017), dark)
+    m.box(E + np.array([0, y + 0.003, z]), (X, Y, Z), (0.03, 0.003, 0.03), dark)
 
 
 def build(atlas, E, skin):
@@ -125,7 +131,8 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, HOOD_REAR, BOW_W, 0.03, out, inner)
     C.member(m, sh, E, 0.0, -0.60, SPLIT, 0.045, 0.035, out, inner)
     C.fill(m, sh, E, rear, front, lambda z: BAND + corner(z - rear) + corner(front - z), out, inner, steps=40)
-    C.member(m, sh, E, 1.0, HOOD_REAR, SPLIT, 0.05, 0.022, out, inner, sides=(1,), steps=16)
+    C.member(m, sh, E, 1.0, HOOD_REAR, SPLIT, 0.08, 0.022, out, inner, sides=(1,), steps=16)   # (the reference's
+    # centre bar is about a ninth of the hood's width from above)
     C.cap(m, sh, E, rear, rear + CORNER[0], lambda z: 1.0 - corner(z - rear), out, inner, steps=10)
     C.cap(m, sh, E, front - CORNER[0], front, lambda z: 1.0 - corner(front - z), out, inner, steps=10)
     periscope_fin(m, sh, E, out, dark)
