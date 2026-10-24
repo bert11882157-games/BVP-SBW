@@ -614,6 +614,18 @@ def build(atlas, E):
         m.box(P(s * 0.035, -0.855, 0.15), (X, Y, Z), (0.006, 0.05, 0.006), sw['metal'])
     m.box(P(0, -0.795, 0.15), (X, Y, Z), (0.045, 0.011, 0.009), sw['yellow'], front=(2, 1, stripes, X, Y))
 
+    # -- the side consoles' bigger fittings: the left one's elevator trim wheel (a thumb wheel standing in the console top beside
+    # the throttle's sweep, its face toward the pilot, with a grip stud and an index mark), the right one's long red placard
+    # on the wall above the switch plate
+    tw = P(0.285, CONSOLE_Y + 0.030, 0.185)
+    m.box(tw - np.array([0, 0.020, 0]), (X, Y, Z), (0.022, 0.026, 0.010), sw['dgrey'])               # the wheel housing in the console top
+    m.ring(tw, [-1, 0, 0], Y, 0.018, 0.034, 0.013, sw['black'], seg=20)                              # the wheel's knurled rim
+    m.disc(tw + np.array([-0.013, 0, 0]), [-1, 0, 0], Y, 0.018, sw['dgrey'], seg=20)                  # its face
+    m.box(tw + np.array([-0.0155, 0.026, 0]), (X, Y, Z), (0.0025, 0.007, 0.0030), sw['metal'])        # index mark on the rim
+    m.box(tw + np.array([-0.0155, -0.006, 0.010]), (X, Y, Z), (0.0030, 0.0030, 0.0030), sw['metal'])  # grip stud
+    plac = atlas.paint(268, 40, H.p_label_plate('ARMEMENT  -  ALARMES  -  GENERAL', bg=(150, 22, 20)))
+    m.box(P(-(WALL_B - 0.006), -0.440, -0.20), (X, Y, Z), (0.002, 0.030, 0.20), sw['red'], front=(0, 1, plac, -Z, Y))
+
     # -- control stick: the boot stays with the cockpit, the rest goes into the stick bone
     sz = 0.19
     m.box(P(0, -0.945, sz), (X, Y, Z), (0.040, 0.04, 0.040), sw['dgrey'])
