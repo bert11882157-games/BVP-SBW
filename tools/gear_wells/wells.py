@@ -631,8 +631,10 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
     modes = cfg.get('hinge_modes', range(len(ups)))
     cands, worst, hits_any = [], None, False
     strut_k = cfg.get('strut_k', 1.0)
-    # fore-and-aft folds may twist the wheel a quarter turn so it lies flat (mirrored left and right)
-    twists = [t * (1.0 if g.nose else side) for t in cfg.get('twists', [0.0, 90.0] if direction in DIRS else [0.0])]
+    # the wheel may turn a quarter turn about the strut as it folds (mirrored left and right): lying flat in a
+    # fore-and-aft fold, or standing upright in the deep fuselage at the end of an inward fold (MiG-21, Mirage)
+    twists = [t * (1.0 if g.nose else side)
+              for t in cfg.get('twists', [0.0, 90.0] if direction in DIRS or direction == 'in' else [0.0])]
     for ui, u in enumerate(ups):
         if ui not in modes:
             continue
@@ -667,7 +669,7 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
                     over = max(p[1] + CEIL_MARGIN + TOP_SKIN - top for p in st[:: max(1, len(st) // 160)]
                                for col in [skin.column(round(p[0] * 2) / 2, round(p[2] * 2) / 2, which='all')]
                                for top in [col[-1] if len(col) else -1e9])
-                    cands.append((over > 0, d + extra / 10.0 + D / 3.0 + abs(tw) / 90.0 + ui, H, a, ang, st, d, extra,
+                    cands.append((over > cfg.get('blister', 0.0), over > 0, d + extra / 10.0 + D / 3.0 + abs(tw) / 90.0 + ui, H, a, ang, st, d, extra,
                                   D, tw, u, ui, g.sq))
                     break
     if not hits_any:
@@ -677,9 +679,9 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
             f' (e.g. {np.round(worst[0], 1).tolist()} over skin {worst[1] if worst[1] is None else round(worst[1], 1)})'
             if worst else '')
     first = None
-    for _, _, H, a, ang, st, d, extra, D, tw, u, ui, sq in sorted(cands, key=lambda c: c[:2])[:40]:
+    for _, _, _, H, a, ang, st, d, extra, D, tw, u, ui, sq in sorted(cands, key=lambda c: c[:3])[:40]:
         g.sq = sq
-        plan, why = check_plan(g, skin, direction, s, H, a, ang, st, d, others, D, tw, u)
+        plan, why = check_plan(g, skin, direction, s, H, a, ang, st, d, others, D, tw, u, cfg.get('blister', 0.0))
         if plan is not None:
             plan['extra'] = extra
             plan['mode'] = ui
@@ -693,7 +695,8 @@ def plan_leg(g, skin, direction, others, cfg, accept=None):
     return None, first
 
 
-def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u=(0.0, 1.0, 0.0)):
+def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u=(0.0, 1.0, 0.0), blister=0.0):
+    """`blister` > 0 lets a well rise up to that many px above the airframe's top, under a fairing."""
     m = g.m
     # every stowed point (the planner only sampled them) must sit above the skin right over it, so no tyre edge
     # pokes out through a curved belly (the finished model is checked for any gear showing from below as well)
@@ -706,6 +709,7 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
     well = Well(st)
     skin_min = 1e9
     inner = 0
+    bulges = {}                  # cell -> lowest airframe top over it, for cells that need a fairing
     for c, top in well.cells.items():
         x0, x1, z0, z1 = well.rect(c)
         for x, z in ((x0 + .5, z0 + .5), (x0 + .05, z0 + .05), (x1 - .05, z0 + .05), (x0 + .05, z1 - .05),
@@ -715,7 +719,9 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
                 return None, f'no skin under the well at ({x:.1f},{z:.1f})'
             allc = skin.column(x, z, which='all')
             if allc[-1] < top + TOP_SKIN:
-                return None, f'the well breaks through the top of the airframe at ({x:.1f},{z:.1f})'
+                if not blister or top + TOP_SKIN - allc[-1] > blister or allc[-1] < col[0] + 0.5:
+                    return None, f'the well breaks through the top of the airframe at ({x:.1f},{z:.1f})'
+                bulges[c] = min(bulges.get(c, 1e9), allc[-1])
             if col[0] > top - 0.5:
                 return None, f'skin above the ceiling at ({x:.1f},{z:.1f})'
             fx = skin.column(x, z, which='fixed')
@@ -728,7 +734,8 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
         i, j = c
         for (di, dj), (x, z) in (((-1, 0), (x0 + .05, z0 + .5)), ((1, 0), (x1 - .05, z0 + .5)),
                                  ((0, -1), (x0 + .5, z0 + .05)), ((0, 1), (x0 + .5, z1 - .05))):
-            if (i + di, j + dj) not in well.cells and not skin.inside(np.array([x, top - 0.05, z])):
+            probe = min(top, bulges[c] - 0.3) if c in bulges else top
+            if (i + di, j + dj) not in well.cells and not skin.inside(np.array([x, probe - 0.05, z])):
                 return None, f'the well wall at ({x:.1f},{z:.1f}) would stand outside the airframe'
         # the doors are cut from the skin under the well: it must be one gently curved surface, not a nacelle's
         # side or a step, or a door would carry a wall with it
@@ -743,7 +750,7 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
     boxes = [(np.array([b[0], lo[1], b[2]]), np.array([b[1], b[4], b[3]])) for b in well.boxes()]
     plan = {'leg': g.leg, 'dir': direction, 'H': H, 'axis': a, 'angle': ang, 'lo': lo, 'hi': hi,
             'depth': d, 's': s, 'stowed': st, 'inner': inner, 'well': well, 'boxes': boxes, 's_axis': s_axis,
-            'c_axis': c_axis, 'slide': D, 'twist': tw, 'up': np.asarray(u, float)}
+            'c_axis': c_axis, 'slide': D, 'twist': tw, 'up': np.asarray(u, float), 'bulges': bulges}
     # stores, control surfaces and other wells must stay clear
     for n, polys in m.polys.items():
         if AIRFRAME.match(n) or n in g.mesh_bones:
@@ -863,7 +870,10 @@ def build(m, plans, gears, skin):
                         cut_points += [c[0] for c in ins]
                 new_polys[n] = kept
         # pieces facing the open air become the doors; internal faces inside the well go
-        doors = [(n, p) for n, p in inside if outermost(skin, p)]
+        bulges = plan.get('bulges') or {}
+        tops = [(n, p) for n, p in inside if bulges and cells.top_at(*centroid_xz(p)) is not None
+                and centroid_xz(p) and is_top_piece(skin, p)]
+        doors = [(n, p) for n, p in inside if outermost(skin, p) and not any(p is q for _, q in tops)]
         dropped_inner = len(inside) - len(doors)
         piece = max(((AIRFRAME.match(n).group(1), M.area(p)) for n, p in doors), key=lambda t: t[1])[0] \
             if doors else AIRFRAME.match(skin_bones[0]).group(1)
@@ -920,6 +930,8 @@ def build(m, plans, gears, skin):
                     nrm = np.array([0, 0, 1.0 if t2 > t else -1.0])
                     vs = [(x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)]
                 well.append([(np.array(v, float), nrm, uv) for v in vs])
+        if bulges:
+            well += fairing(skin, cells, bulges, tops, uv)
         well = [w for w in (M.clean(w) for w in well) if w]
         new_polys['wreck_%s__hull' % piece] = new_polys.get('wreck_%s__hull' % piece, []) + well
         cut_points += [c[0] for w in well for c in w]
@@ -969,6 +981,63 @@ def build(m, plans, gears, skin):
         if 'polys' in b:
             b['polys'] = M.repair_t_junctions(b['polys'], cut_points)
     return new_polys, new_bones, door_entries, retracts, report
+
+
+def centroid_xz(p):
+    c = np.mean([v[0] for v in p], axis=0)
+    return float(c[0]), float(c[2])
+
+
+def is_top_piece(skin, p):
+    """A piece of the airframe's top surface (the highest skin over its centre), never a door."""
+    x, z = centroid_xz(p)
+    allc = skin.column(x, z, which='all')
+    return len(allc) > 0 and float(np.max([v[0][1] for v in p])) > allc[-1] - 0.3
+
+
+def fairing(skin, cells, bulges, tops, uv_well, e=0.05):
+    """A low fairing over the cells where the well rises above the airframe: a roof TOP_SKIN over each
+    ceiling, risers between roofs, and side walls down into the skin around it, all set e px outside the well's
+    own faces so nothing coincides. Painted with the colour of the top skin it replaces."""
+    uv = (max(tops, key=lambda t: M.area(t[1]))[1][0][2] if tops else uv_well)
+    out = []
+    up = np.array([0, 1.0, 0])
+
+    def top_at(x, z):
+        c = skin.column(x, z, which='all')
+        return c[-1] if len(c) else None
+    for c in bulges:
+        i, j = c
+        x0, x1, z0, z1 = cells.rect(c)
+        tb = cells.cells[c] + TOP_SKIN
+        ex = {k: (e if (i + di, j + dj) not in bulges else 0.0)
+              for k, (di, dj) in (('x0', (-1, 0)), ('x1', (1, 0)), ('z0', (0, -1)), ('z1', (0, 1)))}
+        X0, X1, Z0, Z1 = x0 - ex['x0'], x1 + ex['x1'], z0 - ex['z0'], z1 + ex['z1']
+        P = lambda x, y, z: np.array([x, y, z], float)
+        out.append([(P(X0, tb, Z0), up, uv), (P(X0, tb, Z1), up, uv), (P(X1, tb, Z1), up, uv), (P(X1, tb, Z0), up, uv)])
+        for k, (di, dj) in (('x0', (-1, 0)), ('x1', (1, 0)), ('z0', (0, -1)), ('z1', (0, 1))):
+            nb = (i + di, j + dj)
+            if nb in bulges:
+                tb2 = cells.cells[nb] + TOP_SKIN
+                if tb2 >= tb - 1e-4:
+                    continue              # the higher neighbour draws the riser
+                y0 = tb2
+            else:
+                ends = {'x0': ((X0, Z0), (X0, Z1)), 'x1': ((X1, Z0), (X1, Z1)),
+                        'z0': ((X0, Z0), (X1, Z0)), 'z1': ((X0, Z1), (X1, Z1))}[k]
+                hs = [h for h in (top_at(*q) for q in ends) if h is not None]
+                y0 = (min(hs) if hs else bulges[c]) - 0.3
+            n = np.array([float(di), 0, float(dj)])
+            if k == 'x0':
+                vs = [P(X0, y0, Z1), P(X0, y0, Z0), P(X0, tb, Z0), P(X0, tb, Z1)]
+            elif k == 'x1':
+                vs = [P(X1, y0, Z0), P(X1, y0, Z1), P(X1, tb, Z1), P(X1, tb, Z0)]
+            elif k == 'z0':
+                vs = [P(X0, y0, Z0), P(X1, y0, Z0), P(X1, tb, Z0), P(X0, tb, Z0)]
+            else:
+                vs = [P(X1, y0, Z1), P(X0, y0, Z1), P(X0, tb, Z1), P(X1, tb, Z1)]
+            out.append([(v, n, uv) for v in vs])
+    return out
 
 
 def apply(m, new_polys, new_bones, door_entries, retracts, gears):

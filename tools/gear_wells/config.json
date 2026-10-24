@@ -1,8 +1,48 @@
 {
-  "default": {"tyre_ratios": [0.25]},
-  "b_1b": {"tyre_ratios": [0, 0.4, 0.3]},
-  "b_47e": {"tyre_ratios": [0, 0.4, 0.3]},
-  "m_50a": {"tyre_ratios": [0, 0.4, 0.3]},
-  "tu_22m": {"tyre_ratios": [0, 0.4, 0.3]},
-  "tu_95ms": {"tyre_ratios": [0, 0.4, 0.3]}
+  "default": {
+    "tyre_ratios": [
+      0.25
+    ]
+  },
+  "b_1b": {
+    "tyre_ratios": [
+      0,
+      0.4,
+      0.3
+    ]
+  },
+  "b_47e": {
+    "tyre_ratios": [
+      0,
+      0.4,
+      0.3
+    ]
+  },
+  "m_50a": {
+    "tyre_ratios": [
+      0,
+      0.4,
+      0.3
+    ]
+  },
+  "tu_22m": {
+    "tyre_ratios": [
+      0,
+      0.4,
+      0.3
+    ]
+  },
+  "tu_95ms": {
+    "tyre_ratios": [
+      0,
+      0.4,
+      0.3
+    ]
+  },
+  "mig_21bis": {
+    "blister": 2.0
+  },
+  "su_9": {
+    "blister": 2.0
+  }
 }
