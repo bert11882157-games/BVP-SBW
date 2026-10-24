@@ -94,4 +94,23 @@ class AircraftLoadoutFramingTest {
         assertTrue(fit.distance<oldDistance*.8,"Expected noticeably closer fitting")
         assertTrue(fit.position.y<oldDistance*sin(Math.toRadians(22.0)),"Expected lower viewpoint")
     }
+
+    @Test fun fitRecordsTheViewRotationItWasFramedFor() {
+        val center=Vec3(0.0,70.0,0.0); val points=listOf(center.add(-6.0,0.0,0.0),center.add(6.0,1.0,4.0))
+        val fit=AircraftLoadoutFraming.fit(center,points,137f,640,360,70.0,0,-20f)
+        assertEquals(137f,fit.yaw); assertEquals(-20f,fit.pitch)
+    }
+
+    @Test fun obstructedEyeMovesInAlongItsLineAndKeepsTheRotation() {
+        val center=Vec3(10.0,64.0,10.0)
+        val fit=AircraftLoadoutFraming.Fit(center.add(0.0,3.0,-4.0),5.0,30f,90f)
+        assertSame(fit,AircraftLoadoutFraming.unobstructed(center,fit,.2) { null })
+        val pulled=AircraftLoadoutFraming.unobstructed(center,fit,.2) { 3.0 }
+        assertEquals(2.8,pulled.position.distanceTo(center),1e-9)
+        assertEquals(0.0,pulled.position.subtract(center).normalize().subtract(fit.position.subtract(center).normalize()).length(),1e-9)
+        assertEquals(fit.pitch,pulled.pitch); assertEquals(fit.yaw,pulled.yaw)
+        // A block beyond the eye never pushes it out, and a block at the pivot keeps it there.
+        assertEquals(fit.position,AircraftLoadoutFraming.unobstructed(center,fit,.2) { 9.0 }.position)
+        assertEquals(0.0,AircraftLoadoutFraming.unobstructed(center,fit,.2) { 0.1 }.position.distanceTo(center),1e-9)
+    }
 }

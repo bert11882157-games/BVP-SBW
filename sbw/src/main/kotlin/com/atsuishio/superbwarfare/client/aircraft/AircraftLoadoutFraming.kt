@@ -12,9 +12,12 @@ internal object AircraftLoadoutFraming {
     /** World-space eye height above the aircraft's ground plane, in blocks. */
     const val EYE_CLEARANCE_BLOCKS = .5
     private const val PITCH_SEARCH_STEPS = 24
+    /** Pilot-orbited view pitch limits in degrees (positive looks down), short of the poles. */
+    const val ORBIT_MIN_PITCH = -60f
+    const val ORBIT_MAX_PITCH = 85f
 
-    /** [pitch] is in degrees and is the view pitch that produced [position]. */
-    data class Fit(val position: Vec3, val distance: Double, val pitch: Float = PITCH)
+    /** [pitch] and [yaw] are in degrees and are the view rotation that produced [position]. */
+    data class Fit(val position: Vec3, val distance: Double, val pitch: Float = PITCH, val yaw: Float = 0f)
 
     fun fit(center: Vec3, points: List<Vec3>, yaw: Float, width: Int, height: Int,
             verticalFov: Double, bayRows: Int, pitch: Float = PITCH): Fit {
@@ -43,7 +46,7 @@ internal object AircraftLoadoutFraming {
         }
         // A small fixed margin protects labels from rounding without scaling distance with span.
         distance += .35
-        return Fit(center.subtract(forward.scale(distance)).add(up.scale(offsetSlope * distance)), distance, pitch)
+        return Fit(center.subtract(forward.scale(distance)).add(up.scale(offsetSlope * distance)), distance, pitch, yaw)
     }
 
     /**
@@ -67,5 +70,20 @@ internal object AircraftLoadoutFraming {
             if (middle.position.y >= targetY) above = middle else below = middle
         }
         return above
+    }
+
+    /**
+     * Shortens [fit] along the line from [center] to its eye so the eye stops [clearance] blocks
+     * before the nearest obstruction. [obstruction] returns the distance in blocks from [center]
+     * at which the segment to a point is first blocked, or null when it is clear. Keeps the view
+     * rotation, so the aircraft stays in view while the eye moves in.
+     */
+    fun unobstructed(center: Vec3, fit: Fit, clearance: Double, obstruction: (Vec3) -> Double?): Fit {
+        val offset = fit.position.subtract(center)
+        val length = offset.length()
+        if (!(length > 1.0e-6)) return fit
+        val blocked = obstruction(fit.position) ?: return fit
+        val allowed = (blocked - clearance).coerceIn(0.0, length)
+        return fit.copy(position = center.add(offset.scale(allowed / length)))
     }
 }
