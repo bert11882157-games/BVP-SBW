@@ -114,6 +114,28 @@ def seam_strip(m, sh, E, sfun, z0, z1, out, inner, ds=0.014, proud=0.004, steps=
             m.flat([b0, d0, d1, b1], inner, toward=(b0 + d1) / 2 + (b0 - a0))
 
 
+def sill_shelf(m, sh, E, out, inner, z0=-0.45, z1=0.70, steps=40):
+    """the strip closing the slit between the canopy's sill and the fuselage's rail ledge beside it (the model's rail
+    top, its inner edge at x 0.485 from z -0.35 back, falling from y -0.475 to -0.519 forward): level, 4 mm under the
+    ledge and running 1 cm in under it, so it meets neither the hull's faces nor its plane (the hull untouched)"""
+    hy = lambda z: float(np.interp(z, [-0.45, 0.65], [-0.475, -0.519])) - 0.004      # noqa: E731
+    hx = lambda z: float(np.interp(z, [-0.45, -0.35], [0.441, 0.485])) + 0.010        # noqa: E731
+    zs = np.linspace(z0, z1, steps + 1)
+    for side in (1, -1):
+        for za, zb in zip(zs[:-1], zs[1:]):
+            q = []
+            for z in (za, zb):
+                y = hy(z)
+                y0 = max(y, sh.point(z, 0.0)[1] + 0.006)    # (its inner edge up inside the sill fill's foot, where
+                x0 = sh.point(z, sh.s_at_y(z, y0), 1)[0] - 0.008   # the ledge lies under it: no slit between them)
+                q.append((np.array([x0 * side, y0, z]) + E, np.array([hx(z) * side, y, z]) + E))
+            (a0, a1), (b0, b1) = q
+            m.flat([a0, a1, b1, b0], out, normal=[0, 1, 0])
+            d = np.array([0, -0.008, 0])
+            m.flat([a0 + d, a1 + d, b1 + d, b0 + d], inner, normal=[0, -1, 0])
+            m.flat([a1, b1, b1 + d, a1 + d], inner, normal=[side, 0, 0])
+
+
 def shield(m, sh, E, z, out, dark):
     """the periscope fitting on the canopy's centre bar: from above a shield, broad at its rear, pointed ahead"""
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
@@ -135,6 +157,7 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.02, out, inner)
     C.fill(m, sh, E, -0.45, BASE - 0.02, sill_s(sh), out, inner, steps=44)
     seam_strip(m, sh, E, sill_s(sh), -0.43, BASE - 0.03, out, inner)
+    sill_shelf(m, sh, E, out, inner)
     # the bar along the canopy's top, its full length, its two halves meeting on it; the shield-shaped periscope
     # fitting on it at mid-length (the reference's top view)
     C.member(m, sh, E, 1.0, -0.43, SPLIT - 0.02, 0.05, 0.022, out, inner, sides=(1,), steps=18)   # (50 mm: at 35 the
