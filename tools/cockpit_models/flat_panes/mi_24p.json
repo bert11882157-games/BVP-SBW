@@ -219,30 +219,48 @@
           [
             -0.5035,
             2.0774,
-            7.1535
+            7.1472
           ],
           [
             -0.5027,
             2.0782,
-            7.1543
+            7.148
           ]
         ]
       ]
     },
     {
-      "name": "operator side right 3 c",
+      "name": "operator side right 3 c.a",
       "mirror": false,
       "boxes": [
         [
           [
-            -0.5021,
-            2.0164,
-            7.2691
+            -0.5035,
+            2.0494,
+            7.1805
           ],
           [
-            -0.5013,
-            2.0172,
-            7.2699
+            -0.5027,
+            2.0502,
+            7.1813
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side right 3 c.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.5024,
+            2.0071,
+            7.2718
+          ],
+          [
+            -0.5016,
+            2.0079,
+            7.2726
           ]
         ]
       ]
@@ -284,21 +302,63 @@
       ]
     },
     {
-      "name": "operator side right 5",
+      "name": "operator side right 5.a.a",
       "mirror": false,
       "boxes": [
         [
           [
-            -0.4514,
-            1.9118,
-            7.4824
+            -0.4877,
+            1.9592,
+            7.3868
           ],
           [
-            -0.4506,
-            1.9126,
-            7.4832
+            -0.4869,
+            1.96,
+            7.3876
           ]
-        ],
+        ]
+      ]
+    },
+    {
+      "name": "operator side right 5.a.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.4654,
+            1.9254,
+            7.4374
+          ],
+          [
+            -0.4646,
+            1.9262,
+            7.4382
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side right 5.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.4291,
+            1.8779,
+            7.533
+          ],
+          [
+            -0.4283,
+            1.8787,
+            7.5338
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side right 5.c",
+      "mirror": false,
+      "boxes": [
         [
           [
             -0.3774,
@@ -310,7 +370,13 @@
             1.7712,
             7.6895
           ]
-        ],
+        ]
+      ]
+    },
+    {
+      "name": "operator side right 5.d",
+      "mirror": false,
+      "boxes": [
         [
           [
             -0.3758,
@@ -440,19 +506,37 @@
       ]
     },
     {
-      "name": "operator side left 3 b",
+      "name": "operator side left 3 b.a",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.5789,
+            1.977,
+            7.0389
+          ],
+          [
+            0.5797,
+            1.9778,
+            7.0397
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side left 3 b.b",
       "mirror": false,
       "boxes": [
         [
           [
             0.5789,
             2.006,
-            7.0089
+            7.0025
           ],
           [
             0.5797,
             2.0068,
-            7.0097
+            7.0033
           ]
         ]
       ]
@@ -512,7 +596,7 @@
       ]
     },
     {
-      "name": "operator side left 5",
+      "name": "operator side left 5.a",
       "mirror": false,
       "boxes": [
         [
@@ -526,7 +610,13 @@
             1.9886,
             7.5163
           ]
-        ],
+        ]
+      ]
+    },
+    {
+      "name": "operator side left 5.b",
+      "mirror": false,
+      "boxes": [
         [
           [
             0.4263,
@@ -538,7 +628,13 @@
             1.8336,
             7.5612
           ]
-        ],
+        ]
+      ]
+    },
+    {
+      "name": "operator side left 5.c",
+      "mirror": false,
+      "boxes": [
         [
           [
             0.4522,
@@ -549,6 +645,42 @@
             0.453,
             1.7576,
             7.5281
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side left 5.d.a",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.5045,
+            1.8065,
+            7.3883
+          ],
+          [
+            0.5053,
+            1.8073,
+            7.3891
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "operator side left 5.d.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.5408,
+            1.854,
+            7.2927
+          ],
+          [
+            0.5416,
+            1.8548,
+            7.2935
           ]
         ]
       ]
@@ -992,19 +1124,37 @@
       ]
     },
     {
-      "name": "pilot side front right 2 b",
+      "name": "pilot side front right 2 b.a",
       "mirror": false,
       "boxes": [
         [
           [
-            -0.415,
-            2.6284,
-            6.1385
+            -0.43,
+            2.6084,
+            6.0912
           ],
           [
-            -0.4142,
-            2.6292,
-            6.1393
+            -0.4292,
+            2.6092,
+            6.092
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "pilot side front right 2 b.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.3975,
+            2.6162,
+            6.1876
+          ],
+          [
+            -0.3967,
+            2.617,
+            6.1884
           ]
         ]
       ]
@@ -1334,19 +1484,55 @@
       ]
     },
     {
-      "name": "pilot side front left 2 b",
+      "name": "pilot side front left 2 b.a",
       "mirror": false,
       "boxes": [
         [
           [
-            0.5112,
-            2.5885,
-            5.8988
+            0.4938,
+            2.5789,
+            5.9606
           ],
           [
-            0.512,
-            2.5893,
-            5.8996
+            0.4946,
+            2.5797,
+            5.9614
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "pilot side front left 2 b.b.a",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.5115,
+            2.5579,
+            5.9131
+          ],
+          [
+            0.5123,
+            2.5587,
+            5.9139
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "pilot side front left 2 b.b.b",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.529,
+            2.5674,
+            5.8513
+          ],
+          [
+            0.5298,
+            2.5682,
+            5.8521
           ]
         ]
       ]
