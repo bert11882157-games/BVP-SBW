@@ -96,7 +96,7 @@ def sill_s(sh):
     return lambda z: sh.s_at_y(z, float(np.interp(z, [p[0] for p in SILL_LINE], [p[1] for p in SILL_LINE])))
 
 
-def seam_strip(m, sh, E, sfun, z0, z1, out, inner, ds=0.014, proud=0.004, steps=60):
+def seam_strip(m, sh, E, sfun, z0, z1, out, inner, ds=0.014, proud=0.004, steps=60, down=False):
     """a thin lip over the sill band's top edge, 4 mm proud of the glass: the glass stops a pad short of the band
     (cut_glass), and this closes that slit without being a frame the glass is cut round again"""
     zs = np.linspace(z0, z1, steps + 1)
@@ -105,7 +105,7 @@ def seam_strip(m, sh, E, sfun, z0, z1, out, inner, ds=0.014, proud=0.004, steps=
             q = []
             for z in (za, zb):
                 s = sfun(z)
-                for sv in (s - 0.004, s + ds):
+                for sv in ((s - ds, s + 0.004) if down else (s - 0.004, s + ds)):
                     p = sh.point(z, sv, side); n = sh.normal(z, sv, side)
                     q.append((p + n * proud + E, p - n * 0.01 + E))
             (a0, a1), (b0, b1), (c0, c1), (d0, d1) = q
@@ -137,14 +137,19 @@ def build(atlas, E, skin):
     seam_strip(m, sh, E, sill_s(sh), -0.43, BASE - 0.03, out, inner)
     # the bar along the canopy's top, its full length, its two halves meeting on it; the shield-shaped periscope
     # fitting on it at mid-length (the reference's top view)
-    C.member(m, sh, E, 1.0, -0.43, SPLIT - 0.02, 0.035, 0.022, out, inner, sides=(1,), steps=18)
+    C.member(m, sh, E, 1.0, -0.43, SPLIT - 0.02, 0.05, 0.022, out, inner, sides=(1,), steps=18)   # (50 mm: at 35 the
+    # bar's flat face sagged under the curved glass's cut edge on one side, leaving a slit along it)
+    seam_strip(m, sh, E, lambda z: sh.s_at_x(z, 0.024), -0.42, SPLIT - 0.03, out, inner, ds=0.012, down=True)   # (and
+    # over the slits either side of the centre bar)
     shield(m, sh, E, 0.0, out, dark)
     # the windscreen: the arch, the solid bridge back from the ring's apex, the exact pane in its ring, the base strip
     C.bow(m, sh, E, SPLIT + 0.015, 0.04, 0.022, out, inner)
     C.cap(m, sh, E, SPLIT + 0.03, PANE_TOP + 0.02, lambda z: sh.s_at_x(z, 0.10), out, inner, steps=8)
     C.oval_pane(m, sh, E, PANE_TOP, PANE_FOOT, PANE_W, RING, 0.022, out, inner, n=PANE[6], n_bot=PANE[7],
-                outline=OUTLINE, scale=SCALE)
+                outline=OUTLINE, scale=SCALE, lip=0.012)   # (the lip over the slit round the ring)
     C.fill(m, sh, E, PANE_FOOT - 0.01, BASE - 0.015, lambda z: 1.0, out, inner, steps=6)
+    C.fill(m, sh, E, 1.10, PANE_FOOT, lambda z: sh.s_at_x(z, 0.20), out, inner, steps=10)   # (metal up to the
+    # ring's lower corners, where the side pane runs out: the glass's last wedge there left a slit open to the eye)
     C.bow(m, sh, E, BASE - 0.015, 0.03, 0.02, out, inner)
     return m, glass
 

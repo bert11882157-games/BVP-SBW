@@ -355,7 +355,7 @@ def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, dep
 
 
 def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0, n_bot=None, outline=None,
-              scale=1.0):
+              scale=1.0, lip=0.0):
     """the Soviet armoured front pane as it is: one flat sheet whose outline, seen from ahead, is an oval (rounded
     at its foot as well as its top: Oval), in a frame of even [width] all round it; the frame's apex touching the
     windscreen arch at z_top, its foot the base frame at z_end. The shape must be flat_pane'd with the same oval.
@@ -387,6 +387,17 @@ def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in
         m.flat([a1, b1, d1, c1], rect_in, toward=(a1 + d1) / 2 + (a1 - a0))
         m.flat([a0, c0, c1, a1], rect_in, toward=(a0 + c1) / 2 + (a0 - b0))
         m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
+        if lip:                                         # a flange [lip] past the frame's outer edge, over the slit
+            q = []                                      # the windscreen's glass stops short of it at (cut_glass)
+            for t in (i, j):
+                for o in (0.0, lip):
+                    x, d = P[t] + Nv[t] * (width / 2 + o)
+                    b = at(x, d)
+                    q.append((b + Nn * 0.004, b - Nn * 0.01))
+            (a0, a1), (b0, b1), (c0, c1), (d0, d1) = q
+            m.flat([a0, b0, d0, c0], rect_out, toward=(a0 + d0) / 2 + (a0 - a1))
+            m.flat([a1, b1, d1, c1], rect_in, toward=(a1 + d1) / 2 + (a1 - a0))
+            m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
     # the pane: the glass inside the frame, on the plane, rows across it
     r_in = -(width / 2 + 0.006)
     Q = P + Nv * r_in

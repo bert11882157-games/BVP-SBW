@@ -24,7 +24,7 @@ import cockpit_lib as L  # noqa: E402
 from zfight_check import overlap2d  # noqa: E402
 
 LIFT = 0.003
-ANGLE = 2.5
+ANGLE = 4.0                      # (wider than the check's 2.5: what it reports must be in reach of the fix)
 MAX_PASSES = 4
 
 
@@ -83,7 +83,11 @@ def pass_once(ac, eye, gap, reach):
             c = n @ nj
             if abs(c) < math.cos(math.radians(ANGLE)):
                 continue
-            if abs((W.mean(0) - V.mean(0)) @ n) > gap:
+            # (the distance from one face's middle to the other's plane: two large tilted faces' middles can lie far
+            # apart along the normal while their planes cross where they overlap)
+            sv = (V - W[0]) @ nj                                  # (V's corners off W's plane: within the gap, or
+            if min(abs((V.mean(0) - W[0]) @ nj), abs((W.mean(0) - V[0]) @ n)) > gap and not (   # on both sides of it)
+                    np.abs(sv).min() <= gap or sv.min() < 0 < sv.max()):
                 continue
             ax = np.argsort(np.abs(n))[:2]
             ti = [V[[0, k, k + 1]] for k in range(1, len(V) - 1)]
@@ -93,6 +97,15 @@ def pass_once(ac, eye, gap, reach):
             # the one to change: the smaller of the two, never a face of the original model
             mine_small = area <= area_j or not own_j
             k_bone, k_poly, k_n = (bi, pi, n) if mine_small else (bj, pj, nj)
+            if c < 0 and not own_j:
+                # a cockpit face back to back with the model's (a wall inside the fuselage's own wall, the two planes
+                # crossing): dropping ours would open a hole, so it is moved in, wholly onto its own side of the
+                # model's face and 3 mm clear
+                sd = (V - W[0]) @ nj
+                need = float(sd.max()) + LIFT
+                if need > 0:
+                    lift[(bi, pi)] = n * need / max(0.2, float(-(n @ nj)))
+                continue
             if c < 0:
                 drop.add((k_bone, k_poly))
             else:
