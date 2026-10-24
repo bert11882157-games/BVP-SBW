@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "GBU-54B LJDAM · 500 lb laser (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu54.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1605,
+    0.034
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.162,
+      0.0,
+      0.034
+    ],
+    "Right": [
+      -0.162,
+      0.0,
+      0.034
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.034
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu54.png",
+  "Capacity": 1,
+  "MassKg": 260.8,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu54",
+  "LaunchOffset": [
+    0.0,
+    -0.1605,
+    0.0
+  ]
+}

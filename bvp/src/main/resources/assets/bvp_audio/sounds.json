@@ -971,6 +971,33 @@
       }
     ]
   },
+  "air/sa342_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/sa342_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/sa342_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/sa342_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/sa342_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/sa342_stop",
+        "stream": false
+      }
+    ]
+  },
   "air/su25_idle": {
     "category": "neutral",
     "sounds": [
@@ -1295,6 +1322,33 @@
       }
     ]
   },
+  "engine/m113_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m113_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m113_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/m1a2_idle": {
     "category": "neutral",
     "sounds": [
@@ -1453,6 +1507,60 @@
     "sounds": [
       {
         "name": "bvp_audio:engine/pt76_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/puma_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/puma_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/puma_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/scimitar_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/scimitar_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/scimitar_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_stop",
         "stream": false
       }
     ]
@@ -1664,6 +1772,33 @@
       }
     ]
   },
+  "engine/ustruck_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/ustruck_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/ustruck_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/vab_idle": {
     "category": "neutral",
     "sounds": [
@@ -1750,6 +1885,15 @@
     "sounds": [
       {
         "name": "bvp_audio:tracks/leo",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/m113": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/m113",
         "stream": false
       }
     ]
@@ -2213,6 +2357,42 @@
       }
     ]
   },
+  "weapon/gau8_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/gau8_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/gau8_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/gau8_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/gau8_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/gau8_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/gau8_veryfar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/gau8_veryfar",
+        "stream": false
+      }
+    ]
+  },
   "weapon/hydra_1p": {
     "category": "neutral",
     "sounds": [
@@ -2236,6 +2416,42 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/hydra_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/igla_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/igla_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/igla_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/igla_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/igla_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/igla_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/igla_veryfar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/igla_veryfar",
         "stream": false
       }
     ]
@@ -2335,6 +2551,24 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/lav_25_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/m197_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/m197_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/m197_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/m197_3p",
         "stream": false
       }
     ]
@@ -2447,6 +2681,24 @@
       }
     ]
   },
+  "weapon/m61_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/m61_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/m61_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/m61_3p",
+        "stream": false
+      }
+    ]
+  },
   "weapon/mg3_1p": {
     "category": "neutral",
     "sounds": [
@@ -2479,6 +2731,42 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/mg3_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_veryfar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_veryfar",
         "stream": false
       }
     ]
@@ -2578,6 +2866,33 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/pkt_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_far",
         "stream": false
       }
     ]
@@ -2776,6 +3091,42 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/tow_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/type87_25_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/type87_25_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/type87_25_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/type87_25_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/type87_25_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/type87_25_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/type87_25_veryfar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/type87_25_veryfar",
         "stream": false
       }
     ]

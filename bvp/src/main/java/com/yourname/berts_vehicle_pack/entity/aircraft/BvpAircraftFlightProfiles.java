@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightProfile;
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingHandlingProfile;
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingReferenceHandling;
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingTakeoffHandling;
+import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingThrustVectoring;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -86,6 +87,8 @@ public final class BvpAircraftFlightProfiles {
         // transonic drag rise (propeller compressibility)
         engineeringFields.remove("firstSoftCapKmh");
         engineeringFields.remove("waveDragOnsetMach");
+        // optional pitch thrust vectoring {pitchDeg, armM, gyrationM}; absent = a fixed nozzle
+        engineeringFields.remove("thrustVectoring");
         require(engineeringFields.equals(ENGINEERING_FIELDS), "Aircraft flight fields do not match schema");
         validateScalarRecord(r, Set.of("dryThrustKgfPerEngine", "afterburnerThrustKgfPerEngine",
                 "normalPowerHpPerEngine", "maximumPowerHpPerEngine"), Set.of());
@@ -191,7 +194,8 @@ public final class BvpAircraftFlightProfiles {
                 // jets pick up speed briskly when slow; propellers already have their game gain
                 propellerSpeed > 0 ? 1.0 : FixedWingHandlingProfile.JET_LOW_SPEED_BOOST,
                 // wheel-brake gain: FixedWingReferenceHandling.fromReference sets it from the reference mass
-                1.0);
+                1.0,
+                thrustVectoring(e));
         require(!e.has("firstSoftCapKmh") || (number(e, "firstSoftCapKmh") > 0 && number(e, "firstSoftCapKmh") <= 800),
                 "First soft cap must be a positive HUD speed");
         require(!e.has("waveDragOnsetMach") || (number(e, "waveDragOnsetMach") > 0.3
@@ -200,6 +204,18 @@ public final class BvpAircraftFlightProfiles {
         FixedWingFlightProfile handlingReference = casCalibration == 1 ? reference
                 : referenceAtStructuralSpeed.apply(indicatedSpeed * casCalibration);
         return new Binding(reference, FixedWingReferenceHandling.fromReference(handlingReference, controls, scale));
+    }
+
+    /** Optional engineering.thrustVectoring: exactly pitchDeg, armM (CG to nozzle) and gyrationM (pitch radius of gyration). */
+    private static FixedWingThrustVectoring thrustVectoring(JsonObject engineering) {
+        if (!engineering.has("thrustVectoring")) return null;
+        JsonObject v = object(engineering, "thrustVectoring");
+        exactFields(v, fields("pitchDeg armM gyrationM"));
+        double pitch = number(v, "pitchDeg"), arm = number(v, "armM"), gyration = number(v, "gyrationM");
+        require(pitch > 0 && pitch <= FixedWingThrustVectoring.MAX_PITCH_DEGREES
+                && arm > 0 && arm <= 40 && gyration >= 0.5 && gyration <= 40,
+                "Thrust vectoring range, arm or gyration out of bounds");
+        return new FixedWingThrustVectoring(pitch, arm, gyration);
     }
 
     private static void validateIdentity(String reference, String handling) {
@@ -216,6 +232,7 @@ public final class BvpAircraftFlightProfiles {
 
     private static void validateScalarRecord(JsonObject object, Set<String> nullable, Set<String> booleans) {
         for (String key : object.keySet()) {
+            if (key.equals("thrustVectoring")) continue; // an object, decoded by thrustVectoring()
             if (nullable.contains(key) && object.get(key).isJsonNull()) continue;
             if (booleans.contains(key)) bool(object, key); else number(object, key);
         }

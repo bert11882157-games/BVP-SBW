@@ -57,6 +57,7 @@ public final class AircraftRigAnimatorTest {
         invalidV2Atomicity();
         defensiveStationGeometry();
         defensiveStationRejectionAndReset();
+        rigTurretMatchesLegacyPoser();
         gearVisibilityAndRestore();
         gearDoorHingeAndRestore();
         invalidGearAtomicity();
@@ -645,6 +646,42 @@ public final class AircraftRigAnimatorTest {
             check(rejected, "malformed station graph rejected");
             quaternion(model.getBone("rearYaw").rotation, new Quaternionf(), "rejection never poses partially");
         }
+    }
+
+    /** A rigged helicopter's main turret follows the same yaw/pitch as the legacy poser and restores to neutral. */
+    private static void rigTurretMatchesLegacyPoser() {
+        String source = """
+                {"format_version":"1.12.0","minecraft:geometry":[{
+                  "description":{"identifier":"geometry.turret","texture_width":16,"texture_height":16,
+                    "visible_bounds_width":32,"visible_bounds_height":32,"visible_bounds_offset":[0,0,0]},
+                  "bones":[{"name":"hull","pivot":[0,0,0]},
+                    {"name":"turret","parent":"hull","pivot":[0,31,-158]},
+                    {"name":"barell","parent":"turret","pivot":[0,39.8,-158]},
+                    {"name":"rearYaw","parent":"hull","pivot":[8,16,96]},
+                    {"name":"rearPitch","parent":"rearYaw","pivot":[4.8,17.6,91.2]}]}]}
+                """;
+        var model = new PolyMeshModel(GSON.fromJson(source, BedrockModelPOJO.class),
+                JsonParser.parseString(source).getAsJsonObject());
+        var binding = emptyRig(model);
+        var station = AircraftRigAnimator.bindStation(stationResource(), binding, model::getBone);
+        var turret = AircraftRigAnimator.bindTurret(binding, station, model::getBone);
+        check(turret != null && turret.yaw != null && turret.pitch != null, "turret and barell bound");
+        turret.apply(35, -20);
+        station.apply(true, 10, 5);
+        quaternion(model.getBone("turret").rotation,
+                new Quaternionf().rotateZYX(0, (float) Math.toRadians(35), 0), "legacy turret yaw");
+        quaternion(model.getBone("barell").rotation,
+                new Quaternionf().rotateZYX(0, 0, (float) Math.toRadians(-20)), "legacy barell pitch");
+        turret.apply(Double.NaN, 0);
+        quaternion(model.getBone("turret").rotation, new Quaternionf(), "nonfinite turret neutral");
+        turret.apply(35, -20);
+        turret.restore();
+        quaternion(model.getBone("turret").rotation, new Quaternionf(), "turret restoration");
+        quaternion(model.getBone("barell").rotation, new Quaternionf(), "barell restoration");
+        check(model.getBone("rearYaw").rotation.angle() > 0, "station keeps its own pose");
+        station.restore();
+        check(AircraftRigAnimator.bindTurret(binding, station, name -> name.equals("turret") || name.equals("barell")
+                ? null : model.getBone(name)) == null, "no turret bones, no poser");
     }
 
     private static AircraftRigResource resource() {

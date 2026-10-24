@@ -47,9 +47,25 @@ MAIN = {
     'bmp3m_elite': (4.0, 'WT BMP-3 100 mm 2A70 autoloader'),
     'bmp_1am': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'), 'bmd_1': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'),
     'toyota_jihad_bmp1': (8.0, 'estimate: 2A28 on a technical, hand-loaded'),
+    'fv721_fox': (0.8, 'WT FV721 Fox 30 mm L21A1 RARDEN, 3-round clip, aced'),
+    't64bv': (6.0, 'WT T-64B (1984) 125 mm 2A46 autoloader (shotFreq 0.16666)'),
+    'm1a1_tusk': (5.0, 'WT M1A1 HC 120 mm M256, aced'),
+    'puma_ifv': (0.2, 'WT Puma 30 mm MK 30-2/ABM, 100-round cartridge reloadTime 0.2, aced (basic 0.3 s)'),
+    'pgz_95': (4.0, 'WT PGZ04A (no PGZ-95 in WT) 4 x 25 mm PG87, 258-round belts, unit reloadTime 4.0'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
+# Machine guns whose reload is WT's own (aced belt change), not the 20 s rule of thumb.
+WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)'),
+         ('t64bv', 'MachineGun'): (8.0, 'WT PKT, 250-round belt (reloadTime 8.0)'),
+         ('t64bv', 'PassengerMachineGun'): (5.0, 'WT NSVT, 150-round belt (reloadTime 5.0)'),
+         ('puma_ifv', 'MainMachineGun'): (8.0, 'WT MG4, 1,000-round belt, aced (basic crew 10.4 s)'),
+         ('pgz_95', 'Missile'): (15.0, 'WT PGZ04A 72mm_HN_6 launcher, 4 rounds, reloadTime 15.0 (QW-2 is not in WT)'),
+         ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
+         ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)'),
+         ('m113a3', 'PassengerMachineGun'): (8.0, 'WT it_m113a1_tow M2HB, 100-round belt, aced (basic crew 10.4 s)')}
+# Guns whose reload is too short for any crew reload clip: no clip is set.
+NO_CLIP = {('fv721_fox', 'Cannon'), ('puma_ifv', 'Cannon'), ('pgz_95', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
 # autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
 # set to the empty-belt value (12 s) as the fallback
@@ -59,17 +75,18 @@ GRENADE = re.compile(r'AG-30|AGS-30|AGS|grenade|Mk ?19|QLZ', re.I)
 # WT rounds per minute by gun.
 RPM = {
     'PKT': 700, 'M240': 940, 'MG3': 1200, 'M73': 500, 'SGMT': 600, 'TYPE74': 700, 'TYPE86': 700, 'L94A1': 600,
-    'L37A2': 650, 'QJT': 800, 'AANF1': 900, 'KSP': 650,
+    'L37A2': 650, 'QJT': 800, 'AANF1': 900, 'KSP': 650, 'MG4': 890,
     'M2HB': 575, 'NSVT': 700, 'KORD': 700, 'DSHK': 600, 'M85': 625, 'QJC88A': 600, 'KPVT': 600,
     '2A42': 550, '2A72': 330, '2A14x2': 1600,
 }
 # Nation of the generic "7.62 mm coax" per vehicle.
 COAX = {
     'bmp2': 'PKT', 'bmp2m': 'PKT', 'bmp3m_elite': 'PKT', 'bmp_1am': 'PKT', 'btr80a': 'PKT', 'btr_60pb': 'PKT',
-    't14_armata': 'PKT', 't64b_obr1976': 'PKT', 't72a': 'PKT', 't72b': 'PKT', 't72b3': 'PKT', 't72b3_ubh_cope': 'PKT',
+    't14_armata': 'PKT', 't64b_obr1976': 'PKT', 't64bv': 'PKT', 't72a': 'PKT', 't72b': 'PKT', 't72b3': 'PKT', 't72b3_ubh_cope': 'PKT',
     't80b_obr1976': 'PKT', 't80u_obr1985': 'PKT', 't90a': 'PKT', 't90m': 'PKT', 't_62a': 'PKT', 't55a_2_0': 'SGMT',
     'ztz99a': 'TYPE86', 'cv9040_no_net': 'KSP', 'leo2a6': 'MG3',
-    'm1_abrams_elite': 'M240', 'm1a1_abrams': 'M240', 'm1a2_abrams_sep_v2': 'M240', 'm2_bradley': 'M240',
+    'm1_abrams_elite': 'M240', 'm1a1_abrams': 'M240', 'm1a1_tusk': 'M240', 'm1a2_abrams_sep_v2': 'M240',
+    'm2_bradley': 'M240',
     'm48a3_elite': 'M73', 'm551a1': 'M73', 'm60a1': 'M73',
 }
 
@@ -80,7 +97,7 @@ def gun_of(vid, name):
     for key, pat in (('M2HB', 'M2HB'), ('NSVT', 'NSVT'), ('KORD', 'KORD'), ('DSHK', 'DSHK'), ('M85', 'M85'),
                      ('QJC88A', 'QJC88A'), ('KPVT', 'KPVT'), ('PKT', 'PKT'), ('MG3', 'MG3'), ('M240', 'M240'),
                      ('L94A1', 'L94A1'), ('L37A2', 'L37A2'), ('TYPE74', 'TYPE74'), ('TYPE86', 'TYPE86'),
-                     ('QJT', 'QJT'), ('AANF1', 'AANF1')):
+                     ('QJT', 'QJT'), ('AANF1', 'AANF1'), ('MG4', 'MG4')):
         if pat in n:
             return key
     if 'COAX' in n:
@@ -131,7 +148,7 @@ def plan(vid, weapon, v, name, typ):
     cls = classify(vid, weapon, v, name)
     if cls is None:
         return None, {}
-    secs = MAIN[vid][0] if cls == 'MAIN' else RULE[cls]
+    secs = MAIN[vid][0] if cls == 'MAIN' else WT_MG[(vid, weapon)][0] if (vid, weapon) in WT_MG else RULE[cls]
     depletion = cls == 'AUTOCANNON' and not GRENADE.search(name) and weapon != 'GrenadeLauncher'
     if depletion:
         secs = DEPLETION[-1][1]
@@ -175,7 +192,7 @@ MAIN_CLIP = {
     't90a': 'berts_vehicle_pack:soviet_125mm_autoloader', 't90m': 'berts_vehicle_pack:soviet_125mm_autoloader',
     'm1128': 'berts_vehicle_pack:soviet_125mm_autoloader',
     't80b_obr1976': 'superbwarfare:t_90a_reload', 't80u_obr1985': 'superbwarfare:t_90a_reload',
-    't64b_obr1976': 'superbwarfare:t_90a_reload', 't14_armata': 'superbwarfare:t_90a_reload',
+    't64b_obr1976': 'superbwarfare:t_90a_reload', 't64bv': 'superbwarfare:t_90a_reload', 't14_armata': 'superbwarfare:t_90a_reload',
     'bmp_1am': 'superbwarfare:t_90a_reload', 'bmd_1': 'superbwarfare:t_90a_reload',
     'vt_4a1': 'superbwarfare:ztz_99a_reload', 'ztz99a': 'superbwarfare:ztz_99a_reload',
     'leopard_2a4': 'superbwarfare:m_1a_2_reload', 'leo2a6': 'superbwarfare:m_1a_2_reload',
@@ -194,6 +211,8 @@ EXTRA_CLIP = {('9p149_shturm', 'Missile'): 'superbwarfare:medium_missile_reload'
 
 def sound_plan(vid, weapon, cls, v):
     """SoundInfo changes (None deletes a key): one crew reload clip, timed to end with the reload."""
+    if (vid, weapon) in NO_CLIP:
+        return {}
     si = v.get('SoundInfo') or {}
     current = si.get('VehicleReload') or si.get('VehicleReload3p')
     if cls == 'MAIN':

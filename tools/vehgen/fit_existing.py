@@ -631,6 +631,12 @@ def build_client(spec, old_client, s, track_x=None, pivots=None):
             side['XCenter'] = round((track_x if name == 'L' else -track_x) * s, 5)
     for o in c.get('EngineExhaust', {}).get('Origins', []):
         o['Position'] = r5(np.array(o['Position']) * s)
+    if spec.get('exhaust'):
+        # grille(s) measured on the finished model, in final model px (+Z = rear): the renderer flips Z, so the origin is
+        # the model point / 16 as it is, not geo_to_data
+        c['EngineExhaust']['Origins'] = [
+            {'Id': f'engine_exhaust_group_origin_{i:03d}', 'Position': r5(np.array(p) / 16)}
+            for i, p in enumerate(spec['exhaust'])]
     return c
 
 

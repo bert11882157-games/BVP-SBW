@@ -1,0 +1,14 @@
+{
+  "Schema": 1,
+  "Name": "480 US gal F/A-18E/F fuel tank",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_480gal.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [0.0, 0.3165, 0.0],
+  "SideMountAnchors": {"Left": [0.3165, 0.0, 0.0], "Right": [-0.3165, 0.0, 0.0]},
+  "MountAxis": [0.0, 0.0, 0.0],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_480gal.png",
+  "Capacity": 1,
+  "MassKg": 1590.0,
+  "LaunchOffset": [0.0, -0.3165, 0.0]
+}

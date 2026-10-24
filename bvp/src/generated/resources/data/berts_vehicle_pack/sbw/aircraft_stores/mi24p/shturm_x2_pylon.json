@@ -1,0 +1,39 @@
+{
+  "Schema": 1,
+  "Name": "9M114 Shturm · 2-round launcher on a pylon stem (AI)",
+  "Category": "MISSILE_LAUNCHER",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mi24p_shturm_x2_pylon.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1767,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.4348,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.4348,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mi24p_shturm_x2_pylon.png",
+  "Capacity": 2,
+  "Scale": 1,
+  "MassKg": 46.5,
+  "LaunchOffset": [
+    0.0,
+    -0.1767,
+    0.0
+  ]
+}

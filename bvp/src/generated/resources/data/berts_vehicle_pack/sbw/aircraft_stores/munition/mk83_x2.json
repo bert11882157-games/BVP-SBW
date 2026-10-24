@@ -1,0 +1,83 @@
+{
+  "Schema": 1,
+  "Name": "Mk 83 · 1,000 lb freefall · BRU-33 twin rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk83.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2581,
+      -0.329,
+      0.0
+    ],
+    "Right": [
+      -0.2581,
+      -0.329,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.329,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk83.png",
+  "Capacity": 1,
+  "MassKg": 454,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 272.43,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk83",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_fa18_x2_mk83.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/fa18e_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.05,
+          -0.3345,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.3345,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.58,
+    0.4,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.329,
+    0.0
+  ]
+}

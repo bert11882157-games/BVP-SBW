@@ -56,7 +56,7 @@ def apply_client(client, overrides, pivots):
         new = pivots[bone]
         hit = False
         rig = client['AircraftRig']
-        for s in [s for key in ('Sweeps', 'Surfaces', 'Rotors') for s in (rig.get(key) or [])]:
+        for s in [s for key in ('Sweeps', 'Surfaces', 'Rotors', 'NoseSteering', 'Flaps') for s in (rig.get(key) or [])]:
             if s['Bone'] == bone:
                 s['Pivot'] = list(new)
                 if 'axis' in o:

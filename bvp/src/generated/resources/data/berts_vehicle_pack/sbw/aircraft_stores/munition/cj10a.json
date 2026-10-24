@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "CJ-10A · GPS/INS land-attack cruise missile (AI)",
+  "Category": "CRUISE",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cj10a.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.284,
+    -0.1
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.26,
+      0.0,
+      -0.1
+    ],
+    "Right": [
+      -0.26,
+      0.0,
+      -0.1
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.1
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/cj10a.png",
+  "Capacity": 1,
+  "MassKg": 1300,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.8,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 36,
+    "Damage": 150,
+    "BlastRadius": 12,
+    "TntEquivalentKg": 600,
+    "Range": 2000
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.284,
+    0.0
+  ]
+}

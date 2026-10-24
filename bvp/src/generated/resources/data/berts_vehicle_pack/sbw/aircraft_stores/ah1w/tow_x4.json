@@ -1,0 +1,44 @@
+{
+  "Schema": 1,
+  "Name": "M65 · 4 × BGM-71D TOW-2",
+  "Category": "COMMAND_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ah1w_tow_x4.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.4462,
+    0.1594
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3825,
+      -0.0319,
+      0.1594
+    ],
+    "Right": [
+      -0.3825,
+      -0.0319,
+      0.1594
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.0319,
+    0.1594
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ah1w_tow_x4.png",
+  "Capacity": 4,
+  "Scale": 1,
+  "MassKg": 21.45,
+  "AmmoItem": "superbwarfare:large_atgm",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "LaunchOffset": [
+    0.0,
+    -0.4781,
+    0.0
+  ]
+}

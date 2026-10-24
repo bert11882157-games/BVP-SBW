@@ -1,0 +1,50 @@
+{
+  "Schema": 1,
+  "Name": "FAB-500Sh · 515 kg HE",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_500.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.0851,
+    0.3988
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1711,
+      -0.1168,
+      0.3988
+    ],
+    "Right": [
+      0.1711,
+      -0.1168,
+      0.3988
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1168,
+    0.3988
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_500.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 515,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 29,
+    "TntEquivalentKg": 362.6,
+    "BlastDamage": 850
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_500",
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.2019,
+    0.0
+  ]
+}

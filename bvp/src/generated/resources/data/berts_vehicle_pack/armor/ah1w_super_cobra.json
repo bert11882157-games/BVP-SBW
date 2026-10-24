@@ -1,8 +1,8 @@
 {
   "id": "ah1w_super_cobra",
-  "model_scale": 1.15255,
-  "ap_penetration_mm": 0,
-  "chemical_penetration_mm": 0,
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
   "fallback_incoming_penetration_mm": 500,
   "atgm_tandem": false,
   "impact_tolerance": 0.25,
@@ -15,5 +15,469 @@
   "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [],
-  "sbw_obb": []
+  "sbw_obb": [
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.88876,
+        6.66
+      ],
+      "Size": [
+        1.1475,
+        1.21125,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.20751,
+        5.7675
+      ],
+      "Size": [
+        1.4025,
+        1.84875,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.95958,
+        4.875
+      ],
+      "Size": [
+        1.4025,
+        2.98211,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.64721,
+        3.9825
+      ],
+      "Size": [
+        1.4025,
+        2.35736,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        3.32314,
+        3.9825
+      ],
+      "Size": [
+        0.72675,
+        0.255,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -0.00736,
+        2.36689,
+        3.09
+      ],
+      "Size": [
+        1.41721,
+        3.1875,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.81314,
+        2.1975
+      ],
+      "Size": [
+        2.1675,
+        3.825,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.81314,
+        1.305
+      ],
+      "Size": [
+        2.1675,
+        3.825,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.62189,
+        0.4125
+      ],
+      "Size": [
+        2.1675,
+        3.4425,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.39876,
+        -0.48
+      ],
+      "Size": [
+        2.1675,
+        2.99625,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.17564,
+        -1.3725
+      ],
+      "Size": [
+        2.1675,
+        2.55,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.27802,
+        -2.265
+      ],
+      "Size": [
+        1.58737,
+        2.24476,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.79314,
+        -3.1575
+      ],
+      "Size": [
+        1.02,
+        1.275,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.79314,
+        -4.05
+      ],
+      "Size": [
+        1.02,
+        1.275,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.79314,
+        -4.9425
+      ],
+      "Size": [
+        3.06,
+        1.275,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.92064,
+        -5.835
+      ],
+      "Size": [
+        3.06,
+        1.02,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.65376,
+        -6.7275
+      ],
+      "Size": [
+        1.02,
+        2.48625,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.52626,
+        -7.62
+      ],
+      "Size": [
+        1.02,
+        2.74125,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        1.21939,
+        -8.13
+      ],
+      "Size": [
+        0.1275,
+        0.1275,
+        0.1275
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        2.81314,
+        -8.5125
+      ],
+      "Size": [
+        0.255,
+        2.1675,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -2.19937,
+        2.08001,
+        1.56
+      ],
+      "Size": [
+        0.19125,
+        0.44625,
+        1.4025
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        1.37062,
+        2.08001,
+        1.78313
+      ],
+      "Size": [
+        1.46625,
+        0.19125,
+        1.33875
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        1.33875,
+        1.82501,
+        1.62375
+      ],
+      "Size": [
+        0.1275,
+        0.31875,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        2.19937,
+        2.08001,
+        1.56
+      ],
+      "Size": [
+        0.19125,
+        0.44625,
+        1.4025
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -1.37062,
+        2.08001,
+        1.78313
+      ],
+      "Size": [
+        1.46625,
+        0.19125,
+        1.33875
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -1.33875,
+        1.82501,
+        1.62375
+      ],
+      "Size": [
+        0.1275,
+        0.31875,
+        0.8925
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        1.05188,
+        0.19532,
+        2.06098
+      ],
+      "Size": [
+        0.1275,
+        0.39064,
+        4.99438
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -1.05188,
+        0.19532,
+        2.06098
+      ],
+      "Size": [
+        0.1275,
+        0.39064,
+        4.99438
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.0,
+        4.88501,
+        1.6875
+      ],
+      "Size": [
+        1.1475,
+        0.31875,
+        1.1475
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        -0.60562,
+        3.89689,
+        -8.64
+      ],
+      "Size": [
+        0.06375,
+        3.4425,
+        0.6375
+      ]
+    },
+    {
+      "Transform": "WeaponStation",
+      "Rotation": "WeaponStation",
+      "Position": [
+        0.0,
+        -0.03187,
+        -0.06374
+      ],
+      "Size": [
+        1.1985,
+        0.1275,
+        0.95625
+      ]
+    },
+    {
+      "Transform": "WeaponStationBarrel",
+      "Rotation": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        -0.07331,
+        0.61201
+      ],
+      "Size": [
+        1.21125,
+        0.46538,
+        2.30775
+      ]
+    },
+    {
+      "Transform": "WeaponStationBarrel",
+      "Rotation": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        0.01594,
+        1.05188
+      ],
+      "Size": [
+        0.19125,
+        0.15937,
+        1.53
+      ]
+    }
+  ],
+  "schema": "berts_vehicle_pack:armor_profile/v1"
 }

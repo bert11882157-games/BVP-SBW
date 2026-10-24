@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "LAU-3/A · 3 x 19 FFAR 2.75 in (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lau3a_ffar.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.21,
+    0.2,
+    -0.0065
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.41,
+      0.0,
+      -0.0065
+    ],
+    "Right": [
+      -0.01,
+      0.0,
+      -0.0065
+    ]
+  },
+  "MountAxis": [
+    0.21,
+    0.0,
+    -0.0065
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/lau3a_ffar.png",
+  "Capacity": 57,
+  "Scale": 1,
+  "MassKg": 12.09,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.2,
+    0.0
+  ]
+}

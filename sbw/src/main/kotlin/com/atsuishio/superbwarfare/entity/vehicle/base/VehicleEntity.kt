@@ -4672,16 +4672,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         this.turretTurnSound(diffX, diffY, 0.95f)
 
-        this.gunXRot = Mth.clamp(
+        val pitch = Mth.clamp(
             this.gunXRot + Mth.clamp(diffX, -xSpeed, xSpeed),
             -this.passengerWeaponMaxPitch,
             -this.passengerWeaponMinPitch
         )
-        this.gunYRot = Mth.clamp(
+        val yaw = Mth.clamp(
             this.gunYRot - Mth.clamp(diffY, -ySpeed, ySpeed),
             -this.passengerWeaponMaxYaw,
             -this.passengerWeaponMinYaw
         )
+        val stopped = stopPassengerWeaponSlew(this.gunYRot, this.gunXRot, yaw, pitch)
+        this.gunXRot = stopped[1]
+        this.gunYRot = stopped[0]
     }
 
     fun adjustWeaponControllerAngle() {
@@ -6013,6 +6016,22 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun isHullParentedPassengerWeaponStation(): Boolean {
         val binding = computed().passengerWeaponStationBinding ?: return false
         return hasPassengerWeaponStation() && binding.parent == PassengerWeaponStationParent.HULL
+    }
+
+    /**
+     * One gunYRot/gunXRot step [yaw, pitch] after the station's authored SlewStops (hull-parented stations only; the
+     * stops share FireExclusions' convention, which is the negated gun angles).
+     */
+    fun stopPassengerWeaponSlew(previousYaw: Float, previousPitch: Float, yaw: Float, pitch: Float): FloatArray {
+        val binding = computed().passengerWeaponStationBinding
+        if (binding == null || binding.slewStops.isEmpty() || !isHullParentedPassengerWeaponStation()) {
+            return floatArrayOf(yaw, pitch)
+        }
+        val step = floatArrayOf(-Mth.wrapDegrees(yaw), -pitch)
+        val authored = binding.stopSlew(-Mth.wrapDegrees(previousYaw), -previousPitch, step[0], step[1])
+        // An unstopped step keeps the caller's own yaw frame.
+        if (authored.contentEquals(step)) return floatArrayOf(yaw, pitch)
+        return floatArrayOf(-authored[0], -authored[1])
     }
 
     val passengerWeaponStationBaseYawDegrees: Float

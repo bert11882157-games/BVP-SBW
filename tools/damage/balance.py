@@ -52,19 +52,23 @@ GROUND = {  # combat weight (t), class
     'challenger_2': (62.5, 'MBT'), 'k2a1_black_panther': (55, 'MBT'), 'leclerc_s1': (56.5, 'MBT'),
     'leo2a6': (62.3, 'MBT'), 'leopard_2a4': (55.2, 'MBT'), 'm1_abrams_elite': (54.5, 'MBT'),
     'm1a1_abrams': (57, 'MBT'), 'm1a2_abrams_sep_v2': (64.6, 'MBT'), 'm48a3_elite': (47, 'MBT'),
+    'm1a1_tusk': (61.2, 'MBT'), 't64bv': (38.1, 'MBT'),
     'm60a1': (52.6, 'MBT'), 't14_armata': (55, 'MBT'), 't55a_2_0': (36, 'MBT'), 't64b_obr1976': (42.4, 'MBT'),
     't72a': (41.5, 'MBT'), 't72b': (44.5, 'MBT'), 't72b3': (46, 'MBT'), 't72b3_ubh_cope': (48, 'MBT'),
     't80b_obr1976': (42.5, 'MBT'), 't80u_obr1985': (46, 'MBT'), 't90a': (46.5, 'MBT'), 't90m': (48, 'MBT'),
     't_62a': (37.5, 'MBT'), 'type_90': (50.2, 'MBT'), 'vt_4a1': (52, 'MBT'), 'ztz99a': (55, 'MBT'),
     'bmpt': (47.5, 'MBT_CHASSIS'), 'gepard': (47.5, 'MBT_CHASSIS'), 'pzh_2000': (55, 'MBT_CHASSIS'),
-    'm109a7_paladin': (35, 'MBT_CHASSIS'), 'qn_506model': (36, 'MBT_CHASSIS'),
-    'bmp2': (14.3, 'IFV'), 'bmp2m': (14.6, 'IFV'), 'bmp3m_elite': (18.7, 'IFV'), 'bmp_1am': (14, 'IFV'),
+    'm109a7_paladin': (35, 'MBT_CHASSIS'), 'qn_506model': (36, 'MBT_CHASSIS'), 'tos_1a': (45.3, 'MBT_CHASSIS'),
+    'bmp2': (14.3, 'IFV'), 'bmp2m': (14.6, 'IFV'), 'bmp3m_elite': (18.7, 'IFV'), 'bmp_1am': (14, 'IFV'), 'zbd_05': (22.9, 'IFV'),
     'cv9040_no_net': (23, 'IFV'), 'm2_bradley': (30, 'IFV'), 'marder_1a1': (28, 'IFV'),
-    'marder_1a2': (28.5, 'IFV'), 'marder_1a5': (37.4, 'IFV'), '9k22_tunguska': (34, 'IFV'), 'zsu23_4': (21, 'IFV'),
+    'marder_1a2': (28.5, 'IFV'), 'marder_1a5': (37.4, 'IFV'), 'puma_ifv': (43, 'IFV'), 'pgz_95': (22.5, 'IFV'), '9k22_tunguska': (34, 'IFV'), 'zsu23_4': (21, 'IFV'),
     'btr_90': (20.9, 'WHEELED'), 'vbci': (28, 'WHEELED'), 'lav25': (13, 'WHEELED'), 'btr80a': (14.6, 'WHEELED'),
     'btr_60pb': (10.3, 'WHEELED'), 'zbd_09': (21, 'WHEELED'), 'zsl_92': (15.8, 'WHEELED'), 'ztl_09': (23, 'WHEELED'),
     'm1128': (18.8, 'WHEELED'), '9p148': (7, 'WHEELED'), 'gaz_3937_vodnik_aa': (7.5, 'WHEELED'),
-    'bmd_1': (7.5, 'LIGHT'), 'btr_zd': (8.5, 'LIGHT'), '9p149_shturm': (12, 'LIGHT'), 'm551a1': (15.8, 'LIGHT'),
+    'fv721_fox': (6.12, 'WHEELED'), 'm142_himars': (16.25, 'WHEELED'),
+    'scud_b': (37.4, 'WHEELED'), 'gaz_tigr': (7.2, 'WHEELED'), 'dv15': (12.0, 'LIGHT'), 'lcac': (185, 'WHEELED'),
+    'bmd_1': (7.5, 'LIGHT'), 'btr_zd': (8.5, 'LIGHT'), '9p149_shturm': (12, 'LIGHT'), 'strela_10m2': (12.3, 'LIGHT'), 'm551a1': (15.8, 'LIGHT'),
+    'm113a3': (12.34, 'LIGHT'),
     'toyota_jihad_bmp1': (2.5, 'CAR'), 'toyota_jihad_dshk': (2.3, 'CAR'), 'toyota_jihad_s5': (2.3, 'CAR'),
     'toyota_jihad_spg9': (2.3, 'CAR'), 'uaz_469_spg9': (1.6, 'CAR'),
     'ags_30': (0.1, 'STATIC'), 'browning_tripod': (0.06, 'STATIC'), 'kord_tripod': (0.05, 'STATIC'),
@@ -122,10 +126,11 @@ def modifiers(cls):
 # ---------------------------------------------------------------- aircraft hull HP
 HELI_MASS = {'mi24_hind_a': 11500, 'mi_24a': 11500, 'mi_24d': 11500, 'mi24v': 11500, 'mi28n': 11500, 'ka50': 10800,
              'ah_64d': 9500, 'eurocopter_tiger': 6000, 'ah1w_super_cobra': 6700, 'ah_1f': 4500, 'ah_1g_cobra': 4300,
-             'ah_6j': 1600, 'uh1d_huey': 4300, 'ch_46e': 10400, 'mi_26': 56000}
+             'ah_6j': 1600, 'sa341f_gazelle': 1443, 'uh1d_huey': 4300, 'ch_46e': 10400, 'mi_26': 56000, 'ah_56a': 7170, 'mi_24p': 10480,
+             'mi_8amtsh': 8992}
 ARMOURED = {'a_10': 1.35, 'su_25': 1.35, 'su_39': 1.35, 'il_10': 1.35, 'mi24_hind_a': 1.25, 'mi_24a': 1.25,
             'mi_24d': 1.25, 'mi24v': 1.25, 'mi28n': 1.25, 'ka50': 1.25, 'ah_64d': 1.25, 'eurocopter_tiger': 1.25,
-            'ah1w_super_cobra': 1.25}
+            'ah1w_super_cobra': 1.25, 'ah_56a': 1.25, 'mi_24p': 1.25, 'mi_8amtsh': 1.25}
 MASS_ALIAS = {}
 WING_IDS = {'superbwarfare:wing_left', 'superbwarfare:wing_right'}
 WING_FRACTION = 0.4

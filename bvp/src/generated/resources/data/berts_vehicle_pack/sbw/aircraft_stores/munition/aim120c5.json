@@ -1,0 +1,60 @@
+{
+  "Schema": 1,
+  "Name": "AIM-120C-5 AMRAAM · active radar",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim120.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1123,
+    0.511
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1123,
+      0.0,
+      0.511
+    ],
+    "Right": [
+      -0.1123,
+      0.0,
+      0.511
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.511
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim120.png",
+  "Capacity": 1,
+  "MassKg": 161.5,
+  "Guidance": {
+    "Mode": "ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 4000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.15
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 14,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 50,
+    "Damage": 60,
+    "BlastRadius": 5,
+    "TntEquivalentKg": 9.1735
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1123,
+    0.0
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [
+    "FfarDoors"
+  ],
+  "Pairs": [
+    {
+      "Id": "tank",
+      "Name": "Stations 1/7 · wing pylons (215 gal tanks)",
+      "Left": [
+        3.3969,
+        1.4237,
+        -3.6465
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.3969,
+            1.4237,
+            -3.6465
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.3969,
+        1.4237,
+        -3.6465
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.3969,
+            1.4237,
+            -3.6465
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_215gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "StoreGroups": {},
+  "Name": "F-102A Delta Dagger",
+  "BuiltInWeapons": [],
+  "MaxPayloadKg": 3000,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [
+    {
+      "Id": "bay_2",
+      "Name": "Bay station 2 · forward Falcons (up to 2)",
+      "Position": [
+        0.0,
+        1.2988,
+        2.448
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim4g",
+        "berts_vehicle_pack:munition/aim4f",
+        "berts_vehicle_pack:munition/aim4d",
+        "berts_vehicle_pack:munition/aim4c",
+        "berts_vehicle_pack:munition/aim4a"
+      ],
+      "MaxPylonMassKg": 140,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_4",
+      "Name": "Bay station 4 · centre Falcons (up to 2)",
+      "Position": [
+        0.0,
+        1.2988,
+        1.1492
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim4g",
+        "berts_vehicle_pack:munition/aim4f",
+        "berts_vehicle_pack:munition/aim4d",
+        "berts_vehicle_pack:munition/aim4c",
+        "berts_vehicle_pack:munition/aim4a"
+      ],
+      "MaxPylonMassKg": 140,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_6",
+      "Name": "Bay station 6 · aft Falcons (up to 2)",
+      "Position": [
+        0.0,
+        1.2988,
+        -0.1496
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim4g",
+        "berts_vehicle_pack:munition/aim4f",
+        "berts_vehicle_pack:munition/aim4d",
+        "berts_vehicle_pack:munition/aim4c",
+        "berts_vehicle_pack:munition/aim4a"
+      ],
+      "MaxPylonMassKg": 140,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "door_ffar",
+      "Name": "Stations 3/5 · bay door FFAR (12 + 12)",
+      "Position": [
+        0.3497,
+        1.2489,
+        3.0974
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/ffar_doors"
+      ],
+      "MaxPylonMassKg": 250,
+      "QuantitySelectable": false,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ffar_doors": "FfarDoors"
+      }
+    }
+  ],
+  "Radar": {
+    "Enabled": true,
+    "Range": 1800
+  }
+}

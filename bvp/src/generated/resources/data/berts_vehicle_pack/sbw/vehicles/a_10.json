@@ -240,11 +240,17 @@
       "BodyAttachment": "Vehicle",
       "Position": [
         0,
-        1.358825625,
-        4.891139375
+        1.419427,
+        4.68
       ],
       "Weapons": [
-        "Avenger"
+        "Avenger",
+        "Hydra7St2",
+        "Hydra7St10",
+        "Hydra7Mid",
+        "Hydra21Mid",
+        "Hydra7Inner",
+        "Hydra21Inner"
       ],
       "CanRotateHead": true,
       "FixedGunBank": [
@@ -452,6 +458,572 @@
           "avenger_muzzle"
         ]
       }
+    },
+    "Hydra7St2": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 7,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (LAU-131A, station 2) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            4.8957,
+            1.3252,
+            0.8584
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          4.8957,
+          1.3252,
+          0.8584
+        ],
+        "MuzzleAttachments": [
+          "Hydra7St2_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra7St2_0"
+        ],
+        "EffectAttachments": [
+          "Hydra7St2_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra7St2_0"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Hydra7St10": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 7,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (LAU-131A, station 10) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -4.8957,
+            1.3252,
+            0.8584
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -4.8957,
+          1.3252,
+          0.8584
+        ],
+        "MuzzleAttachments": [
+          "Hydra7St10_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra7St10_0"
+        ],
+        "EffectAttachments": [
+          "Hydra7St10_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra7St10_0"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Hydra7Mid": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 14,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (LAU-131A, stations 3/9) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.8466,
+            1.2253,
+            0.8584
+          ],
+          [
+            -3.8466,
+            1.2253,
+            0.8584
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.8466,
+          1.2253,
+          0.8584
+        ],
+        "MuzzleAttachments": [
+          "Hydra7Mid_0",
+          "Hydra7Mid_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra7Mid_0",
+          "Hydra7Mid_1"
+        ],
+        "EffectAttachments": [
+          "Hydra7Mid_0",
+          "Hydra7Mid_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra7Mid_0",
+          "Hydra7Mid_1"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Hydra21Mid": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 42,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (3 x LAU-131A, stations 3/9) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.8466,
+            1.1534,
+            0.8734
+          ],
+          [
+            -3.8466,
+            1.1534,
+            0.8734
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.8466,
+          1.1534,
+          0.8734
+        ],
+        "MuzzleAttachments": [
+          "Hydra21Mid_0",
+          "Hydra21Mid_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra21Mid_0",
+          "Hydra21Mid_1"
+        ],
+        "EffectAttachments": [
+          "Hydra21Mid_0",
+          "Hydra21Mid_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra21Mid_0",
+          "Hydra21Mid_1"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Hydra7Inner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 14,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (LAU-131A, stations 4/8) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.8484,
+            1.1254,
+            0.8584
+          ],
+          [
+            -1.8484,
+            1.1254,
+            0.8584
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.8484,
+          1.1254,
+          0.8584
+        ],
+        "MuzzleAttachments": [
+          "Hydra7Inner_0",
+          "Hydra7Inner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra7Inner_0",
+          "Hydra7Inner_1"
+        ],
+        "EffectAttachments": [
+          "Hydra7Inner_0",
+          "Hydra7Inner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra7Inner_0",
+          "Hydra7Inner_1"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Hydra21Inner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 42,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (3 x LAU-131A, stations 4/8) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.8484,
+            1.0535,
+            0.8734
+          ],
+          [
+            -1.8484,
+            1.0535,
+            0.8734
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.8484,
+          1.0535,
+          0.8734
+        ],
+        "MuzzleAttachments": [
+          "Hydra21Inner_0",
+          "Hydra21Inner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Hydra21Inner_0",
+          "Hydra21Inner_1"
+        ],
+        "EffectAttachments": [
+          "Hydra21Inner_0",
+          "Hydra21Inner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Hydra21Inner_0",
+          "Hydra21Inner_1"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -530,9 +1102,139 @@
     "pilot_eye": {
       "Parent": "Vehicle",
       "Position": [
+        0.0,
+        3.2,
+        4.58
+      ],
+      "Direction": [
         0,
-        3.139398,
-        4.791139
+        0,
+        1
+      ]
+    },
+    "Hydra7St2_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.8957,
+        1.3252,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra7St10_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.8957,
+        1.3252,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra7Mid_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.8466,
+        1.2253,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra7Mid_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.8466,
+        1.2253,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra21Mid_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.8466,
+        1.1534,
+        0.8734
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra21Mid_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.8466,
+        1.1534,
+        0.8734
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra7Inner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8484,
+        1.1254,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra7Inner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8484,
+        1.1254,
+        0.8584
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra21Inner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8484,
+        1.0535,
+        0.8734
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Hydra21Inner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8484,
+        1.0535,
+        0.8734
       ],
       "Direction": [
         0,

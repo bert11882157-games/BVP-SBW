@@ -1,0 +1,44 @@
+{
+  "Schema": 1,
+  "Name": "AGM-12C Bullpup B · manual command (AI)",
+  "Category": "COMMAND_GUIDED",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm12c.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.23,
+    0.5796
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.23,
+      0.0,
+      0.5796
+    ],
+    "Right": [
+      -0.23,
+      0.0,
+      0.5796
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5796
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm12c.png",
+  "Capacity": 1,
+  "MassKg": 810.0,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm12c",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm12c",
+  "LaunchOffset": [
+    0.0,
+    -0.23,
+    0.0
+  ],
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+}

@@ -1,0 +1,142 @@
+{
+  "Schema": 1,
+  "Name": "Su-15TM Flagon-F",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [
+    "UpkPods"
+  ],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Stations 1/4 · outer wing pylons",
+      "Left": [
+        3.491,
+        1.0201,
+        -2.4239
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.491,
+            1.0201,
+            -2.4239
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.491,
+        1.0201,
+        -2.4239
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.491,
+            1.0201,
+            -2.4239
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r98mr",
+        "berts_vehicle_pack:munition/r98mt"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 350
+    },
+    {
+      "Id": "inner",
+      "Name": "Stations 2/3 · inner wing pylons",
+      "Left": [
+        1.7682,
+        0.9068,
+        -1.1185
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.7682,
+            0.9068,
+            -1.1185
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.7682,
+        0.9068,
+        -1.1185
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.7682,
+            0.9068,
+            -1.1185
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60_x2",
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    },
+    {
+      "Id": "fuselage",
+      "Name": "Stations 5/6 · fuselage pylons",
+      "Left": [
+        0.4534,
+        1.0065,
+        -1.4812
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.4534,
+            1.0065,
+            -1.4812
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.4534,
+        1.0065,
+        -1.4812
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.4534,
+            1.0065,
+            -1.4812
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_600l_su15",
+        "berts_vehicle_pack:gun_pod/upk23_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 700,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkPods"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1800,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}

@@ -1,0 +1,38 @@
+{
+  "Schema": 1,
+  "Name": "AN/ASQ-213 HARM targeting system pod (AI)",
+  "Category": "VISUAL_ONLY",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/asq213_hts.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.124,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.1,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.124,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/asq213_hts.png",
+  "Capacity": 1,
+  "MassKg": 45.0
+}

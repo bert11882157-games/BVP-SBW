@@ -1,0 +1,50 @@
+{
+  "Schema": 1,
+  "Name": "SAMP Type 21 400 kg (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/samp21.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2485,
+    -0.055
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2245,
+      0.0,
+      -0.055
+    ],
+    "Right": [
+      -0.2245,
+      0.0,
+      -0.055
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.055
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/samp21.png",
+  "Capacity": 1,
+  "MassKg": 400.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 167.0,
+    "BlastDamage": 540
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/samp21",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.2485,
+    0.0
+  ]
+}

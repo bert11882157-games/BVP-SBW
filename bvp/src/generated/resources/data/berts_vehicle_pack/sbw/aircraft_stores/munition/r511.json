@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "Matra R.511 · semi-active radar (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r511.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1315,
+    0.4592
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1315,
+      0.0,
+      0.4592
+    ],
+    "Right": [
+      -0.1315,
+      0.0,
+      0.4592
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4592
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r511.png",
+  "Capacity": 1,
+  "MassKg": 172.5,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 1350,
+    "ConeDegrees": 20,
+    "CountermeasureVulnerability": 0.9
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.08,
+    "TurnDegreesPerSecond": 45,
+    "Damage": 40,
+    "BlastRadius": 4.1,
+    "TntEquivalentKg": 13.0
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.1315,
+    0.0
+  ]
+}

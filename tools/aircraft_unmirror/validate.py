@@ -14,7 +14,7 @@ GEO = os.path.join(ROOT, 'bvp/src/generated/resources/assets/berts_vehicle_pack/
 BONE_WITNESSES = [
     ('ah_64d', 'tail_rotor', 'left'), ('mi_24d', 'tail_rotor', 'left'), ('mi24v', 'tailPropeller', 'left'),
     ('uh1d_huey', 'tailPropeller', 'left'), ('ah_6j', 'tailPropeller', 'left'), ('ah_1f', 'tail_rotor', 'right'),
-    ('ah1w_super_cobra', 'tailPropeller', 'right'), ('ka50', 'barell', 'right'),
+    ('ah1w_super_cobra', 'tail_rotor', 'right'), ('ka50', 'barell', 'right'),
 ]
 
 

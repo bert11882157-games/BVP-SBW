@@ -1,0 +1,685 @@
+{
+  "ID": "berts_vehicle_pack:gaz_tigr",
+  "MaxHealth": 115,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Wheel",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.13636,
+    "WheelDifferential": 0.75,
+    "MaxForwardSpeedRate": 1.4706,
+    "MaxBackwardSpeedRate": 0.23529411764705882,
+    "Increment": 0.008,
+    "Decrement": 0.011,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0.0,
+  "Mass": 7.2,
+  "TerrainCompat": [
+    [
+      0.82417,
+      0.0,
+      2.0493
+    ],
+    [
+      0.82417,
+      0.0,
+      -1.9008
+    ],
+    [
+      -0.82417,
+      0.0,
+      2.0493
+    ],
+    [
+      -0.82417,
+      0.0,
+      -1.9008
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.3365,
+        1.1583,
+        3.0591
+      ],
+      "Position": [
+        0.0,
+        1.5444,
+        0.1485
+      ]
+    },
+    {
+      "Size": [
+        1.0098,
+        0.7128,
+        0.9504
+      ],
+      "Position": [
+        0.0,
+        1.0989,
+        2.1384
+      ],
+      "Part": "MainEngine"
+    },
+    {
+      "Size": [
+        0.46777,
+        0.6534,
+        2.62845
+      ],
+      "Position": [
+        0.82417,
+        0.6534,
+        0.07425
+      ],
+      "Part": "WheelLeft"
+    },
+    {
+      "Size": [
+        0.46777,
+        0.6534,
+        2.62845
+      ],
+      "Position": [
+        -0.82417,
+        0.6534,
+        0.07425
+      ],
+      "Part": "WheelRight"
+    },
+    {
+      "Size": [
+        0.04455,
+        0.0891,
+        0.04455
+      ],
+      "Position": [
+        0.0,
+        -0.0891,
+        -0.0
+      ],
+      "Transform": "WeaponStation",
+      "Rotation": "WeaponStation"
+    },
+    {
+      "Size": [
+        0.26433,
+        0.17969,
+        1.05732
+      ],
+      "Position": [
+        -0.18117,
+        -0.09058,
+        0.44253
+      ],
+      "Transform": "WeaponStationBarrel",
+      "Rotation": "WeaponStationBarrel"
+    }
+  ],
+  "Attachments": {
+    "gunner2_camera": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        0.2376,
+        -0.7128
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "hmg_muzzle": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        0.0,
+        1.50876
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_station_left_grip": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.08316,
+        -0.15444,
+        -0.5049
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_station_right_grip": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        -0.08316,
+        -0.15444,
+        -0.5049
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        0.594,
+        2.35375,
+        0.3564
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.594,
+        0.73375,
+        0.3564
+      ],
+      "BodyAttachment": "Vehicle",
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          2.3365,
+          0.3,
+          0.3564
+        ]
+      },
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      }
+    },
+    {
+      "IsEnclosed": false,
+      "Transform": "WeaponStation",
+      "Position": [
+        0.0,
+        -1.20285,
+        -0.4158
+      ],
+      "MinPitch": -10,
+      "MaxPitch": 60,
+      "MinYaw": -360,
+      "MaxYaw": 360,
+      "Pose": "MachineGunStand",
+      "BodyAttachment": "WeaponStation",
+      "Orientation": 0,
+      "CanRotateBody": false,
+      "CanRotateHead": true,
+      "OperatorPose": {
+        "LeftHandAttachment": "passenger_station_left_grip",
+        "RightHandAttachment": "passenger_station_right_grip",
+        "MaxForwardLeanDegrees": 60,
+        "MaxBackwardLeanDegrees": 15
+      },
+      "CameraPos": {
+        "Transform": "WeaponStationBarrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "Direction": "WeaponStationBarrel",
+        "EyeAttachment": "gunner2_camera",
+        "ZoomEyeAttachment": "gunner2_camera",
+        "DirectionAttachment": "hmg_muzzle",
+        "ZoomDirectionAttachment": "hmg_muzzle",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "Weapons": [
+        "PassengerMachineGun"
+      ],
+      "Sensitivity": [
+        0.58,
+        0.62,
+        0.85
+      ],
+      "HidePassenger": false,
+      "ExposedToFire": true
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.594,
+        0.735,
+        0.3564
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -2.3365,
+          0.3,
+          0.3564
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.7128,
+        0.735,
+        -0.9504
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          2.3365,
+          0.3,
+          -0.9504
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.7128,
+        0.735,
+        -0.9504
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -2.3365,
+          0.3,
+          -0.9504
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.7128,
+        0.735,
+        -1.9008
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          2.3365,
+          0.3,
+          -1.9008
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.7128,
+        0.735,
+        -1.9008
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -2.3365,
+          0.3,
+          -1.9008
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "PassengerMachineGun": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 2,
+      "Magazine": 50,
+      "AutoReload": true,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
+      "RPM": 700,
+      "Name": "weapon.berts_vehicle_pack.gaz_tigr_kord",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/kord_1p",
+        "Fire3P": "bvp_audio:weapon/kord_3p",
+        "Fire3PFar": "bvp_audio:weapon/kord_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/kord_veryfar",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.6,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
+      },
+      "SoundRadius": 18,
+      "ShootPos": {
+        "Transform": "WeaponStationBarrel",
+        "Positions": [
+          [
+            0.0,
+            0.0,
+            -1.50876
+          ]
+        ],
+        "Directions": [
+          "WeaponStationBarrel"
+        ],
+        "ViewPosition": [
+          0.0,
+          0.0,
+          -1.50876
+        ],
+        "MuzzleAttachments": [
+          "hmg_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "hmg_muzzle"
+        ],
+        "HudOriginAttachment": "hmg_muzzle",
+        "HudDirectionAttachment": "hmg_muzzle",
+        "ViewAttachment": "hmg_muzzle",
+        "ViewDirectionAttachment": "hmg_muzzle",
+        "SeekAttachment": "hmg_muzzle",
+        "SeekDirectionAttachment": "hmg_muzzle",
+        "EffectAttachments": [
+          "hmg_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "hmg_muzzle"
+        ]
+      },
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/default"
+      },
+      "ShellType": "AP",
+      "Velocity": 40,
+      "Damage": 65,
+      "BypassesArmor": 0.6,
+      "Spread": 0.2,
+      "RecoilTime": 20,
+      "RecoilForce": 0.15,
+      "HeatPerShoot": 5,
+      "NaturalCooldown": 1,
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/belt_ammo_00_russian_127_mdz_iai"
+            },
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_I_C",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/belt_ammo_00_russian_127_mdz_iai",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ],
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/belt_ammo_01_russian_127_bzt44_api_t_2"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/belt_ammo_02_russian_127_bs41_ap_i_c"
+            },
+            "ShellType": "AP",
+            "Velocity": 42.5,
+            "ApDurability": 34,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP_I_C",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:gaz_tigr/passengermachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ]
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "APC",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/gaz_tigr.png",
+  "ThirdPersonCameraPos": [
+    0,
+    2.6,
+    7.0
+  ],
+  "HasDecoy": false,
+  "DeathChargeKg": 2.9,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.5",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DamageClass": "WHEELED",
+  "PassengerWeaponStationPos": [
+    0.0,
+    2.83635,
+    -0.297
+  ],
+  "PassengerWeaponStationBarrelPos": [
+    0.0,
+    0.22275,
+    -0.0
+  ],
+  "PassengerWeaponStationControllerIndex": 1,
+  "PassengerWeaponStationBinding": {
+    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
+    "Parent": "HULL",
+    "WeaponId": "PassengerMachineGun",
+    "WeaponKind": "HEAVY_MACHINE_GUN",
+    "CameraAttachment": "gunner2_camera",
+    "MuzzleAttachment": "hmg_muzzle"
+  },
+  "PassengerWeaponStationTurnSpeed": [
+    78.2609,
+    78.2609
+  ],
+  "PassengerWeaponStationYawRange": [
+    -360,
+    360
+  ],
+  "PassengerWeaponStationPitchRange": [
+    -10,
+    60
+  ]
+}

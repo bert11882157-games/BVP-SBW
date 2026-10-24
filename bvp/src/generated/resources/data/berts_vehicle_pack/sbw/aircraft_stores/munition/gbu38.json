@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "GBU-38 JDAM · 500 lb GPS (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu38.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1605,
+    -0.026
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1517,
+      0.0,
+      -0.026
+    ],
+    "Right": [
+      -0.1517,
+      0.0,
+      -0.026
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.026
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu38.png",
+  "Capacity": 1,
+  "MassKg": 253.1,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu38",
+  "LaunchOffset": [
+    0.0,
+    -0.1605,
+    0.0
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "Schema": 1,
+  "Name": "GBU-64 JDAM-ER · Mk 84 GPS (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu64.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.253,
+    0.0855
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.229,
+      0.0,
+      0.0855
+    ],
+    "Right": [
+      -0.229,
+      0.0,
+      0.0855
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0855
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu64.png",
+  "Capacity": 1,
+  "MassKg": 987.0,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 14,
+    "TntEquivalentKg": 578.61,
+    "BlastDamage": 900,
+    "LiftToDrag": 6,
+    "BestGlideSpeed": 6,
+    "MaxG": 3
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu64",
+  "LaunchOffset": [
+    0.0,
+    -0.253,
+    0.0
+  ]
+}

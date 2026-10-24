@@ -68,20 +68,28 @@ final class AircraftRigAnimator {
             entry.resource = resource;
             entry.binding = null;
             entry.station = null;
+            entry.turret = null;
             AircraftRigResource data = resource == null ? null : resource.getAircraftRig();
             entry.explicit = data != null;
             if (data != null) {
                 try {
                     entry.binding = bind(data, model::getBone);
-                    var station = resource.getDefensiveStationPresentation();
-                    if (station != null) entry.station = bindStation(station, entry.binding, model::getBone);
                 } catch (IllegalArgumentException invalid) {
-                    if (warningsRemaining > 0) {
-                        warningsRemaining--;
-                        LogUtils.getLogger().warn("Aircraft rig skipped for {}: {}",
-                                entry.resourceId, invalid.getMessage());
+                    warn("Aircraft rig skipped for {}: {}", entry.resourceId, invalid);
+                }
+                var station = resource.getDefensiveStationPresentation();
+                // A bad station must not take the main turret down with it: each binds on its own.
+                if (entry.binding != null && station != null) {
+                    try {
+                        entry.station = bindStation(station, entry.binding, model::getBone);
+                    } catch (IllegalArgumentException invalid) {
+                        warn("Defensive station skipped for {}: {}", entry.resourceId, invalid);
                     }
                 }
+                // A cockpit-only rig leaves the turret to the legacy poser, which still runs for it.
+                if (entry.binding != null && entity instanceof BvpHelicopterEntity && entity.hasTurret()
+                        && !cockpitOnly(entry))
+                    entry.turret = bindTurret(entry.binding, entry.station, model::getBone);
             }
         }
         if (!entry.explicit) return false;
@@ -195,7 +203,56 @@ final class AircraftRigAnimator {
                         renderParts.getStationYawFromRenderedHullDegrees(), -renderParts.getStationPitchDegrees());
             } else entry.station.restore();
         }
+        if (entry.turret != null) {
+            if (Float.isFinite(partialTick) && !entity.isWreck() && entity.hasTurret()) {
+                entry.turret.apply(renderParts.getTurretYawFromRenderedHullDegrees(),
+                        renderParts.getBarrelPitchDegrees());
+            } else entry.turret.restore();
+        }
         return true;
+    }
+
+    /**
+     * The main turret of a rigged helicopter (owner 2026-10-23, AH-56A nose turret frozen): the rig owns the model,
+     * so the legacy turret/barell poser never runs for it. Pose those two bones here, exactly as the legacy poser
+     * does (turret yaw about +Y, barell pitch about +X), unless the rig or the station already owns either bone.
+     */
+    static Turret bindTurret(Binding binding, Station station, Function<String, BedrockBone> bones) {
+        BedrockBone turret = bones.apply("turret");
+        BedrockBone barrel = bones.apply("barell");
+        if (turret == null && barrel == null) return null;
+        Set<BedrockBone> owned = new HashSet<>();
+        for (Part part : binding.surfaces) owned.add(part.bone);
+        for (Part part : binding.rotors) owned.add(part.bone);
+        for (Sweep sweep : binding.sweeps) owned.add(sweep.part.bone);
+        for (Gear gear : binding.gear) owned.add(gear.bone);
+        for (Part part : binding.flaps) owned.add(part.bone);
+        for (Door door : binding.doors) owned.add(door.part.bone);
+        for (Part part : binding.steering) owned.add(part.bone);
+        if (station != null) { owned.add(station.yaw.bone); owned.add(station.pitch.bone); }
+        Part yaw = turret == null || owned.contains(turret) ? null : new Part(turret, -9, 1, 0, 0, 0, 0, 1, 0);
+        Part pitch = barrel == null || owned.contains(barrel) ? null : new Part(barrel, -9, 1, 0, 0, 0, 1, 0, 0);
+        return yaw == null && pitch == null ? null : new Turret(yaw, pitch);
+    }
+
+    static final class Turret {
+        final Part yaw, pitch;
+
+        Turret(Part yaw, Part pitch) { this.yaw = yaw; this.pitch = pitch; }
+
+        void apply(double yawDegrees, double pitchDegrees) {
+            if (!Double.isFinite(yawDegrees) || !Double.isFinite(pitchDegrees)) {
+                restore();
+                return;
+            }
+            if (yaw != null) yaw.rotate(yawDegrees);
+            if (pitch != null) pitch.rotate(pitchDegrees);
+        }
+
+        void restore() {
+            if (yaw != null) yaw.restore();
+            if (pitch != null) pitch.restore();
+        }
     }
 
     static Station bindStation(DefaultVehicleResource.DefensiveStationResource data, Binding binding,
@@ -245,7 +302,11 @@ final class AircraftRigAnimator {
      */
     static boolean cockpitOnly(PolyMeshModel model) {
         Entry entry = BINDINGS.get(model);
-        Binding binding = entry == null ? null : entry.binding;
+        return entry != null && cockpitOnly(entry);
+    }
+
+    private static boolean cockpitOnly(Entry entry) {
+        Binding binding = entry.binding;
         return binding != null && entry.station == null && binding.rotors.length == 0
                 && binding.sweeps.length == 0 && binding.gear.length == 0 && binding.steering.length == 0;
     }
@@ -262,6 +323,13 @@ final class AircraftRigAnimator {
         PHASES.clear();
         world = null;
         warningsRemaining = 8;
+    }
+
+    private static void warn(String message, String resourceId, IllegalArgumentException invalid) {
+        if (warningsRemaining > 0) {
+            warningsRemaining--;
+            LogUtils.getLogger().warn(message, resourceId, invalid.getMessage());
+        }
     }
 
     private static <K, V> void trim(Map<K, V> cache) {
@@ -591,6 +659,7 @@ final class AircraftRigAnimator {
         DefaultVehicleResource resource;
         Binding binding;
         Station station;
+        Turret turret;
         boolean resolved;
         boolean explicit;
 
@@ -602,6 +671,7 @@ final class AircraftRigAnimator {
         void restore() {
             if (binding != null) binding.restore();
             if (station != null) station.restore();
+            if (turret != null) turret.restore();
         }
     }
 

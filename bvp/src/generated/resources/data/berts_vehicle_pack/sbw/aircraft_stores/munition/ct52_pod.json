@@ -1,0 +1,38 @@
+{
+  "Schema": 1,
+  "Name": "CT52 reconnaissance pod (AI)",
+  "Category": "VISUAL_ONLY",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ct52_pod.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.414,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.39,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.39,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ct52_pod.png",
+  "Capacity": 1,
+  "MassKg": 1100.0,
+  "LaunchOffset": [
+    0.0,
+    -0.414,
+    0.0
+  ]
+}

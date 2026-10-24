@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "280 US gal external fuel tank",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_280gal.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3098,
+    0.0962
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3098,
+      0.0,
+      0.0962
+    ],
+    "Right": [
+      -0.3098,
+      0.0,
+      0.0962
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0962
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_280gal.png",
+  "Capacity": 1,
+  "MassKg": 955.7,
+  "LaunchOffset": [
+    0.0,
+    -0.3098,
+    0.0
+  ]
+}

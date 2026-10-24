@@ -1,0 +1,142 @@
+{
+  "Schema": 1,
+  "Name": "F-4C",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [
+    "CenterlineGAU4"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylons",
+      "Left": [
+        2.28,
+        0.97,
+        1.67
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.275,
+            0.7,
+            0.9
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.28,
+        0.97,
+        1.67
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.275,
+            0.7,
+            0.9
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/aim9b",
+        "berts_vehicle_pack:munition/skyflash",
+        "berts_vehicle_pack:munition/agm12b",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu8",
+        "berts_vehicle_pack:munition/walleye2",
+        "berts_vehicle_pack:munition/walleye"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1100
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylons",
+      "Left": [
+        3.5,
+        1.2,
+        -0.52
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.5,
+            1.2,
+            -0.52
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.5,
+        1.2,
+        -0.52
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.5,
+            1.2,
+            -0.52
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/agm12b",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu8",
+        "berts_vehicle_pack:munition/walleye2",
+        "berts_vehicle_pack:munition/walleye"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1100
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_0": [
+      "suspended_f_4c_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_1": [
+      "suspended_f_4c_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_2": [
+      "suspended_f_4c_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_3": [
+      "suspended_f_4c_3"
+    ],
+    "berts_vehicle_pack:gun_pod/f4c_gau4": [
+      "suspended_f_4c_4"
+    ]
+  },
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Centerline gun pod",
+      "Position": [
+        0,
+        0.8,
+        1.9775
+      ],
+      "WeaponId": "CenterlineGAU4",
+      "AllowedStores": [
+        "berts_vehicle_pack:gun_pod/f4c_gau4"
+      ],
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "MaxPayloadKg": 7257,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12
+}

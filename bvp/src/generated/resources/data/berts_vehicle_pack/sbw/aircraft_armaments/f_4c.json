@@ -1,135 +1,305 @@
 {
   "Schema": 1,
-  "Name": "F-4C",
+  "Name": "F-4C Phantom II",
   "BuiltInWeapons": [],
   "SuspendedWeapons": [
-    "CenterlineGAU4"
+    "CenterlineGAU4",
+    "WingGAU4",
+    "FfarOuter",
+    "ZuniOuter",
+    "FfarInner",
+    "ZuniInner",
+    "FfarCentre",
+    "ZuniCentre"
   ],
   "Pairs": [
     {
-      "Id": "inner",
-      "Name": "Inner wing pylons",
+      "Id": "outer",
+      "Name": "Stations 1/11 · outer wing pylons",
       "Left": [
-        2.28,
-        0.97,
-        1.67
+        3.3383,
+        1.1795,
+        -1.0382
       ],
       "LeftStations": [
         {
           "Point": [
-            2.275,
-            0.7,
-            0.9
+            3.3383,
+            1.1795,
+            -1.0382
           ],
           "Face": "bottom"
         }
       ],
       "Right": [
-        -2.28,
-        0.97,
-        1.67
+        -3.3383,
+        1.1795,
+        -1.0382
       ],
       "RightStations": [
         {
           "Point": [
-            -2.275,
-            0.7,
-            0.9
+            -3.3383,
+            1.1795,
+            -1.0382
           ],
           "Face": "bottom"
         }
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/aim9b",
-        "berts_vehicle_pack:munition/skyflash",
-        "berts_vehicle_pack:munition/agm12b",
-        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk82_x6",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x6",
+        "berts_vehicle_pack:munition/mk81_x6",
+        "berts_vehicle_pack:munition/m117_x3",
+        "berts_vehicle_pack:munition/blu27",
+        "berts_vehicle_pack:munition/blu1_x2",
+        "berts_vehicle_pack:munition/mk83_x2",
         "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu8",
-        "berts_vehicle_pack:munition/walleye2",
-        "berts_vehicle_pack:munition/walleye"
+        "berts_vehicle_pack:munition/mk84_air",
+        "berts_vehicle_pack:munition/agm12b",
+        "berts_vehicle_pack:munition/agm45a",
+        "berts_vehicle_pack:munition/lau3a_ffar",
+        "berts_vehicle_pack:munition/lau10_zuni",
+        "berts_vehicle_pack:gun_pod/suu23a"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1100
+      "MaxPylonMassKg": 2300,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gun_pod/suu23a": "WingGAU4",
+        "berts_vehicle_pack:munition/lau3a_ffar": "FfarOuter",
+        "berts_vehicle_pack:munition/lau10_zuni": "ZuniOuter"
+      }
     },
     {
-      "Id": "outer",
-      "Name": "Outer wing pylons",
+      "Id": "inner",
+      "Name": "Stations 2/10 · inner wing pylons",
       "Left": [
-        3.5,
-        1.2,
-        -0.52
+        2.0475,
+        0.9792,
+        1.5657
       ],
       "LeftStations": [
         {
           "Point": [
-            3.5,
-            1.2,
-            -0.52
+            2.0475,
+            0.9792,
+            1.5657
           ],
           "Face": "bottom"
         }
       ],
       "Right": [
-        -3.5,
-        1.2,
-        -0.52
+        -2.0475,
+        0.9792,
+        1.5657
       ],
       "RightStations": [
         {
           "Point": [
-            -3.5,
-            1.2,
-            -0.52
+            -2.0475,
+            0.9792,
+            1.5657
           ],
           "Face": "bottom"
         }
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/m117_x3",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+        "berts_vehicle_pack:munition/mk83_x3",
+        "berts_vehicle_pack:munition/blu1_x2",
         "berts_vehicle_pack:munition/agm12b",
-        "berts_vehicle_pack:munition/mk83",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu8",
-        "berts_vehicle_pack:munition/walleye2",
-        "berts_vehicle_pack:munition/walleye"
+        "berts_vehicle_pack:munition/agm12c",
+        "berts_vehicle_pack:munition/agm45a",
+        "berts_vehicle_pack:munition/lau3a_ffar",
+        "berts_vehicle_pack:munition/lau10_zuni"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1100
+      "MaxPylonMassKg": 1400,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/lau3a_ffar": "FfarInner",
+        "berts_vehicle_pack:munition/lau10_zuni": "ZuniInner"
+      }
+    },
+    {
+      "Id": "lau7",
+      "Name": "Stations 3/9 · LAU-7 rails",
+      "Left": [
+        2.2923,
+        1.0683,
+        1.9441
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.2923,
+            1.0683,
+            1.9441
+          ],
+          "Face": "left"
+        },
+        {
+          "Point": [
+            1.8027,
+            1.0683,
+            1.9441
+          ],
+          "Face": "right"
+        }
+      ],
+      "Right": [
+        -2.2923,
+        1.0683,
+        1.9441
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.2923,
+            1.0683,
+            1.9441
+          ],
+          "Face": "right"
+        },
+        {
+          "Point": [
+            -1.8027,
+            1.0683,
+            1.9441
+          ],
+          "Face": "left"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9b_x2",
+        "berts_vehicle_pack:munition/aim9e_x2"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 200
+    },
+    {
+      "Id": "sparrow_front",
+      "Name": "Stations 4/5 · forward Sparrow wells",
+      "Left": [
+        0.7122,
+        1.2908,
+        3.8135
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.7122,
+            1.2908,
+            3.8135
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.7122,
+        1.2908,
+        3.8135
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.7122,
+            1.2908,
+            3.8135
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7d"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    },
+    {
+      "Id": "sparrow_rear",
+      "Name": "Stations 7/8 · aft Sparrow wells",
+      "Left": [
+        1.046,
+        1.3131,
+        -0.3705
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.046,
+            1.3131,
+            -0.3705
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.046,
+        1.3131,
+        -0.3705
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.046,
+            1.3131,
+            -0.3705
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7d"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
     }
   ],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/f_4c/assembly_0": [
-      "suspended_f_4c_0"
-    ],
-    "berts_vehicle_pack:modeled_store/f_4c/assembly_1": [
-      "suspended_f_4c_1"
-    ],
-    "berts_vehicle_pack:modeled_store/f_4c/assembly_2": [
-      "suspended_f_4c_2"
-    ],
-    "berts_vehicle_pack:modeled_store/f_4c/assembly_3": [
-      "suspended_f_4c_3"
-    ],
-    "berts_vehicle_pack:gun_pod/f4c_gau4": [
-      "suspended_f_4c_4"
-    ]
-  },
+  "StoreGroups": {},
   "Singles": [
     {
       "Id": "centerline",
-      "Name": "Centerline gun pod",
+      "Name": "Station 6 · centreline",
       "Position": [
-        0,
-        0.8,
-        1.9775
+        0.0,
+        1.2463,
+        1.677
       ],
-      "WeaponId": "CenterlineGAU4",
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            1.2463,
+            1.677
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
       "AllowedStores": [
-        "berts_vehicle_pack:gun_pod/f4c_gau4"
+        "berts_vehicle_pack:munition/mk82_x6",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x6",
+        "berts_vehicle_pack:munition/mk81_x6",
+        "berts_vehicle_pack:munition/m117_x3",
+        "berts_vehicle_pack:munition/blu27_x2",
+        "berts_vehicle_pack:munition/blu1_x2",
+        "berts_vehicle_pack:munition/mk83_x3",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/mk84_air",
+        "berts_vehicle_pack:munition/lau3a_ffar",
+        "berts_vehicle_pack:munition/lau10_zuni",
+        "berts_vehicle_pack:gun_pod/suu23a",
+        "berts_vehicle_pack:munition/tank_600gal"
       ],
-      "MaxPylonMassKg": 1000
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2300,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gun_pod/suu23a": "CenterlineGAU4",
+        "berts_vehicle_pack:munition/lau3a_ffar": "FfarCentre",
+        "berts_vehicle_pack:munition/lau10_zuni": "ZuniCentre"
+      }
     }
   ],
   "MaxPayloadKg": 7257,

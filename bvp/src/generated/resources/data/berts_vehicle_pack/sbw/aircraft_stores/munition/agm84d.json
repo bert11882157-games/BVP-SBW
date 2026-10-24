@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "AGM-84D Harpoon · active-radar anti-ship (AI)",
+  "Category": "CRUISE",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm84d.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1715,
+    0.5376
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1715,
+      0.0,
+      0.5376
+    ],
+    "Right": [
+      -0.1715,
+      0.0,
+      0.5376
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5376
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm84d.png",
+  "Capacity": 1,
+  "MassKg": 549.2,
+  "Guidance": {
+    "Mode": "ACTIVE_SURFACE_RADAR",
+    "LockTicks": 60,
+    "Range": 820,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.5
+  },
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 30,
+    "Damage": 75,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 97.52,
+    "Range": 820
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1715,
+    0.0
+  ]
+}

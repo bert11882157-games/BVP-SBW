@@ -1600,11 +1600,19 @@
     "Parent": "HULL",
     "Origins": [
       {
-        "Id": "fitted_exhaust_face_000",
+        "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -0.69878,
-          1.89238,
-          -3.23826
+          -0.56875,
+          1.94063,
+          3.06875
+        ]
+      },
+      {
+        "Id": "engine_exhaust_group_origin_001",
+        "Position": [
+          0.55625,
+          1.94063,
+          3.06875
         ]
       }
     ]

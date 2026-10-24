@@ -1,0 +1,38 @@
+{
+  "Schema": 1,
+  "Name": "9M114 Shturm · 2-round tube launcher",
+  "Category": "MISSILE_LAUNCHER",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mi24p_shturm_x2.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    -0.0679,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.4348,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.4348,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mi24p_shturm_x2.png",
+  "Capacity": 2,
+  "Scale": 1,
+  "MassKg": 46.5,
+  "LaunchOffset": [
+    0.0,
+    0.0679,
+    0.0
+  ]
+}

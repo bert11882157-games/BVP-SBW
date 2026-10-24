@@ -1,0 +1,201 @@
+{
+  "why": "AH-56A Cheyenne canopy: tandem crew sections of flat panes in slim frames (the real Cheyenne has flat plates, a V-shaped windscreen centre post, flat side panes and separate raised rear and lower front sections). Layout from the model's own frame bars (canopy_ah_56a.py): every pane is a face of one convex canopy solid, so each is one exact plane; pane count and sizes are UNVERIFIED against photographs. Glazed: pilot side / shoulder / roof (two, either side of a centre spine), gunner side / shoulder / overhead / corner / windscreen (two, meeting in the V). The fairing between the crews and the rear fairing are opaque.",
+  "panes": [
+    {
+      "name": "gunner corner pane",
+      "mirror": true,
+      "box": [
+        [
+          0.357,
+          2.9332,
+          7.9574
+        ],
+        [
+          0.8642,
+          3.7969,
+          9.0863
+        ]
+      ]
+    },
+    {
+      "name": "gunner overhead pane",
+      "mirror": false,
+      "box": [
+        [
+          -0.3515,
+          3.6086,
+          7.3431
+        ],
+        [
+          0.3515,
+          4.2687,
+          8.6197
+        ]
+      ]
+    },
+    {
+      "name": "gunner shoulder pane",
+      "mirror": true,
+      "box": [
+        [
+          0.3582,
+          3.6551,
+          7.3431
+        ],
+        [
+          0.6561,
+          4.2668,
+          8.5262
+        ]
+      ]
+    },
+    {
+      "name": "gunner side pane (right)",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            0.7054,
+            3.6261,
+            7.8615
+          ],
+          [
+            0.7062,
+            3.6269,
+            7.8623
+          ]
+        ],
+        [
+          [
+            0.7784,
+            3.3378,
+            7.8312
+          ],
+          [
+            0.7792,
+            3.3386,
+            7.832
+          ]
+        ],
+        [
+          [
+            0.7827,
+            3.3739,
+            7.385
+          ],
+          [
+            0.7835,
+            3.3747,
+            7.3858
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "gunner side pane (left)",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.8751,
+            2.9696,
+            7.7023
+          ],
+          [
+            -0.8743,
+            2.9704,
+            7.7031
+          ]
+        ],
+        [
+          [
+            -0.8021,
+            3.2579,
+            7.7325
+          ],
+          [
+            -0.8013,
+            3.2587,
+            7.7333
+          ]
+        ],
+        [
+          [
+            -0.7105,
+            3.6622,
+            7.4152
+          ],
+          [
+            -0.7097,
+            3.663,
+            7.416
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "gunner windscreen pane",
+      "mirror": true,
+      "box": [
+        [
+          0.0035,
+          2.9327,
+          8.5429
+        ],
+        [
+          0.3515,
+          3.6468,
+          9.1401
+        ]
+      ]
+    },
+    {
+      "name": "pilot roof pane",
+      "mirror": true,
+      "box": [
+        [
+          0.0035,
+          4.3895,
+          5.474
+        ],
+        [
+          0.3515,
+          4.3905,
+          6.7965
+        ]
+      ]
+    },
+    {
+      "name": "pilot shoulder pane",
+      "mirror": true,
+      "box": [
+        [
+          0.3581,
+          4.2586,
+          5.4518
+        ],
+        [
+          0.6173,
+          4.3887,
+          6.7965
+        ]
+      ]
+    },
+    {
+      "name": "pilot side pane",
+      "mirror": true,
+      "box": [
+        [
+          0.5748,
+          3.1111,
+          5.2791
+        ],
+        [
+          0.8795,
+          4.2769,
+          6.7948
+        ]
+      ]
+    }
+  ]
+}

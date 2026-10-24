@@ -1,0 +1,789 @@
+{
+  "id": "yak_141",
+  "name": "Yak-141 Freestyle",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "su_27",
+  "source": "Yak-141.mtb",
+  "note": "New vehicle (Elite Expansion 2): Yak-141.mtb (Yakovlev Yak-41M / Yak-141 prototype, red stars, call sign 77) on the Su-27 airframe data (twin fins, working rig), flown as a conventional jet: the pack has no hover support. Real size: 18.4 m x 10.1 m (one scale, 0.8 px per source unit, 16 px per m). Lift-engine doors closed (the model carries both poses; the open copy and the two fans are left out), wing tips spread (folded copy left out), baked B-8M1 pods x2 and inner stores x2 cut out and kept in work/elite_expansion_2/yak141/stores; the model's pylon plates stay. Control surfaces on the model's own hinges. The model has one canopy state (closed frame).",
+  "yaw180": true,
+  "scale": 0.8,
+  "shift": [
+    0.0,
+    0.0,
+    14.00358
+  ],
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    14,
+    15
+  ],
+  "excludeParts": [
+    21,
+    23,
+    24,
+    26,
+    28
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropGroupIds": [
+    "366410126"
+  ],
+  "dropRules": [
+    {
+      "absXMin": 29.6,
+      "absXMax": 36.0,
+      "yMin": 22.4,
+      "yMax": 30.4,
+      "zMin": 3.2,
+      "zMax": 52.8,
+      "parts": [
+        4,
+        5
+      ]
+    }
+  ],
+  "fuselageCuts": [
+    -88.0,
+    -24.0,
+    72.0
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "3": "fuselage",
+    "27": "fuselage",
+    "2": [
+      {
+        "bone": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+        "if": {
+          "frame": "source",
+          "absXMin": 26,
+          "yMax": 32,
+          "zMin": 120
+        }
+      }
+    ],
+    "4": "wing",
+    "5": "wing",
+    "20": "wing",
+    "22": "wing",
+    "7": [
+      {
+        "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+        "if": {
+          "frame": "source",
+          "absXMin": 15
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__control_stick_pitch",
+        "if": {}
+      }
+    ],
+    "8": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+    "9": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+    "10": "wreck_wing_left__aileron_left",
+    "11": "wreck_wing_right__aileron_right",
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "yMax": 1.0
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "yMax": 6.5,
+          "absXMax": 3
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__landing_gear_2",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_wing_left__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "absXMin": 27,
+          "yMax": 3.5
+        }
+      },
+      {
+        "bone": "wreck_wing_left__landing_gear_0",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_wing_right__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 27,
+          "yMax": 3.5
+        }
+      },
+      {
+        "bone": "wreck_wing_right__landing_gear_1",
+        "if": {}
+      }
+    ]
+  },
+  "keepTemplateBones": [],
+  "addBones": [
+    {
+      "name": "stabilator_left",
+      "parent": "hull",
+      "pivot": [
+        21.6,
+        27.6,
+        112.0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__stabilator_left",
+      "parent": "stabilator_left",
+      "pivot": [
+        21.6,
+        27.6,
+        112.0
+      ]
+    },
+    {
+      "name": "stabilator_right",
+      "parent": "hull",
+      "pivot": [
+        -21.6,
+        27.6,
+        112.0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__stabilator_right",
+      "parent": "stabilator_right",
+      "pivot": [
+        -21.6,
+        27.6,
+        112.0
+      ]
+    }
+  ],
+  "sweeps": {
+    "aileron_left": {
+      "pivot": [
+        36.8,
+        34.2,
+        55.2
+      ],
+      "axis": [
+        -0.9895,
+        0.1443,
+        -0.0
+      ],
+      "maxDegrees": 20
+    },
+    "aileron_right": {
+      "pivot": [
+        -36.8,
+        34.2,
+        55.2
+      ],
+      "axis": [
+        -0.9895,
+        -0.1443,
+        0.0
+      ],
+      "maxDegrees": 20
+    },
+    "rudder_left": {
+      "pivot": [
+        17.8,
+        54.4,
+        126.4
+      ],
+      "axis": [
+        0.0818,
+        0.9161,
+        0.3926
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_right": {
+      "pivot": [
+        -17.8,
+        54.4,
+        126.4
+      ],
+      "axis": [
+        -0.0818,
+        0.9161,
+        0.3926
+      ],
+      "maxDegrees": 25
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        23.2,
+        4.8,
+        45.2
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        -23.2,
+        4.8,
+        45.2
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        0.0,
+        2.4,
+        -85.2
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0.0,
+        2.4,
+        -85.2
+      ]
+    },
+    "control_stick_roll": {
+      "pivot": [
+        0.0,
+        28.0,
+        -87.6
+      ]
+    },
+    "control_stick_pitch": {
+      "pivot": [
+        0.0,
+        28.0,
+        -87.6
+      ]
+    }
+  },
+  "clientSet": {
+    "AircraftRig.Surfaces": [
+      {
+        "Bone": "aileron_left",
+        "Parent": "hull",
+        "Pivot": [
+          36.8,
+          34.2,
+          55.2
+        ],
+        "Axis": [
+          -0.9895,
+          0.1443,
+          -0.0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          -36.8,
+          34.2,
+          55.2
+        ],
+        "Axis": [
+          -0.9895,
+          -0.1443,
+          0.0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "stabilator_left",
+        "Parent": "hull",
+        "Pivot": [
+          21.6,
+          27.6,
+          112.0
+        ],
+        "Axis": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0.2,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "stabilator_right",
+        "Parent": "hull",
+        "Pivot": [
+          -21.6,
+          27.6,
+          112.0
+        ],
+        "Axis": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -0.2,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder_left",
+        "Parent": "hull",
+        "Pivot": [
+          17.8,
+          54.4,
+          126.4
+        ],
+        "Axis": [
+          0.0818,
+          0.9161,
+          0.3926
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": 1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder_right",
+        "Parent": "hull",
+        "Pivot": [
+          -17.8,
+          54.4,
+          126.4
+        ],
+        "Axis": [
+          -0.0818,
+          0.9161,
+          0.3926
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": 1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "control_stick_roll",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          28.0,
+          -87.6
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 11.0
+      },
+      {
+        "Bone": "control_stick_pitch",
+        "Parent": "control_stick_roll",
+        "Pivot": [
+          0.0,
+          28.0,
+          -87.6
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 14.0
+      }
+    ],
+    "AircraftRig.Flaps": [],
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 191.0,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 191.0,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 191.0,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_left",
+        "Position": [
+          0.0,
+          1.85,
+          -5.45
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.65
+      }
+    ],
+    "AfterburnerPresentation.TapEmitters": [
+      {
+        "Outlet": "afterburner_left",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.1316417910375,
+          0.1316417910375,
+          0.1316417910375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ]
+  },
+  "removeClientKeys": [
+    "CockpitGauges",
+    "FlightDisplays",
+    "HeadUpDisplay",
+    "CanopyGlass"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0.0,
+      43.2,
+      -78.4
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0.0,
+      17.3,
+      -78.4
+    ]
+  },
+  "addSeats": [],
+  "dataSet": {
+    "AircraftSurfaceTransforms": {
+      "aileron_left": {
+        "Parent": "hull",
+        "Pivot": [
+          2.3,
+          2.1375,
+          -3.45
+        ],
+        "Axis": [
+          0.9895,
+          -0.1443,
+          -0.0
+        ],
+        "ControlWeights": [
+          0,
+          1,
+          0
+        ],
+        "MaxDeflectionDegrees": 20
+      },
+      "aileron_right": {
+        "Parent": "hull",
+        "Pivot": [
+          -2.3,
+          2.1375,
+          -3.45
+        ],
+        "Axis": [
+          0.9895,
+          0.1443,
+          0.0
+        ],
+        "ControlWeights": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 20
+      },
+      "stabilator_left": {
+        "Parent": "hull",
+        "Pivot": [
+          1.35,
+          1.725,
+          -7.0
+        ],
+        "Axis": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "ControlWeights": [
+          1,
+          0.2,
+          0
+        ],
+        "MaxDeflectionDegrees": 25
+      },
+      "stabilator_right": {
+        "Parent": "hull",
+        "Pivot": [
+          -1.35,
+          1.725,
+          -7.0
+        ],
+        "Axis": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "ControlWeights": [
+          1,
+          -0.2,
+          0
+        ],
+        "MaxDeflectionDegrees": 25
+      },
+      "rudder_left": {
+        "Parent": "hull",
+        "Pivot": [
+          1.1125,
+          3.4,
+          -7.9
+        ],
+        "Axis": [
+          -0.0818,
+          -0.9161,
+          0.3926
+        ],
+        "ControlWeights": [
+          0,
+          0,
+          1
+        ],
+        "MaxDeflectionDegrees": 25
+      },
+      "rudder_right": {
+        "Parent": "hull",
+        "Pivot": [
+          -1.1125,
+          3.4,
+          -7.9
+        ],
+        "Axis": [
+          0.0818,
+          -0.9161,
+          0.3926
+        ],
+        "ControlWeights": [
+          0,
+          0,
+          1
+        ],
+        "MaxDeflectionDegrees": 25
+      }
+    }
+  },
+  "flightReference": {
+    "maximumTrueAirspeedKmh": 1800,
+    "referenceAltitudeMetres": 11000,
+    "climbMetresPerSecond": 250,
+    "turnSeconds": 26,
+    "takeoffRunMetres": 450,
+    "baseMassKg": 11650,
+    "mainFuelMassKg": 4400,
+    "fullFuelWingLoadingKgPerSquareMetre": 506.3,
+    "maximumIndicatedAirspeedKmh": 1250,
+    "negativeGLimit": -3,
+    "positiveGLimit": 9,
+    "engineCount": 1,
+    "dryThrustKgfPerEngine": 11013.0,
+    "afterburnerThrustKgfPerEngine": 15500.0
+  },
+  "armamentOverrides": {
+    "Name": "Yak-141 Freestyle",
+    "BuiltInWeapons": [
+      "Cannon"
+    ],
+    "SuspendedWeapons": [
+      "Ub32Outer",
+      "B8Outer",
+      "B13Outer",
+      "S24Outer",
+      "Ub32Inner",
+      "B8Inner",
+      "B13Inner",
+      "S24Inner",
+      "UpkOuter",
+      "UpkInner"
+    ],
+    "MaxPayloadKg": 3000,
+    "Pairs": [
+      {
+        "Id": "outer",
+        "Name": "Stations 1/5 Â· outer wing pylons",
+        "Left": [
+          2.9,
+          1.65,
+          -2.6
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.9,
+              1.65,
+              -2.6
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.9,
+          1.65,
+          -2.6
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.9,
+              1.65,
+              -2.6
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:r60",
+          "berts_vehicle_pack:r73",
+          "berts_vehicle_pack:r27r",
+          "berts_vehicle_pack:r27t",
+          "berts_vehicle_pack:munition/ub32a_24",
+          "berts_vehicle_pack:su25_s8ko_pod",
+          "berts_vehicle_pack:munition/b13l",
+          "berts_vehicle_pack:munition/s24b",
+          "berts_vehicle_pack:munition/ofab100_x4",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/ofab250sh",
+          "berts_vehicle_pack:munition/fab500sh",
+          "berts_vehicle_pack:munition/zb500",
+          "berts_vehicle_pack:gun_pod/upk23_250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/ub32a_24": "Ub32Outer",
+          "berts_vehicle_pack:su25_s8ko_pod": "B8Outer",
+          "berts_vehicle_pack:munition/b13l": "B13Outer",
+          "berts_vehicle_pack:munition/s24b": "S24Outer",
+          "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter"
+        }
+      },
+      {
+        "Id": "inner",
+        "Name": "Stations 2/4 Â· inner wing pylons",
+        "Left": [
+          2.05,
+          1.775,
+          -1.9
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.05,
+              1.775,
+              -1.9
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.05,
+          1.775,
+          -1.9
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.05,
+              1.775,
+              -1.9
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:r60",
+          "berts_vehicle_pack:r73",
+          "berts_vehicle_pack:r27r",
+          "berts_vehicle_pack:r27t",
+          "berts_vehicle_pack:munition/r27er",
+          "berts_vehicle_pack:munition/r27et",
+          "berts_vehicle_pack:munition/ub32a_24",
+          "berts_vehicle_pack:su25_s8ko_pod",
+          "berts_vehicle_pack:munition/b13l",
+          "berts_vehicle_pack:munition/s24b",
+          "berts_vehicle_pack:munition/ofab100_x4",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/ofab250sh",
+          "berts_vehicle_pack:munition/fab500sh",
+          "berts_vehicle_pack:munition/zb500",
+          "berts_vehicle_pack:gun_pod/upk23_250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/ub32a_24": "Ub32Inner",
+          "berts_vehicle_pack:su25_s8ko_pod": "B8Inner",
+          "berts_vehicle_pack:munition/b13l": "B13Inner",
+          "berts_vehicle_pack:munition/s24b": "S24Inner",
+          "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner"
+        }
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {}
+  }
+}

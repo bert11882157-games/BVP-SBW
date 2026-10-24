@@ -1,0 +1,44 @@
+{
+  "Schema": 1,
+  "Name": "HOT-2 Ã‚Â· 2 Ãƒâ€” Euromissile HOT-2",
+  "Category": "COMMAND_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gazelle_hot_launcher.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2326,
+    0.0517
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2326,
+      0.0,
+      0.0517
+    ],
+    "Right": [
+      -0.2326,
+      0.0,
+      0.0517
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0517
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gazelle_hot_launcher.png",
+  "Capacity": 2,
+  "Scale": 1,
+  "MassKg": 23.0,
+  "AmmoItem": "superbwarfare:small_atgm",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/hot2_gazelle",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/hot2_gazelle",
+  "LaunchOffset": [
+    0.0,
+    -0.2326,
+    0.7
+  ]
+}

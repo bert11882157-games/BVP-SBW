@@ -1,0 +1,83 @@
+{
+  "Schema": 1,
+  "Name": "GBU-32 JDAM · BRU-33 twin rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu32.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.202,
+    -0.075
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2201,
+      0.0,
+      -0.075
+    ],
+    "Right": [
+      -0.2201,
+      0.0,
+      -0.075
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.075
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu32.png",
+  "Capacity": 1,
+  "MassKg": 480.0,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 272.43,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu32",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_fa18_x2_gbu32.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/fa18e_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.05,
+          -0.2075,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.2075,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.58,
+    0.4,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.202,
+    0.0
+  ]
+}
