@@ -47,6 +47,12 @@ object HeadUpDisplay {
     private const val GRID = 8
     private const val LIFT = 0.0015f          // the picture sits this far in front of the glass, blocks
     private const val MAX_STILLS = 16
+    /** The live picture's resolution over [HudPainter.SIZE]: sharp when the pilot zooms in (the stills stay at 1). */
+    private const val LIVE_SCALE = 3
+    /** The live picture follows the pilot's camera within this distance of the design eye, blocks... */
+    private const val MAX_EYE_SHIFT = 0.6
+    /** ...refitted once the camera has moved this far. */
+    private const val REFIT_DISTANCE = 0.005
     private const val DEFAULT_RGB = 0x4CFF6A
     private const val SIGHT_RGB = 0xFF9A3C          // a gunsight's reticle lamp: amber
 
@@ -63,10 +69,43 @@ object HeadUpDisplay {
     private var failed = false
     private var logged = false
 
-    private fun resource(vehicle: VehicleEntity): HeadUpDisplayResource? =
-        VehicleResource.getDefault(vehicle).headUpDisplay?.takeIf { it.frame == "VEHICLE_LOCAL_BLOCKS" }
+    /** The vehicle's HUDs and sights (see [HudSeats]). */
+    private fun resources(vehicle: VehicleEntity): List<HeadUpDisplayResource> = HudSeats.of(VehicleResource.getDefault(vehicle))
 
     private fun combiner(r: HeadUpDisplayResource): Combiner? = combiners.getOrPut(r) { fit(r) }
+
+    private var liveFit: Combiner? = null
+    private var liveFitFor: HeadUpDisplayResource? = null
+    private val liveFitEye = Vector3d()
+    /**
+     * The camera in the vehicle frame, measured in the world pass where the camera and the vehicle's pose belong to
+     * the same frame. The frame's start (where the picture is painted) still holds the last frame's camera, which
+     * against this frame's pose put the eye off by the distance flown per frame: the picture refitted every frame and
+     * the symbols slid about, and flipped back to the design eye once that passed [MAX_EYE_SHIFT].
+     */
+    private val measuredEye = Vector3d(Double.NaN, Double.NaN, Double.NaN)
+    private var measuredFor = -1
+
+    /**
+     * The pilot's picture, collimated for where their eye actually is: in first person the camera's position in the
+     * vehicle frame (a zoom or seat camera can sit off the design eye, and the symbols would then slide off the
+     * boresight), refitted when it moves; otherwise, or when the camera is not near the seat, the design eye.
+     */
+    private fun liveCombiner(vehicle: VehicleEntity, r: HeadUpDisplayResource): Combiner? {
+        val mc = Minecraft.getInstance()
+        val design = vec(r.eye) ?: return combiner(r)
+        var eye = design
+        if (mc.options.cameraType.isFirstPerson && measuredFor == vehicle.id && measuredEye.isFinite
+            && measuredEye.distance(design) < MAX_EYE_SHIFT) eye = Vector3d(measuredEye)
+        if (eye === design) return combiner(r)
+        if (liveFitFor !== r || liveFit == null || liveFitEye.distance(eye) > REFIT_DISTANCE) {
+            liveFit = fit(r, eye) ?: return combiner(r)
+            if (liveFitFor !== r) LOGGER.info("Head-up display eye refit: camera {} blocks off the design eye", eye.distance(design))
+            liveFitFor = r
+            liveFitEye.set(eye)
+        }
+        return liveFit
+    }
 
     /** Called from [FlightDisplays.onRenderTick] at the start of every frame, outside the world pass. */
     fun renderTick(partialTick: Float) {
@@ -82,14 +121,16 @@ object HeadUpDisplay {
             }
             stillRequested.clear()
             val vehicle = Minecraft.getInstance().player?.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
-            val r = resource(vehicle) ?: run { liveVehicleId = -1; return }
+            // live only for the crewman at a HUD's own seat (first or third person); the others show the still picture
+            val seat = FlightDisplayState.crewSeat(vehicle)
+            val r = HudSeats.liveFor(seat, resources(vehicle)) ?: run { liveVehicleId = -1; return }
             if (vehicle.isWreck) { liveVehicleId = -1; return }
-            val c = combiner(r) ?: run { liveVehicleId = -1; return }
+            val c = liveCombiner(vehicle, r) ?: run { liveVehicleId = -1; return }
             val state = FlightDisplayState.sample(vehicle, partialTick) ?: return
             val flags = vehicle.getIncomingMissileWarning()
             val alerts = HudPainter.Alerts(locked = vehicle.getAircraftThreatLevel() > 0,
                 launch = flags and IncomingMissileWarning.INCOMING != 0)
-            val target = live ?: create(LIVE_TEXTURE).also { live = it }
+            val target = live ?: create(LIVE_TEXTURE, LIVE_SCALE).also { live = it }
             paint(target, state, c, alerts)
             liveFor = r
             liveVehicleId = vehicle.id
@@ -107,9 +148,18 @@ object HeadUpDisplay {
     /** Draws [vehicle]'s HUD picture in the vehicle model frame (see [FlightDisplays.render]). */
     fun render(vehicle: VehicleEntity, poseStack: PoseStack, buffers: MultiBufferSource) {
         if (failed) return
-        val r = resource(vehicle) ?: return
-        val c = combiner(r) ?: return
-        val isLive = liveVehicleId == vehicle.id && liveFor === r && Minecraft.getInstance().player?.vehicle === vehicle
+        for (r in resources(vehicle)) render(vehicle, r, poseStack, buffers)
+    }
+
+    private fun render(vehicle: VehicleEntity, r: HeadUpDisplayResource, poseStack: PoseStack, buffers: MultiBufferSource) {
+        val mc = Minecraft.getInstance()
+        if (mc.player?.vehicle === vehicle && FlightDisplayState.crewSeat(vehicle) == r.seat) {
+            val cam = vehicle.worldToVehicleLocal(mc.gameRenderer.mainCamera.position, mc.frameTime)
+            measuredEye.set(cam.x, cam.y, cam.z)
+            measuredFor = vehicle.id
+        }
+        val isLive = liveVehicleId == vehicle.id && liveFor === r && mc.player?.vehicle === vehicle
+        val c = (if (isLive && liveFitFor === r) liveFit else null) ?: combiner(r) ?: return
         val texture = if (isLive) LIVE_TEXTURE else stills[r]?.second ?: run { stillRequested.add(r); return }
         val matrix = poseStack.last().pose()
         // Additive: black adds nothing, the symbols glow on the glass. A soft halo first, then the sharp picture.
@@ -138,9 +188,9 @@ object HeadUpDisplay {
      * Fits the picture to the combiner: the field of view the glass covers from the design eye (degrees off the nose,
      * square so both axes share one scale), and for each grid point of the glass the texture point in its direction.
      */
-    private fun fit(r: HeadUpDisplayResource): Combiner? {
+    private fun fit(r: HeadUpDisplayResource, eyeAt: Vector3d? = null): Combiner? {
         val centre = vec(r.center) ?: return null
-        val eye = vec(r.eye) ?: return null
+        val eye = eyeAt ?: vec(r.eye) ?: return null
         val n = vec(r.normal)?.takeIf { it.lengthSquared() > 1e-9 }?.normalize() ?: return null
         val u0 = vec(r.up) ?: return null
         val up = Vector3d(u0).sub(Vector3d(n).mul(u0.dot(n))).takeIf { it.lengthSquared() > 1e-9 }?.normalize() ?: return null
@@ -201,8 +251,12 @@ object HeadUpDisplay {
 
     // ------------------------------------------------------------------ painting
 
-    private fun create(location: ResourceLocation): RenderTarget {
-        val target = TextureTarget(HudPainter.SIZE, HudPainter.SIZE, false, Minecraft.ON_OSX)
+    /**
+     * A target [scale] times [HudPainter.SIZE] texels across; the painter keeps drawing in its SIZE units (the ortho
+     * projection below maps them over the whole target), so a larger target only adds sharpness.
+     */
+    private fun create(location: ResourceLocation, scale: Int = 1): RenderTarget {
+        val target = TextureTarget(HudPainter.SIZE * scale, HudPainter.SIZE * scale, false, Minecraft.ON_OSX)
         target.setClearColor(0f, 0f, 0f, 1f)
         target.setFilterMode(GL11.GL_LINEAR)
         Minecraft.getInstance().textureManager.register(location, TargetTexture(target))

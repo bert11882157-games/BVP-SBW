@@ -29,7 +29,8 @@ import numpy as np
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
+# BVP_GEN: another resources tree (a scratch copy holding another branch's files, to rerun a script on them)
+GEN = os.environ.get('BVP_GEN') or os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo')
 ASSET_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 DATA_DIR = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles')
@@ -607,11 +608,40 @@ RUSSIAN = {
 }
 
 
+GERMAN = {
+    'MASTER|CAUTION': 'ACHTUNG', 'GEAR|DOWN': 'FAHRWERK|AUS', 'GEAR|UNSAFE': 'FAHRWERK|ZWISCH', 'FUEL|LOW': 'KRAFTST|REST',
+    'OIL|PRESS': 'ÖLDRUCK', 'ENGINE|FIRE': 'BRAND|MOTOR', 'GEN': 'GENERATOR', 'FIRE': 'BRAND', 'ENG|OUT': 'MOTOR|AUS',
+    'HYD|PRESS': 'HYDRAULIK', 'STALL': 'ÜBERZIEHEN', 'OVER G': 'ÜBERLAST', 'LOW|ALT': 'HÖHE', 'DAMAGE': 'SCHADEN',
+    'OVER|SPEED': 'HÖCHST|FAHRT', 'SPD|BRK': 'STURZ|BREMSE', 'AMMO|LOW': 'MUNITION',
+}
+
+
+FRENCH = {
+    'MASTER|CAUTION': 'PANNE', 'GEAR|DOWN': 'TRAIN|SORTI', 'GEAR|UNSAFE': 'TRAIN|TRANSIT', 'FUEL|LOW': 'BINGO',
+    'OIL|PRESS': 'PRESS|HUILE', 'ENGINE|FIRE': 'FEU|MOTEUR', 'GEN': 'ALTERN', 'FIRE': 'FEU', 'ENG|OUT': 'MOTEUR',
+    'HYD|PRESS': 'HYDR', 'STALL': 'INCID', 'OVER G': 'FACTEUR|CHARGE', 'RWR|LOCK': 'ALERTE|RADAR', 'LAUNCH': 'MISSILE',
+    'LOW|ALT': 'ALTI|BASSE', 'DAMAGE': 'AVARIE', 'A/B': 'PC', 'OVER|SPEED': 'VITESSE|MAXI', 'SPD|BRK': 'AÉRO|FREINS',
+    'AMMO|LOW': 'MUNITIONS',
+}
+
+
+SWEDISH = {
+    'MASTER|CAUTION': 'HUVUD|VARNING', 'GEAR|DOWN': 'LANDST|NERE', 'GEAR|UNSAFE': 'LANDST|OLÅST', 'FUEL|LOW': 'BRÄNSLE|REST',
+    'OIL|PRESS': 'OLJE|TRYCK', 'ENGINE|FIRE': 'BRAND|MOTOR', 'GEN': 'GENERATOR', 'FIRE': 'BRAND', 'ENG|OUT': 'MOTOR|STOPP',
+    'HYD|PRESS': 'HYDR', 'STALL': 'ANFALL|VINKEL', 'OVER G': 'ÖVERLAST', 'RWR|LOCK': 'RADAR|VARNING', 'LAUNCH': 'ROBOT',
+    'LOW|ALT': 'LÅG|HÖJD', 'DAMAGE': 'SKADA', 'A/B': 'EBK', 'OVER|SPEED': 'ÖVERFART', 'SPD|BRK': 'LUFT|BROMS',
+    'AMMO|LOW': 'AMMO',
+}
+
+
 def lamps_of(name, pal_name):
+    """the lamp set [name] with its legends in the cockpit's language: Russian for the Soviet palettes, German for the
+    Luftwaffe's, French for the Armee de l'Air's, Swedish for the Flygvapnet's, else English"""
     spec = LAMP_SETS[name]
     cyr = pal_name.startswith('soviet') or pal_name == 'ussr_ww2'
-    return spec['columns'], [{'Text': RUSSIAN.get(t, t) if cyr else t, 'Condition': c, 'Colour': k}
-                             for t, c, k in spec['lamps']]
+    lang = (RUSSIAN if cyr else GERMAN if pal_name.startswith('luftwaffe') else
+            FRENCH if pal_name.startswith('armee_air') else SWEDISH if pal_name.startswith('flygvapnet') else {})
+    return spec['columns'], [{'Text': lang.get(t, t), 'Condition': c, 'Colour': k} for t, c, k in spec['lamps']]
 
 
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)
@@ -1105,7 +1135,12 @@ SKIP_BONES = ('canopy', 'pilot_view_occluder', 'gear', 'landing', 'suspended', '
               'aileron', 'elevator', 'rudder', 'flap', 'airbrake', 'control_stick', 'turret', 'barell')
 
 
+INTERIOR_BONES = set()        # plain bones that hold the cockpit too (a helicopter's single 'hull'; its script adds it)
+
+
 def is_interior_bone(name):
+    if name in INTERIOR_BONES:
+        return True
     if not name.startswith('wreck_'):
         return False
     tail = name.split('__', 1)[1] if '__' in name else name

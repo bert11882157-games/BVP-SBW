@@ -49,7 +49,8 @@ METAL = (128, 132, 134)
 FLOOR = (46, 50, 50)
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
-WALL_X = 0.450                 # the panel's wings end here, inside the side rails
+WALL_X = 0.380                 # the panel's wings end here, inside the canopy's sides (at 0.45 their top corners
+                               # stood out through the raised metal sides, 2026-10-24)
 CONSOLE_OUT = 0.550            # the consoles run out to the rails
 SILL_Y = -0.50                 # the rails' tops
 FLOOR_Y = -1.09
@@ -61,7 +62,7 @@ LEAN = math.radians(12)
 HINGE = 0.210                  # centre facet half width
 WING = math.radians(25)
 WING_LEN = (WALL_X - HINGE) / math.cos(WING)
-TOP_C, TOP_W = -0.240, -0.400  # centre facet top, wing top at its end
+TOP_C, TOP_W = -0.240, -0.420  # centre facet top, wing top at its end
 BOT_C, BOT_W = -0.700, -0.700
 FRONT_Z = 0.95                 # the coaming runs forward down the deck
 FRONT_Y_C, FRONT_Y_W = -0.300, -0.440
@@ -105,12 +106,12 @@ LAYOUT = [
     ('ias',     -1,   0.060, -0.341, ('game', 'AIRSPEED', 0.062), 'KUS airspeed'),
     ('aoa',     -1,   0.060, -0.420, ('game', 'AOA', 0.050), 'UUA AoA'),
     ('g',       -1,   0.060, -0.500, ('game', 'G_METER', 0.046), 'accelerometer'),
-    ('gear',    -1,   0.180, -0.450, ('paint_rect', 0.050, 0.100), 'gear control panel'),
-    ('weapons', -1,   0.150, -0.590, ('paint_rect', 0.130, 0.070), 'weapons panel'),
+    ('gear',    -1,   0.140, -0.450, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('weapons', -1,   0.100, -0.590, ('paint_rect', 0.130, 0.070), 'weapons panel'),
     ('spo15',    1,   0.060, -0.337, ('game', 'RWR', 0.058), 'SPO-15 Beryoza'),
     ('fuel',     1,   0.060, -0.420, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
     ('hyd',      1,   0.060, -0.500, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressures'),
-    ('warning',  1,   0.165, -0.475, ('annunciator', 0.080, 0.120), 'warning lights'),
+    ('warning',  1,   0.130, -0.475, ('annunciator', 0.080, 0.120), 'warning lights'),
 ]
 
 
@@ -382,6 +383,7 @@ def build(atlas, E):
     g_n = H.unit(np.cross(X, g_up))
     base_y = E[1] + TOP_C + 0.045                                  # the coaming's top
     g_c = np.array([E[0], E[1], E[2] + PANEL_Z + 0.14])
+    g_c, g_h = H.fit_sight_under(VID, E, g_c, g_up, g_h, g_hw)   # (the reflector under the windscreen glass)
     g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
     body_top = base_y + 0.07                                       # the sight head's own height
     body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z + 0.11])
@@ -390,10 +392,8 @@ def build(atlas, E):
         for s in (-1, 1):
             m.box([E[0] + s * (g_hw + 0.004), (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z),
                   (0.004, (g_bot[1] - 0.006 - body_top) / 2, 0.005), sw['dgrey'])
-    m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
-    for s in (-1, 1):
-        m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
-    m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
+    # the ASP-17's reflector: narrowing upward, framed at its foot and sides, the top edge bare (the glass into the canopy glass, the symbology over it)
+    H.combiner(m, g_bot, g_up, -g_n, 2 * g_hw, g_h, 'trapezoid', 0.78, ('bottom', 'side'), 0.007, sw['dgrey'])
     hud = dict(centre=g_c, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h, style='GYRO')
 
     # -- consoles over the fuselage's sloping sides (those sides are the cockpit walls: no walls of our own)

@@ -37,10 +37,14 @@ SPLIT = 0.46                     # the canopy's front edge, against the windscre
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line
 
 
+PANE = (0.505, 0.94, 0.15, 0.06, 0.035, 0.91, 2.4, 5.0)   # the flat armoured front pane: apex z, foot z, half width, (radius), frame width, frame foot z, oval n
+
+
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
-    sh = C.Shape(SECTIONS)
+    # the armoured front pane is a flat slab: the windscreen made flat round it
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))
     glass = C.glass_triangles(sh, E, -0.90, SPLIT, nz=16) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.94, nz=8)
     # the canopy: its tail frame, its front bow, the sill rails
     C.bow(m, sh, E, -0.88, 0.035, 0.025, out, inner)
@@ -48,7 +52,8 @@ def build(atlas, E, skin):
     C.member(m, sh, E, 0.012, -0.90, SPLIT, 0.04, 0.03, out, inner, steps=16)   # just up the glass: off the fuselage side
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.62, 0.94, 0.025, 0.02, out, inner)
+    # the MiG-17's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
+    C.oval_pane(m, sh, E, 0.505, 0.91, 0.15, 0.035, 0.022, out, inner, n=2.4, n_bot=5.0)   # the MiG-15bis's, bert's War Thunder reference (2026-10-23): tall, round top, rounded lower corners, a flat foot, a thick ring
     C.bow(m, sh, E, 0.925, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.94, 0.04, 0.03, out, inner)
     return m, glass
