@@ -43,7 +43,17 @@ class AircraftDebrisMotion(position: Vec3, velocity: Vec3, orientation: Quaterni
     private var lastLean: Vec3? = null
     private var quietTicks = 0
     val expired: Boolean get() = groundedTicks >= WreckDebrisPhysics.FRAGMENT_GROUND_TICKS || age >= 1200
-    data class Contact(val position: Vec3, val normal: Vec3, val point: Vec3? = null)
+    data class Contact(val position: Vec3, val normal: Vec3, val point: Vec3? = null,
+                       /** Time along the original cast, before support/depenetration offsets. */
+                       val fraction: Double? = null) {
+        fun fractionAlong(from: Vec3, to: Vec3): Double {
+            fraction?.takeIf { it.isFinite() }?.let { return it.coerceIn(0.0, 1.0) }
+            // Compatibility for synthetic callers whose position really is on the swept segment.
+            val delta = to.subtract(from)
+            return if (delta.lengthSqr() > 1e-18)
+                (position.subtract(from).dot(delta) / delta.lengthSqr()).coerceIn(0.0, 1.0) else 0.0
+        }
+    }
 
     /** Downward terrain query used for support, step-up and depenetration. */
     fun interface Surface {
@@ -64,8 +74,12 @@ class AircraftDebrisMotion(position: Vec3, velocity: Vec3, orientation: Quaterni
     /** Nearest terrain contact of any sweep sample moving with the current attitude; [cast] works on world points. */
     fun sweep(from: Vec3, to: Vec3, cast: (Vec3, Vec3) -> Contact?): Contact? = sweepSamples.mapNotNull { local ->
         val offset = offset(local)
-        cast(from.add(offset), to.add(offset))?.let { Contact(it.position.subtract(offset), it.normal, it.point ?: it.position) }
-    }.minByOrNull { it.position.distanceToSqr(from) }
+        val sampleFrom = from.add(offset)
+        val sampleTo = to.add(offset)
+        cast(sampleFrom, sampleTo)?.let {
+            Contact(it.position.subtract(offset), it.normal, it.point ?: it.position, it.fractionAlong(sampleFrom, sampleTo))
+        }
+    }.minByOrNull { it.fractionAlong(from, to) }
 
     /** Pairwise cosmetic contact never feeds back into the authoritative vehicle. */
     fun separate(offset: Vec3, normal: Vec3) {
@@ -105,8 +119,8 @@ class AircraftDebrisMotion(position: Vec3, velocity: Vec3, orientation: Quaterni
             if (contact == null) { position = target; break }
             impacted = true
             val normal = contact.normal.normalize()
-            val distance = remaining.length()
-            val fraction = if (distance > 1e-9) (position.distanceTo(contact.position) / distance).coerceIn(0.0, 1.0) else 0.0
+            // Contact positions can include relaxed-floor recovery; they are not distance travelled.
+            val fraction = contact.fractionAlong(position, target)
             val floor = normal.y > .5
             if (!floor && abs(normal.y) < .5 && surface != null && (wasGrounded || grounded)) {
                 val rise = stepRise(contact, normal, surface)
@@ -155,7 +169,9 @@ class AircraftDebrisMotion(position: Vec3, velocity: Vec3, orientation: Quaterni
             }
         } else {
             tipRate = 0f
-            rolling = false
+            // A support pivot can lift all sweep samples briefly. Keep an unfinished forced
+            // cut-end/wing-edge roll until its allowed face is reached on later contact.
+            // Gravity and captured spin still govern flight; no settling torque is applied here.
             lastLean = null
             quietTicks = 0
             // Smooth changing torque gives a tumbling broken panel without per-frame randomness.

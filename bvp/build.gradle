@@ -16,6 +16,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 def canonicalJava = file(providers.gradleProperty('bvpSourceRoot').getOrElse('src/main/java'))
 def inputsFile = file(providers.gradleProperty('sbwBuildInputs').getOrElse('build/source-build/inputs.json'))
 def namedJava = layout.buildDirectory.dir('generated/sources/named')
+def canonicalTestJava = file('src/test/java')
+def namedTestJava = layout.buildDirectory.dir('generated/sources/namedTest')
 def sha256 = { File f ->
     def digest = MessageDigest.getInstance('SHA-256')
     f.withInputStream { stream ->
@@ -45,6 +47,29 @@ sourceSets.main {
     resources.setSrcDirs(['src/main/resources', 'src/generated/resources'])
     compileClasspath = files(compilerFiles)
 }
+repositories { mavenCentral() }
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+sourceSets.test {
+    java.setSrcDirs([namedTestJava])
+    compileClasspath += files(compilerFiles)
+    runtimeClasspath += files(compilerFiles)
+}
+tasks.register('prepareNamedTestSources', Exec) {
+    inputs.dir(canonicalTestJava)
+    inputs.file(inputsFile)
+    inputs.files(fileTree('build-support') { include '*.mjs' })
+    outputs.dir(namedTestJava)
+    commandLine providers.gradleProperty('nodeExecutable').getOrElse('node'),
+        file('build-support/remap-sources.mjs'), '--source', canonicalTestJava,
+        '--inputs', inputsFile, '--output', namedTestJava.get().asFile
+}
+tasks.named('compileTestJava', JavaCompile) { dependsOn('prepareNamedTestSources') }
+tasks.named('test', Test) { useJUnitPlatform() }
+apply from: 'build-support/test-support.gradle'
+
 tasks.register('prepareNamedSources', Exec) {
     inputs.dir(canonicalJava)
     inputs.file(inputsFile)

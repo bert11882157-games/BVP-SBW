@@ -723,6 +723,7 @@ object AircraftArmamentManager {
         return plan
     }
     private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject) {
+        require(vehicle.isVehicleActionFireAllowed()) { "Weapon systems cannot fire now." }
         val pair = mounts(definition(vehicle)!!).firstOrNull { it["Id"].asString == body["Pair"]?.asString }
         require(pair != null) { "Choose a hardpoint." }
         val id = selection(vehicle)[pair["Id"].asString]?.asString

@@ -23,8 +23,17 @@ import kotlin.math.floor
  * builds once. Trigger state (who is holding it) stays per seat for presentation and the gun-stow rule.
  */
 class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
-    private val triggerIntents = LinkedHashMap<UUID, TriggerIntent>()
-    private val secondaryTriggerIntents = LinkedHashMap<UUID, TriggerIntent>()
+    private val triggerIntents = VehicleWeaponTriggerIntents<TriggerIntent, ResolvedVehicleWeaponSchedule>(
+        currentSeat = { uuid -> findPassenger(uuid)?.let { vehicle.getSeatIndex(it) } },
+        resolve = { uuid, slot ->
+            findPassenger(uuid)?.let { controller ->
+                when (slot) {
+                    VehicleWeaponSlot.PRIMARY -> VehicleWeaponScheduleProviders.resolve(vehicle, controller)
+                    VehicleWeaponSlot.SECONDARY -> resolveSecondary(controller)
+                }
+            }
+        },
+    )
     /** Per physical weapon ([physicalWeapon] of a key). */
     private val states = LinkedHashMap<String, RuntimeState>()
     private val activeTriggers = LinkedHashMap<ScheduleKey, ActiveTrigger>()
@@ -48,12 +57,12 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     ): Boolean {
         val resolved = VehicleWeaponScheduleProviders.resolve(vehicle, controller)
         if (!held) {
-            triggerIntents.remove(controller.uuid)
+            triggerIntents.release(VehicleWeaponSlot.PRIMARY, controller.uuid)
             releaseIntentEdge(controller, resolved?.selection, VehicleWeaponSlot.PRIMARY)
             return true
         }
         if (resolved == null) {
-            triggerIntents.remove(controller.uuid)
+            triggerIntents.release(VehicleWeaponSlot.PRIMARY, controller.uuid)
             VehicleWeaponShotDiagnostics.recordBoundary(
                 vehicle,
                 controller,
@@ -70,21 +79,20 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             return false
         }
 
-        triggerIntents[controller.uuid] = TriggerIntent(
-            targetEntityUuid, targetPos, vehicle.getSeatIndex(controller),
-        )
+        triggerIntents.retain(VehicleWeaponSlot.PRIMARY, controller.uuid, vehicle.getSeatIndex(controller),
+            TriggerIntent(targetEntityUuid, targetPos))
         return true
     }
 
     fun updateSecondaryTrigger(controller: LivingEntity, held: Boolean): Boolean {
         val resolved = resolveSecondary(controller)
         if (!held) {
-            secondaryTriggerIntents.remove(controller.uuid)
+            triggerIntents.release(VehicleWeaponSlot.SECONDARY, controller.uuid)
             releaseIntentEdge(controller, resolved?.selection, VehicleWeaponSlot.SECONDARY)
             return true
         }
         if (resolved == null) {
-            secondaryTriggerIntents.remove(controller.uuid)
+            triggerIntents.release(VehicleWeaponSlot.SECONDARY, controller.uuid)
             VehicleWeaponShotDiagnostics.recordBoundary(
                 vehicle,
                 controller,
@@ -100,9 +108,8 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             )
             return false
         }
-        secondaryTriggerIntents[controller.uuid] = TriggerIntent(
-            null, null, vehicle.getSeatIndex(controller),
-        )
+        triggerIntents.retain(VehicleWeaponSlot.SECONDARY, controller.uuid, vehicle.getSeatIndex(controller),
+            TriggerIntent(null, null))
         return true
     }
 
@@ -152,67 +159,39 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
         syncSnapshots()
     }
 
+    /** Current qualified hold for aiming, not shot readiness and not the delayed presentation snapshot. */
+    fun holdsCurrentWeapon(seatIndex: Int, weaponIndex: Int): Boolean {
+        if (vehicle.level().isClientSide || seatIndex < 0 || weaponIndex < 0) return false
+        val controller = vehicle.getNthEntity(seatIndex) as? LivingEntity ?: return false
+        val name = vehicle.getGunName(seatIndex, weaponIndex) ?: return false
+        return triggerIntents.holds(controller.uuid, seatIndex) { anchor, slot ->
+            VehicleFixedGunBanks.expand(anchor, slot == VehicleWeaponSlot.PRIMARY)?.any {
+                it.selection.seatIndex == seatIndex && it.selection.weaponIndex == weaponIndex &&
+                    it.selection.weaponName == name
+            } == true
+        }
+    }
+
     private fun refreshActiveTriggers() {
         activeTriggers.clear()
-        val iterator = triggerIntents.iterator()
-        while (iterator.hasNext()) {
-            val (controllerUuid, intent) = iterator.next()
-            val controller = findPassenger(controllerUuid)
-            if (controller == null || vehicle.getSeatIndex(controller) != intent.seatIndex) {
-                iterator.remove()
-                continue
-            }
-
-            val resolved = VehicleWeaponScheduleProviders.resolve(vehicle, controller)
-            if (resolved == null) {
-                iterator.remove()
-                VehicleWeaponShotDiagnostics.recordBoundary(
-                    vehicle,
-                    controller,
-                    vehicle.getGunName(vehicle.getSeatIndex(controller)) ?: "<selected>",
-                    VehicleWeaponShotDiagnostics.Boundary.SCHEDULER,
-                    "NO_RESOLVED_SELECTION",
-                )
-                VehicleWeaponShotDiagnostics.record(
-                    vehicle,
-                    controller,
-                    "<selected>",
-                    ShotResult.rejected(ShotRejectionReason.NO_WEAPON),
-                )
-                continue
-            }
-            if (!activate(resolved, intent, VehicleWeaponSlot.PRIMARY)) iterator.remove()
-        }
-
-        val secondaryIterator = secondaryTriggerIntents.iterator()
-        while (secondaryIterator.hasNext()) {
-            val (controllerUuid, intent) = secondaryIterator.next()
-            val controller = findPassenger(controllerUuid)
-            if (controller == null || vehicle.getSeatIndex(controller) != intent.seatIndex) {
-                secondaryIterator.remove()
-                continue
-            }
-            val resolved = resolveSecondary(controller)
-            if (resolved == null) {
-                secondaryIterator.remove()
-                VehicleWeaponShotDiagnostics.recordBoundary(
-                    vehicle,
-                    controller,
-                    vehicle.getGunName(vehicle.getSeatIndex(controller)) ?: "<secondary>",
-                    VehicleWeaponShotDiagnostics.Boundary.SCHEDULER,
-                    "NO_RESOLVED_SECONDARY",
-                )
-                VehicleWeaponShotDiagnostics.record(
-                    vehicle,
-                    controller,
-                    "<secondary>",
-                    ShotResult.rejected(ShotRejectionReason.NO_WEAPON),
-                )
-                continue
-            }
-            if (!activate(resolved, intent, VehicleWeaponSlot.SECONDARY)) {
-                secondaryIterator.remove()
-            }
+        for (slot in VehicleWeaponSlot.entries) {
+            triggerIntents.refresh(slot, { uuid ->
+                val controller = findPassenger(uuid)
+                if (controller != null) {
+                    VehicleWeaponShotDiagnostics.recordBoundary(
+                        vehicle, controller,
+                        vehicle.getGunName(vehicle.getSeatIndex(controller))
+                            ?: if (slot == VehicleWeaponSlot.PRIMARY) "<selected>" else "<secondary>",
+                        VehicleWeaponShotDiagnostics.Boundary.SCHEDULER,
+                        if (slot == VehicleWeaponSlot.PRIMARY) "NO_RESOLVED_SELECTION" else "NO_RESOLVED_SECONDARY",
+                    )
+                    VehicleWeaponShotDiagnostics.record(
+                        vehicle, controller,
+                        if (slot == VehicleWeaponSlot.PRIMARY) "<selected>" else "<secondary>",
+                        ShotResult.rejected(ShotRejectionReason.NO_WEAPON),
+                    )
+                }
+            }, ::activate)
         }
     }
 
@@ -450,7 +429,6 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     private data class TriggerIntent(
         val targetEntityUuid: UUID?,
         val targetPos: Vec3?,
-        val seatIndex: Int,
     )
 
     private data class ActiveTrigger(

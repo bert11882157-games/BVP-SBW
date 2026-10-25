@@ -130,8 +130,8 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
     /**
      * The gunner's movable gun follows the gunner's sight whatever either crew member has selected, as a ground
      * vehicle turret does. It is held at boresight (straight ahead) only while no one sits at the gunner's sight, or
-     * while the pilot is firing the shared gun and the gunner is not, so the pilot's rounds go forward. Firing is read
-     * from the synchronized weapon schedule, which both sides know.
+     * while the pilot is firing the shared gun and the gunner is not, so the pilot's rounds go forward. Server aim
+     * reads current qualified trigger intent before shot execution; clients use synchronized schedule presentation.
      */
     @Override
     public boolean isVehicleAimChannelStowed(VehicleAimChannel channel) {
@@ -163,8 +163,7 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
                 ? HelicopterGunStowPolicy.firesThroughTurret(transform)
                 : HelicopterGunStowPolicy.firesThroughStation(transform);
         if (!throughChannel) return false;
-        var snapshot = getWeaponScheduleSnapshot(seat, weaponIndex);
-        return snapshot != null && snapshot.getTriggerHeld();
+        return isWeaponTriggerHeldForAim(seat, weaponIndex);
     }
 
     @Override

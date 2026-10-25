@@ -26,7 +26,6 @@ import org.joml.Matrix4f
 import org.joml.Vector3d
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL11
-import java.util.IdentityHashMap
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -60,8 +59,23 @@ object HeadUpDisplay {
     private class Combiner(val points: Array<Array<Vector3f>>, val uvs: Array<Array<FloatArray>>, val frame: HudPainter.Frame,
                            val rgb: Int, val style: String)
 
-    private val combiners = IdentityHashMap<HeadUpDisplayResource, Combiner?>()
-    private val stills = IdentityHashMap<HeadUpDisplayResource, Pair<RenderTarget, ResourceLocation>>()
+    private val combiners = IdentityFitCache<HeadUpDisplayResource, Combiner>({ fit(it) })
+    private val stills = HudStillSlots<HeadUpDisplayResource, Pair<RenderTarget, ResourceLocation>>(
+        MAX_STILLS,
+        create = { resource, slot ->
+            val location = Mod.loc("dynamic/head_up_display_still_" + slot)
+            val target = create(location)
+            try {
+                paint(target, FlightDisplayState.STILL, checkNotNull(combiner(resource)),
+                    HudPainter.Alerts(locked = false, launch = false))
+                target to location
+            } catch (failure: Throwable) {
+                disposeTarget(target to location)
+                throw failure
+            }
+        },
+        dispose = ::disposeTarget,
+    )
     private val stillRequested = LinkedHashSet<HeadUpDisplayResource>()
     private var live: RenderTarget? = null
     private var liveFor: HeadUpDisplayResource? = null
@@ -69,10 +83,33 @@ object HeadUpDisplay {
     private var failed = false
     private var logged = false
 
+    private fun disposeTarget(entry: Pair<RenderTarget, ResourceLocation>) {
+        RenderSystem.assertOnRenderThread()
+        // TargetTexture.releaseId is deliberately a no-op: RenderTarget owns the attachment.
+        try { Minecraft.getInstance().textureManager.release(entry.second) }
+        finally { entry.first.destroyBuffers() }
+    }
+
+    internal fun resetResources() {
+        RenderSystem.assertOnRenderThread()
+        stillRequested.clear()
+        combiners.clear()
+        stills.clear()
+        live?.let { disposeTarget(it to LIVE_TEXTURE) }
+        live = null
+        liveFor = null
+        liveFitFor = null
+        liveFit = null
+        liveVehicleId = -1
+        measuredFor = -1
+        measuredEye.set(Double.NaN, Double.NaN, Double.NaN)
+        failed = false
+    }
+
     /** The vehicle's HUDs and sights (see [HudSeats]). */
     private fun resources(vehicle: VehicleEntity): List<HeadUpDisplayResource> = HudSeats.of(VehicleResource.getDefault(vehicle))
 
-    private fun combiner(r: HeadUpDisplayResource): Combiner? = combiners.getOrPut(r) { fit(r) }
+    private fun combiner(r: HeadUpDisplayResource): Combiner? = combiners.get(r)
 
     private var liveFit: Combiner? = null
     private var liveFitFor: HeadUpDisplayResource? = null
@@ -111,13 +148,14 @@ object HeadUpDisplay {
     fun renderTick(partialTick: Float) {
         if (failed) return
         try {
-            for (r in stillRequested.toList()) {
-                if (stills.containsKey(r) || stills.size >= MAX_STILLS) continue
-                val c = combiner(r) ?: continue
-                val location = Mod.loc("dynamic/head_up_display_still_" + stills.size)
-                val target = create(location)
-                paint(target, FlightDisplayState.STILL, c, HudPainter.Alerts(locked = false, launch = false))
-                stills[r] = target to location
+            // Previous frame buffers have finished; never recycle slots during world emission.
+            stills.beginFrame()
+            try {
+                for (r in stillRequested.toList()) {
+                    if (combiner(r) != null) stills.prepare(r)
+                }
+            } finally {
+                stills.endPreparation()
             }
             stillRequested.clear()
             val vehicle = Minecraft.getInstance().player?.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
@@ -160,7 +198,7 @@ object HeadUpDisplay {
         }
         val isLive = liveVehicleId == vehicle.id && liveFor === r && mc.player?.vehicle === vehicle
         val c = (if (isLive && liveFitFor === r) liveFit else null) ?: combiner(r) ?: return
-        val texture = if (isLive) LIVE_TEXTURE else stills[r]?.second ?: run { stillRequested.add(r); return }
+        val texture = if (isLive) LIVE_TEXTURE else stills.lease(r)?.second ?: run { stillRequested.add(r); return }
         val matrix = poseStack.last().pose()
         // Additive: black adds nothing, the symbols glow on the glass. A soft halo first, then the sharp picture.
         val glow = buffers.getBuffer(RenderType.eyes(texture))

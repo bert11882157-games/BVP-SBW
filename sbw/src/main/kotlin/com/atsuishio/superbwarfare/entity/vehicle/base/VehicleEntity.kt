@@ -1447,6 +1447,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
+    /**
+     * Current qualified server trigger intent for aim policy, before this tick's shots execute.
+     * Clients retain the synchronized, potentially delayed presentation snapshot. This read neither
+     * advances cadence nor fires; the scheduler owns live seat, selection and bank qualification.
+     */
+    fun isWeaponTriggerHeldForAim(seatIndex: Int, weaponIndex: Int): Boolean =
+        if (level().isClientSide) getWeaponScheduleSnapshot(seatIndex, weaponIndex)?.triggerHeld ?: false
+        else weaponScheduler.holdsCurrentWeapon(seatIndex, weaponIndex)
+
     fun publishWeaponScheduleSnapshots(payload: String) {
         publishTextSnapshot(WEAPON_SCHEDULER_SNAPSHOT, "vehicle_weapon_scheduler_snapshot", payload)
     }
@@ -1913,7 +1922,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         vehicleModuleStateService.readAdditionalSaveData(compound)
         vehicleActionController.readAdditionalSaveData(compound)
-        initialPassengerReloadProgressApplied = compound.getBoolean("InitialPassengerReloadProgressApplied")
+        initialPassengerReloadProgressApplied = compound.getBoolean(VehicleItemDurableState.INITIAL_BOARDING_APPLIED)
 
         power = compound.getFloat("Power")
         decoyReady = compound.getBoolean("DecoyReady")
@@ -2033,7 +2042,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         vehicleModuleStateService.writeAdditionalSaveData(compound)
         vehicleActionController.writeAdditionalSaveData(compound)
         if (initialPassengerReloadProgressApplied || initialPassengerReloadProgressPercent() > 0 || armsGunsOnFirstBoarding()) {
-            compound.putBoolean("InitialPassengerReloadProgressApplied", initialPassengerReloadProgressApplied)
+            compound.putBoolean(VehicleItemDurableState.INITIAL_BOARDING_APPLIED, initialPassengerReloadProgressApplied)
         }
 
         compound.putFloat("Power", power)
@@ -6935,9 +6944,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         val state = CompoundTag()
         state.putInt(VehicleItemLifecycleCodec.SCHEMA_TAG, VehicleItemLifecycleCodec.SCHEMA_VERSION)
         state.putString(VehicleItemLifecycleCodec.ENTITY_TYPE_TAG, typeId.toString())
-        for (key in VEHICLE_ITEM_DURABLE_KEYS) {
-            full.get(key)?.let { state.put(key, it.copy()) }
-        }
+        state.merge(VehicleItemDurableState.project(full))
         // The fitted suspended armament lives in the entity's persistent data, which the save above does not
         // include: carry it (minus per-world launch timers) so a recovered aircraft keeps its paid-for stores.
         armamentForVehicleItem()?.let { state.put(VEHICLE_ITEM_ARMAMENT_TAG, it) }
@@ -6959,10 +6966,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (level().isClientSide || isRemoved || isWreck || passengers.isNotEmpty()) return false
         if (!isValidVehicleItemState(state)) return false
 
-        val durable = CompoundTag()
-        for (key in VEHICLE_ITEM_DURABLE_KEYS) {
-            state.get(key)?.let { durable.put(key, it.copy()) }
-        }
+        val durable = VehicleItemDurableState.forRestore(state, armsGunsOnFirstBoarding())
 
         return try {
             // Virtual dispatch intentionally lets BVP restore its own bounded ERA/module state
@@ -7000,7 +7004,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             state.getString(VehicleItemLifecycleCodec.ENTITY_TYPE_TAG) != expectedType ||
             state.allKeys.any { it != VehicleItemLifecycleCodec.SCHEMA_TAG &&
                 it != VehicleItemLifecycleCodec.ENTITY_TYPE_TAG && it != VEHICLE_ITEM_ARMAMENT_TAG &&
-                it !in VEHICLE_ITEM_DURABLE_KEYS }
+                it !in VehicleItemDurableState.keys }
         ) return false
 
         val healthFields = arrayOf(
@@ -7017,6 +7021,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             if (!maximum.isFinite() || maximum < 0f || !value.isFinite() || value < 0f || value > maximum + 0.001f) return false
         }
 
+        if (!VehicleItemDurableState.validBoardingMarker(state)) return false
         if (state.contains("Override") && !state.contains("Override", Tag.TAG_STRING.toInt())) return false
         if (state.contains("WeaponState") && state.get("WeaponState") !is CompoundTag) return false
         if (state.contains("Inventory") && state.get("Inventory") !is CompoundTag) return false
@@ -7712,28 +7717,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         private const val MAX_AIM_PRESENTATION_CONTINUITY_TICKS = 20.0
         /** The fitted suspended armament (AircraftArmamentManager.EQUIPMENT) inside a vehicle item. */
         private const val VEHICLE_ITEM_ARMAMENT_TAG = "AircraftArmament"
-        private val VEHICLE_ITEM_DURABLE_KEYS = setOf(
-            "Override",
-            "Health",
-            "WeaponState",
-            "TurretHealth",
-            "LeftWheelHealth",
-            "RightWheelHealth",
-            "MainEngineHealth",
-            "SubEngineHealth",
-            "TurretDamaged",
-            "LeftWheelDamaged",
-            "RightWheelDamaged",
-            "MainEngineDamaged",
-            "SubEngineDamaged",
-            VehicleModuleStateService.MODULE_STATES_TAG,
-            "DogTagIcon",
-            "SelectedWeapon",
-            "SecondaryWeapon",
-            "Energy",
-            "Inventory",
-            "BvpSpentEraBricks",
-        )
+
         const val TAG_SEAT_INDEX: String = "SBWSeatIndex"
         @JvmField
         val HEALTH: EntityDataAccessor<Float> =
