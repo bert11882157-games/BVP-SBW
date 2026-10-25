@@ -111,6 +111,11 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
     }
 
     @Override
+    public boolean usesGroundVehicleWeaponScheme() {
+        return true;
+    }
+
+    @Override
     protected Vec3 bvpSeatEyePosition(Entity passenger, float partialTicks, boolean zooming) {
         if (passenger != null && getSeatIndex(passenger) == 0) {
             return VehicleVecUtils.INSTANCE.getCameraPos(this, passenger, partialTicks);

@@ -628,7 +628,13 @@ object AircraftArmamentManager {
                     require(AircraftDesignationData.get(player.serverLevel()).put(vehicle.uuid, null)) { "Designation storage is full." }
                     publishPoint(vehicle)
                 }
-                "FIRE" -> { fire(player, vehicle, body); publish(vehicle) }
+                "FIRE" -> {
+                    require(!vehicle.usesGroundVehicleWeaponScheme()) {
+                        "Use the selected vehicle weapon slot to fire."
+                    }
+                    fire(player, vehicle, body)
+                    publish(vehicle)
+                }
             }
         } catch (e: IllegalArgumentException) {
             reply(player, lease, message = e.message?.take(160) ?: "Invalid armament request.")

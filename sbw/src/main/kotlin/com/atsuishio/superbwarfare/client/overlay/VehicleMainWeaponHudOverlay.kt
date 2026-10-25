@@ -478,6 +478,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         screenHeight: Int,
         color: Int
     ) {
+        if (vehicle.usesGroundVehicleWeaponScheme()) return
         val heat = vehicle.getWeaponHeat(player)
         val component = vehicle.firstPersonAmmoComponent(data, player)
 
@@ -495,9 +496,8 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         data: GunData,
         font: Font
     ) {
-        // Ground vehicles use the authored 3x3 text panel.  Do not re-add the old
-        // crosshair-adjacent ammo/count label; aircraft and helicopter HUDs retain theirs.
-        if (vehicle.computed().hudType == LandVehicleHud.ID) return
+        // The independent shared panel owns ammo text for opted-in vehicles.
+        if (vehicle.usesGroundVehicleWeaponScheme()) return
         if (!vehicle.hasWeapon()) return
 
         val heat = vehicle.getWeaponHeat(player) / 100f
@@ -514,6 +514,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         data: GunData,
         font: Font
     ) {
+        if (vehicle.usesGroundVehicleWeaponScheme()) return
         if (!vehicle.hasWeapon()) return
 
         val heat = vehicle.getWeaponHeat(player) / 100f

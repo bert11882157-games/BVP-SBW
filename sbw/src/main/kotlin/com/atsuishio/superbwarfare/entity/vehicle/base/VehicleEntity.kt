@@ -326,6 +326,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getGunData(name: String) = this.gunDataMap[name]
         ?: com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.data(this, name)
 
+    /**
+     * Use the occupied seat's native primary/secondary controls and shared weapon panel.
+     * Flight instruments keep their authored HUD; an extension can opt into this scheme independently.
+     */
+    open fun usesGroundVehicleWeaponScheme(): Boolean = computed().hudType == "@Land"
+
     /** Stable native order plus authored mount channels; both weapon slots use this list. */
     fun getWeaponIds(seatIndex: Int): List<String> =
         com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.ids(

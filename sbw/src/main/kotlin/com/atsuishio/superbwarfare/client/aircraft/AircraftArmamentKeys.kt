@@ -21,9 +21,13 @@ object AircraftArmamentKeys {
         override fun isActive() = AircraftArmamentClient.controlsActive()
         override fun conflicts(other: IKeyConflictContext) = other === this
     }
-    private fun key(name: String, code: Int) = VehicleControlBindings.register(VehicleKeyMapping(
+    private val legacyStoreContext = object : IKeyConflictContext {
+        override fun isActive() = AircraftArmamentClient.legacyStoreControlsActive()
+        override fun conflicts(other: IKeyConflictContext) = other === this
+    }
+    private fun key(name: String, code: Int, keyContext: IKeyConflictContext = context) = VehicleControlBindings.register(VehicleKeyMapping(
         "key.superbwarfare.aircraft_$name", KeyModifier.NONE, InputConstants.Type.KEYSYM, code,
-        VehicleControlBindings.PLANE_CATEGORY, context))
+        VehicleControlBindings.PLANE_CATEGORY, keyContext))
 
     @JvmField val OPEN = key("loadout", GLFW.GLFW_KEY_I)
     @JvmField val POD = key("pod", GLFW.GLFW_KEY_P)
@@ -32,8 +36,8 @@ object AircraftArmamentKeys {
         "key.superbwarfare.aircraft_designate", KeyModifier.NONE, InputConstants.Type.MOUSE,
         GLFW.GLFW_MOUSE_BUTTON_MIDDLE, VehicleControlBindings.PLANE_CATEGORY, context))
     @JvmField val CLEAR = key("clear_designation", GLFW.GLFW_KEY_U)
-    @JvmField val FIRE = key("fire_store", GLFW.GLFW_KEY_L)
-    @JvmField val CYCLE = key("cycle_store", GLFW.GLFW_KEY_RIGHT_BRACKET)
+    @JvmField val FIRE = key("fire_store", GLFW.GLFW_KEY_L, legacyStoreContext)
+    @JvmField val CYCLE = key("cycle_store", GLFW.GLFW_KEY_RIGHT_BRACKET, legacyStoreContext)
     @JvmField val COMMAND_LEFT = key("command_left", GLFW.GLFW_KEY_LEFT)
     @JvmField val COMMAND_RIGHT = key("command_right", GLFW.GLFW_KEY_RIGHT)
     @JvmField val COMMAND_UP = key("command_up", GLFW.GLFW_KEY_UP)

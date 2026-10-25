@@ -68,6 +68,10 @@ object AircraftArmamentClient {
         Minecraft.getInstance().isWindowActive &&
         pilot()?.let { getVehicleSnapshot(it) != null } == true
 
+    /** Shared weapon schemes select and fire through the vehicle slots, not a local hardpoint cursor. */
+    fun legacyStoreControlsActive(): Boolean = controlsActive() &&
+        pilot()?.usesGroundVehicleWeaponScheme() == false
+
     @JvmStatic fun getState(id: UUID): JsonObject? = cache.get(id)?.json
     @JvmStatic fun getSnapshot(id: UUID): AircraftArmamentSnapshot? = cache.get(id)?.snapshot
     @JvmStatic fun getVehicleSnapshot(vehicle: VehicleEntity): AircraftArmamentSnapshot? =
@@ -321,11 +325,11 @@ object AircraftArmamentClient {
                 requestStabilize(vehicle, mc.frameTime)
             }
             AircraftArmamentKeys.CLEAR.isActiveAndMatches(key) -> request("CLEAR_POINT")
-            AircraftArmamentKeys.CYCLE.isActiveAndMatches(key) -> {
+            !vehicle.usesGroundVehicleWeaponScheme() && AircraftArmamentKeys.CYCLE.isActiveAndMatches(key) -> {
                 val pairs = getVehicleSnapshot(vehicle)?.definition?.mounts.orEmpty()
                 if (pairs.isNotEmpty()) selectedPair = pairs[(pairs.indexOfFirst { it.id == selectedPair } + 1) % pairs.size].id
             }
-            AircraftArmamentKeys.FIRE.isActiveAndMatches(key) -> selectedPair?.let { pair ->
+            !vehicle.usesGroundVehicleWeaponScheme() && AircraftArmamentKeys.FIRE.isActiveAndMatches(key) -> selectedPair?.let { pair ->
                 request("FIRE", JsonObject().apply { addProperty("Pair", pair) })
             }
         }

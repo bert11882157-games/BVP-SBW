@@ -386,8 +386,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
      */
     private fun renderWeaponInfo(guiGraphics: GuiGraphics, vehicle: VehicleEntity, w: Int, h: Int) {
         val player = Minecraft.getInstance().player ?: return
-        if (vehicle.computed().hudType != LandVehicleHud.ID) return
-        if (!vehicle.banHand(player)) return
+        if (!VehicleWeaponHudRouting.independentPanel(vehicle.usesGroundVehicleWeaponScheme(), vehicle.banHand(player))) return
 
         VehicleSystemsHud.ground(guiGraphics, vehicle, player, w, h)
     }
@@ -561,4 +560,10 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         pose.popPose()
     }
 
+}
+
+/** One owner for the weapon list; seat validity and equipped systems remain snapshot responsibilities. */
+internal object VehicleWeaponHudRouting {
+    fun independentPanel(groundScheme: Boolean, banHand: Boolean): Boolean = groundScheme && banHand
+    fun aircraftPanel(groundScheme: Boolean): Boolean = !groundScheme
 }
