@@ -1,0 +1,291 @@
+{
+  "id": "mi_8amtsh",
+  "name": "Mi-8AMTSh",
+  "entityClass": "AuthoredHelicopter",
+  "template": "mi_24d",
+  "source": "Mi-8AMTSH.mtb",
+  "note": "New vehicle (Elite Expansion 2): Mi-8AMTSH.mtb (Russian Air Force Mi-8AMTSh Terminator: nose radar housing, long outriggers with three pylons a side, armour, clamshell rear doors, tail rotor on the port side) on the Mi-24D helicopter data (the closest rig: same main and tail rotor bones). Source nose is toolbox -x (yaw180).",
+  "yaw180": true,
+  "scale": 0.7503,
+  "note_scale": "Fuselage nose (z -180) to the end of the tail boom (z 268.8) is 448.8 units for the real 18.3 m (24.53 units per metre); the pack scales helicopters 18.4 px per real metre, so 18.4 / 24.53 = 0.7503. The source main rotor is only about 14.6 m across, so tools mi8_fit.py stretches the blades to the real 21.3 m.",
+  "lengthParts": [
+    0,
+    2
+  ],
+  "templateLengthBones": [
+    "hull"
+  ],
+  "groundParts": [
+    12,
+    14
+  ],
+  "excludeParts": [],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [],
+  "shift": [
+    0,
+    0,
+    44.46
+  ],
+  "parts": {
+    "0": "hull",
+    "1": "hull",
+    "2": "hull",
+    "4": "hull",
+    "5": "hull",
+    "12": "hull",
+    "14": "hull",
+    "15": "hull",
+    "16": "hull",
+    "17": "hull",
+    "18": "drop",
+    "19": "hull",
+    "28": "main_rotor",
+    "29": "tail_rotor"
+  },
+  "dropRules": [
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "absXMin": 32.0,
+      "absXMax": 38.5,
+      "yMin": 24.0,
+      "yMax": 31.4,
+      "zMin": -56.0,
+      "zMax": -8.0
+    },
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "absXMin": 40.5,
+      "absXMax": 48.7,
+      "yMax": 29.9,
+      "zMin": -54.0,
+      "zMax": -13.0
+    },
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "absXMin": 49.0,
+      "absXMax": 57.5,
+      "yMax": 29.9,
+      "zMin": -54.0,
+      "zMax": -13.0
+    }
+  ],
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "dropGroups": [],
+  "removeClientKeys": [
+    "DefensiveStationPresentation"
+  ],
+  "note_dropRules": "Baked stores on the outriggers (geo px, element centres): inner 4-tube ATGM launcher (x 32..38.5), middle and outer B-8V20 pod (x 40.5..48.7 and 49..57.5), per side 50 + 35 + 35 elements. Catalogue and cut: work/elite_expansion_2/mi8/STORES.md.",
+  "armamentOverrides": {
+    "Name": "Mi-8AMTSh",
+    "MaxPayloadKg": 2500,
+    "SuspendedWeapons": [
+      "B8Outer",
+      "UpkOuter",
+      "GuvGshgOuter",
+      "GuvYakbOuter",
+      "ShturmOuter",
+      "AtakaOuter",
+      "B8Middle",
+      "UpkMiddle",
+      "GuvGshgMiddle",
+      "GuvYakbMiddle",
+      "B8Inner",
+      "UpkInner",
+      "GuvGshgInner",
+      "GuvYakbInner"
+    ],
+    "BuiltInWeapons": [
+      "PassengerGun1"
+    ],
+    "Pairs": [
+      {
+        "Id": "outer",
+        "Name": "Outer pylons (WT slots 1 / 6)",
+        "Left": [
+          3.3435,
+          1.8382,
+          1.7971
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.3435,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.3435,
+          1.8382,
+          1.7971
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.3435,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:mi24p/b8v20",
+          "berts_vehicle_pack:mi24p/shturm_x2_pylon",
+          "berts_vehicle_pack:mi_8amtsh/ataka_x4",
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:munition/ofab250sh",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:gun_pod/upk23_250",
+          "berts_vehicle_pack:mi24p/guv8700"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 520,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:mi24p/b8v20": "B8Outer",
+          "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter",
+          "berts_vehicle_pack:mi24p/guv8700": [
+            "GuvGshgOuter",
+            "GuvYakbOuter"
+          ],
+          "berts_vehicle_pack:mi24p/shturm_x2_pylon": "ShturmOuter",
+          "berts_vehicle_pack:mi_8amtsh/ataka_x4": "AtakaOuter"
+        }
+      },
+      {
+        "Id": "middle",
+        "Name": "Middle pylons (WT slots 2 / 5)",
+        "Left": [
+          2.7808,
+          1.8382,
+          1.7971
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.7808,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.7808,
+          1.8382,
+          1.7971
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.7808,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:mi24p/b8v20",
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:munition/ofab250sh",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/zb500",
+          "berts_vehicle_pack:mi_8amtsh/igla_x2",
+          "berts_vehicle_pack:mi_8amtsh/igla_x4",
+          "berts_vehicle_pack:gun_pod/upk23_250",
+          "berts_vehicle_pack:mi24p/guv8700"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 520,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:mi24p/b8v20": "B8Middle",
+          "berts_vehicle_pack:gun_pod/upk23_250": "UpkMiddle",
+          "berts_vehicle_pack:mi24p/guv8700": [
+            "GuvGshgMiddle",
+            "GuvYakbMiddle"
+          ]
+        }
+      },
+      {
+        "Id": "inner",
+        "Name": "Inner pylons (WT slots 3 / 4)",
+        "Left": [
+          2.2181,
+          1.8382,
+          1.7971
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.2181,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.2181,
+          1.8382,
+          1.7971
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.2181,
+              1.8382,
+              1.7971
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:mi24p/b8v20",
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:munition/ofab250sh",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:gun_pod/upk23_250",
+          "berts_vehicle_pack:mi24p/guv8700"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 520,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:mi24p/b8v20": "B8Inner",
+          "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner",
+          "berts_vehicle_pack:mi24p/guv8700": [
+            "GuvGshgInner",
+            "GuvYakbInner"
+          ]
+        }
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {},
+    "MaxPylonMassKg": 520,
+    "MaxWeaponsPerPylon": 1,
+    "WeaponSeat": 1,
+    "WeaponSeats": [
+      1,
+      0
+    ]
+  },
+  "note_armament": "War Thunder mi_8amtsh stations (work/elite_expansion_2/mi8/WT-mi8amtsh.md), written by work/elite_expansion_2/tools/mi8_armament.py; points on the model's own outrigger pylon plates."
+}

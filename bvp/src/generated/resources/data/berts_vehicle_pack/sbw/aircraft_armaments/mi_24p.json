@@ -1,0 +1,224 @@
+{
+  "Schema": 1,
+  "Name": "Mi-24P",
+  "BuiltInWeapons": [
+    "Gsh30k"
+  ],
+  "SuspendedWeapons": [
+    "Ub32Inner",
+    "B8Inner",
+    "S24Inner",
+    "UpkInner",
+    "GuvGshgInner",
+    "GuvYakbInner",
+    "Ub32Outer",
+    "B8Outer",
+    "S24Outer",
+    "UpkOuter",
+    "GuvGshgOuter",
+    "GuvYakbOuter",
+    "ShturmOuter",
+    "ShturmTip"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylons (WT slots 3 / 4)",
+      "Left": [
+        2.0112,
+        2.2286,
+        0.3674
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.0112,
+            2.2286,
+            0.3674
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.0112,
+        2.2286,
+        0.3674
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.0112,
+            2.2286,
+            0.3674
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/ub32a_24",
+        "berts_vehicle_pack:mi24p/b8v20",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:gun_pod/upk23_250",
+        "berts_vehicle_pack:mi24p/guv8700"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub32a_24": "Ub32Inner",
+        "berts_vehicle_pack:mi24p/b8v20": "B8Inner",
+        "berts_vehicle_pack:munition/s24b": "S24Inner",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner",
+        "berts_vehicle_pack:mi24p/guv8700": [
+          "GuvGshgInner",
+          "GuvYakbInner"
+        ]
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer pylons (WT slots 2 / 5)",
+      "Left": [
+        2.7722,
+        2.0112,
+        0.3674
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.7722,
+            1.9622,
+            0.3674
+          ],
+          "Face": "bottom",
+          "Stores": [
+            "berts_vehicle_pack:r60",
+            "berts_vehicle_pack:mi24p/r60m"
+          ]
+        },
+        {
+          "Point": [
+            2.7722,
+            2.0112,
+            0.3674
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:mi24p/r60_x2",
+            "berts_vehicle_pack:mi24p/r60m_x2"
+          ]
+        }
+      ],
+      "Right": [
+        -2.7722,
+        2.0112,
+        0.3674
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.7722,
+            1.9622,
+            0.3674
+          ],
+          "Face": "bottom",
+          "Stores": [
+            "berts_vehicle_pack:r60",
+            "berts_vehicle_pack:mi24p/r60m"
+          ]
+        },
+        {
+          "Point": [
+            -2.7722,
+            2.0112,
+            0.3674
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:mi24p/r60_x2",
+            "berts_vehicle_pack:mi24p/r60m_x2"
+          ]
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:mi24p/r60_x2",
+        "berts_vehicle_pack:mi24p/r60m",
+        "berts_vehicle_pack:mi24p/r60m_x2",
+        "berts_vehicle_pack:munition/ub32a_24",
+        "berts_vehicle_pack:mi24p/b8v20",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:mi24p/shturm_x2_pylon",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:gun_pod/upk23_250",
+        "berts_vehicle_pack:mi24p/guv8700"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub32a_24": "Ub32Outer",
+        "berts_vehicle_pack:mi24p/b8v20": "B8Outer",
+        "berts_vehicle_pack:munition/s24b": "S24Outer",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter",
+        "berts_vehicle_pack:mi24p/guv8700": [
+          "GuvGshgOuter",
+          "GuvYakbOuter"
+        ],
+        "berts_vehicle_pack:mi24p/shturm_x2_pylon": "ShturmOuter"
+      }
+    },
+    {
+      "Id": "tip",
+      "Name": "Wingtip launchers (WT slots 1 / 6)",
+      "Left": [
+        3.9952,
+        1.3045,
+        0.2315
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.9952,
+            1.3045,
+            0.2315
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.9952,
+        1.3045,
+        0.2315
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.9952,
+            1.3045,
+            0.2315
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:mi24p/shturm_x2"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:mi24p/shturm_x2": "ShturmTip"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 2400,
+  "MaxPylonMassKg": 520,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [],
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
+}

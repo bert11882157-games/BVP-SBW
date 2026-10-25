@@ -1,0 +1,232 @@
+{
+  "Schema": 1,
+  "Name": "F-15A Eagle",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wing_shoulders",
+      "Name": "Stations 1/3 and 9/11 · wing pylon AIM-9 rails",
+      "Left": [
+        3.0953,
+        2.1012,
+        -1.2541
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.0953,
+            2.1012,
+            -1.2541
+          ],
+          "Face": "left"
+        },
+        {
+          "Point": [
+            2.417,
+            2.1012,
+            -1.2541
+          ],
+          "Face": "right"
+        }
+      ],
+      "Right": [
+        -3.0953,
+        2.1012,
+        -1.2541
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.0953,
+            2.1012,
+            -1.2541
+          ],
+          "Face": "right"
+        },
+        {
+          "Point": [
+            -2.417,
+            2.1012,
+            -1.2541
+          ],
+          "Face": "left"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:fa18e/aim9m"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 350
+    },
+    {
+      "Id": "wing_centre",
+      "Name": "Stations 2/10 · wing pylons",
+      "Left": [
+        2.7564,
+        1.7623,
+        -1.7032
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.7564,
+            1.7623,
+            -1.7032
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.7564,
+        1.7623,
+        -1.7032
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.7564,
+            1.7623,
+            -1.7032
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_x6",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x6",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu8",
+        "berts_vehicle_pack:munition/blu27_x3",
+        "berts_vehicle_pack:munition/tank_610gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2268
+    },
+    {
+      "Id": "fuselage_front",
+      "Name": "Stations 4/8 · forward Sparrow stations",
+      "Left": [
+        1.525,
+        1.333,
+        -0.6188
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.525,
+            1.333,
+            -0.6188
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.525,
+        1.333,
+        -0.6188
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.525,
+            1.333,
+            -0.6188
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7m"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    },
+    {
+      "Id": "fuselage_rear",
+      "Name": "Stations 5/7 · aft Sparrow stations",
+      "Left": [
+        1.525,
+        1.333,
+        -3.4655
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.525,
+            1.333,
+            -3.4655
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.525,
+        1.333,
+        -3.4655
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.525,
+            1.333,
+            -3.4655
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7m"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 7257,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Station 6 · centreline",
+      "Position": [
+        0.0,
+        1.1974,
+        -1.8614
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            1.1974,
+            -1.8614
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_x6",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x6",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu8",
+        "berts_vehicle_pack:munition/blu27_x3",
+        "berts_vehicle_pack:munition/tank_610gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2268
+    }
+  ]
+}

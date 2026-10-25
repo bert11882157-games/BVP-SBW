@@ -1,0 +1,9 @@
+{
+  "why": "MiG-25P/PD: a fixed windscreen frame whose front pane is flat, thick and armoured (bullet-resistant), steeply raked (about 27 degrees here) and narrow, between two posts; behind it ONE blown (curved) canopy hinged at the rear, whose front bow is the windscreen's arch. Reference used: the owner's note that the armoured front pane is flat, plus the airframe model's own frame lines (two windscreen rails about 29 cm apart converging to a base bar, one blown canopy behind a fixed rear fairing). A web search for a drawing or photo description of the MiG-25 windscreen (MiG-25PD kit reviews: ICM, Kitty Hawk; Hasegawa, Revell; armedconflicts KM-1 page) found no text on the pane shapes, so the quarter panes beside the front pane are built as flat planes but are NOT listed (no reference shows them flat or curved), and the curved canopy is not listed. UNVERIFIED against War Thunder / DCS views (not reachable here). The pane is the centre strip between the posts (|x| < 0.145, one plane y = 3.26 - 0.523 (z - 5.35) from the front bow z 5.3725 to the base bar z 6.19); the box holds only the triangles whose centroid lies on it.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "box": [[-0.16, 2.70, 5.36], [0.16, 3.30, 6.20]]
+    }
+  ]
+}

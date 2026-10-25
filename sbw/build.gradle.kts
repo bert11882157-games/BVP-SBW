@@ -251,6 +251,12 @@ mixin {
 
 tasks.test {
     useJUnitPlatform()
+    // Compatibility snapshots are reviewed before accepting a changed golden.
+    for (name in listOf("contract.strict", "contract.update")) {
+        val value = project.findProperty(name)?.toString() ?: "false"
+        inputs.property(name, value)
+        systemProperty(name, value)
+    }
 }
 
 // MixinGradle writes these annotation-processor products under compileJava's

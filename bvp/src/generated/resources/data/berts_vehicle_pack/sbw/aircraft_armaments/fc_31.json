@@ -1,0 +1,153 @@
+{
+  "Schema": 1,
+  "Name": "FC-31 Gyrfalcon",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wing_inner",
+      "Name": "Stations 3/4 · inner wing pylons (tank / LS-6 / AAM)",
+      "Left": [
+        2.8536,
+        1.3946,
+        -1.6798
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.8536,
+            1.3946,
+            -1.6798
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.8536,
+        1.3946,
+        -1.6798
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.8536,
+            1.3946,
+            -1.6798
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_300gal",
+        "berts_vehicle_pack:munition/ls6_500",
+        "berts_vehicle_pack:munition/pl15",
+        "berts_vehicle_pack:munition/pl12",
+        "berts_vehicle_pack:munition/pl10"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1100
+    },
+    {
+      "Id": "wing_outer",
+      "Name": "Stations 2/5 · outer twin-rail pylons (2 x PL-10)",
+      "Left": [
+        3.5401,
+        1.6821,
+        -2.2376
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.5401,
+            1.6821,
+            -2.2376
+          ],
+          "Face": "bottom"
+        },
+        {
+          "Point": [
+            4.1838,
+            1.7379,
+            -2.2376
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.5401,
+        1.6821,
+        -2.2376
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.5401,
+            1.6821,
+            -2.2376
+          ],
+          "Face": "bottom"
+        },
+        {
+          "Point": [
+            -4.1838,
+            1.7379,
+            -2.2376
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl10"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 220
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 8000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "bay_main",
+      "Name": "Main bay · 4 PL-15 / PL-12",
+      "Position": [
+        0.0,
+        0.9869,
+        -1.122
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl15",
+        "berts_vehicle_pack:munition/pl12"
+      ],
+      "MaxPylonMassKg": 820,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_bombs"
+      ]
+    },
+    {
+      "Id": "bay_bombs",
+      "Name": "Main bay · 2 LS-6-500 guided bombs",
+      "Position": [
+        0.0,
+        0.9869,
+        -1.122
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/ls6_500"
+      ],
+      "MaxPylonMassKg": 1100,
+      "QuantitySelectable": true,
+      "ExclusiveWith": [
+        "bay_main"
+      ]
+    }
+  ]
+}

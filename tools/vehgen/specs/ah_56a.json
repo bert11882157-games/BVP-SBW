@@ -1,0 +1,239 @@
+{
+  "id": "ah_56a",
+  "name": "AH-56A Cheyenne",
+  "entityClass": "AuthoredHelicopter",
+  "template": "ah_1f",
+  "source": "AH-56A.mtb",
+  "note": "New vehicle (Elite Expansion 2): AH-56A.mtb (Lockheed AH-56A Cheyenne, compound helicopter) on the AH-1F tandem helicopter data (the pack has no compound helicopter; same tandem seating, rotor rig and chin-turret station). Source nose is toolbox -x (yaw180).",
+  "yaw180": true,
+  "scale": 1.034,
+  "note_scale": "The source rotor is 278 px for the real 15.62 m (17.80 px/m); the pack scales helicopters 1.15x (16 px/block x 1.15 = 18.4 px/m), so 1.034 puts the AH-56A on the pack helicopter scale (rotor 15.62 m, fuselage 17.0 m against the real 16.66 m: the model is 2 percent long).",
+  "lengthParts": [
+    0
+  ],
+  "templateLengthBones": [
+    "hull"
+  ],
+  "groundParts": [
+    13,
+    14,
+    15
+  ],
+  "excludeParts": [],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [],
+  "shift": [
+    0,
+    0,
+    -40.2
+  ],
+  "parts": {
+    "0": "hull",
+    "2": "hull",
+    "3": "hull",
+    "7": "hull",
+    "13": "hull",
+    "14": "hull",
+    "15": "hull",
+    "24": "hull",
+    "1": [
+      {
+        "bone": "passengerWeaponStationYaw",
+        "if": {
+          "frame": "source",
+          "yMax": 26.4
+        }
+      },
+      {
+        "bone": "passengerWeaponStationPitch",
+        "if": {}
+      }
+    ],
+    "4": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 25.5
+        }
+      },
+      {
+        "bone": "hull",
+        "if": {}
+      }
+    ],
+    "5": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 25.5
+        }
+      },
+      {
+        "bone": "hull",
+        "if": {}
+      }
+    ],
+    "28": "main_rotor",
+    "29": "tail_rotor"
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "dropGroups": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "HeadUpDisplay",
+    "CockpitGauges",
+    "FlightDisplays"
+  ],
+  "addBones": [
+    {
+      "name": "pusher_prop",
+      "parent": "hull",
+      "pivot": [
+        0.0,
+        48.08,
+        168.4
+      ]
+    }
+  ],
+  "rigAdd": {
+    "Rotors": [
+      {
+        "Bone": "pusher_prop",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          48.08,
+          168.4
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 190
+      }
+    ]
+  },
+  "note_stores": "The baked stores (parts 4 and 5: two 19-tube FFAR pods and a three-tube TOW launcher on each stub wing) are every part 4 / 5 element whose centre is below y 25.5; the wing beam and tip plates stay. Cut as separate models by work/elite_expansion_2/tools/stores.py + ah1w/cut_stores_tex.py, catalogued in work/elite_expansion_2/ah56/STORES.md.",
+  "note_prop": "The source model has no pusher propeller. tools ah56_fit.py builds one (three blades, WT fm Propeller2 radius 1.524 m) in the pusher_prop bone at the tail-cone end; the rig entry is added here (rigAdd).",
+  "armamentOverrides": {
+    "Name": "AH-56A Cheyenne",
+    "MaxPayloadKg": 5000,
+    "SuspendedWeapons": [
+      "Lau3aInner",
+      "Lau3aOuter",
+      "Ter3Outer"
+    ],
+    "BuiltInWeapons": [
+      "BellyGun",
+      "PassengerGun2"
+    ],
+    "Pairs": [
+      {
+        "Id": "inner",
+        "Name": "Inner station (WT slots 2 / 3)",
+        "Left": [
+          2.1972,
+          2.0266,
+          1.2039
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.1972,
+              2.0266,
+              1.2039
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.1972,
+          2.0266,
+          1.2039
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.1972,
+              2.0266,
+              1.2039
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:ah56a/lau3a",
+          "berts_vehicle_pack:ah56a/tow_x3"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1250,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:ah56a/lau3a": "Lau3aInner"
+        }
+      },
+      {
+        "Id": "outer",
+        "Name": "Outer station (WT slots 1 / 4)",
+        "Left": [
+          3.8775,
+          2.2554,
+          1.1716
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.8775,
+              2.2554,
+              1.1716
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.8775,
+          2.2554,
+          1.1716
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.8775,
+              2.2554,
+              1.1716
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:ah56a/lau3a",
+          "berts_vehicle_pack:ah56a/lau3a_x3"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1250,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:ah56a/lau3a": "Lau3aOuter",
+          "berts_vehicle_pack:ah56a/lau3a_x3": "Ter3Outer"
+        }
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {},
+    "MaxPylonMassKg": 1250,
+    "MaxWeaponsPerPylon": 1,
+    "WeaponSeat": 1,
+    "WeaponSeats": [
+      1,
+      0
+    ]
+  },
+  "note_armament": "War Thunder ah_56a stations (work/elite_expansion_2/ah56/WT-ah56.md), written by work/elite_expansion_2/tools/ah56_armament.py; points on the model's own stub wing."
+}

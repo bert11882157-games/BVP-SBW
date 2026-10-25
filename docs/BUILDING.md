@@ -10,9 +10,10 @@ cd sbw
 .\gradlew.bat jar
 ```
 
-On Unix, use `sh gradlew jar`. `build` also runs the unit tests; six of them are known to fail
-(`FarTerrainProjectionTest`, two in `AircraftProjectileDamageIntegrationTest` and three in `AircraftDebrisMotionTest`). The repositories and dependencies declared by the project may
-need network access. No clean build of this new checkout is claimed by the initial source import.
+On Unix, use `sh gradlew jar`. `test` runs the headless JUnit suite and `build` includes it. No BVP
+classes or temporary source exclusions are required for the SBW test task. Dependencies may need
+network access or a populated Gradle cache. Compatibility snapshots and strict-mode usage are
+documented in [CONTRACT_TESTS.md](development/CONTRACT_TESTS.md).
 
 ## Bert's Vehicle Pack
 
@@ -45,6 +46,10 @@ outputs. Canonical BVP Java keeps its runtime/SRG names; only disposable compila
 translated to the matching compiler names, and the output JAR is remapped for Forge runtime use.
 The vehicle generator, an installed game, and old patched mod JARs are not build inputs.
 
+The selected tree must have a fresh `SOURCE_SNAPSHOT.json` that describes its exact intended inputs.
+An inherited snapshot from an older checkout is not build proof; the entry point rejects changed
+listed files. Freeze the current source through the release workflow before building a candidate.
+
 BVP defaults to project-local `src/main/java`. Development can explicitly choose another canonical
 source root with `-PbvpSourceRoot=...`; publication does not rewrite its build file. Both resource
 directories are packaged, with the source-owned overlay taking precedence.
@@ -53,6 +58,22 @@ Do not install a `*-mapped.jar`: it is an intermediate compiler artifact. Use on
 artifact identified by the build proof. Direct BVP `gradlew build` is not the end-to-end runtime
 release entry point. The source-build command and its evidence, rather than a copied snapshot
 alone, establish which sources and dependencies produced each candidate.
+
+## BVP headless tests
+
+BVP tests use the matching named SBW compiler API, dependency identities and mappings recorded in
+the source build's `inputs.json`. Canonical test sources are remapped into a disposable directory,
+just as the production sources are. After obtaining those matching inputs, run with Java 17:
+
+```powershell
+sbw/gradlew.bat -p bvp check "-PsbwBuildInputs=ABSOLUTE_PATH_TO/inputs.json" "-PnodeExecutable=ABSOLUTE_PATH_TO/node.exe"
+```
+
+`check` runs JUnit and a small set of standalone headless harnesses, including three artifact-policy
+cases in separate JVMs. Additional harnesses are explicit tasks in `bvp/build-support/test-support.gradle`;
+for example `helicopterPhysicalControls`, `helicopterAttitude` and `helicopterForceAcceptance`.
+Geometry/resource harnesses require their documented fixture properties and fail if those inputs
+are absent. A passing headless check does not establish world contact, rendered output or gameplay.
 
 Runtime override validation is part of the release build. The remapper must receive the matching
 SBW and meshloader inheritance libraries; compilation alone cannot prove that vehicle save/sync,

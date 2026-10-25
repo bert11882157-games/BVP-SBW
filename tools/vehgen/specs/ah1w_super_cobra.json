@@ -1,0 +1,249 @@
+{
+  "id": "ah1w_super_cobra",
+  "name": "AH-1W SuperCobra",
+  "entityClass": "AuthoredHelicopter",
+  "template": "ah_1f",
+  "source": "AH-1W SuperCobra.mtb",
+  "note": "New vehicle (Elite Expansion 2): AH-1W SuperCobra.mtb on the AH-1F helicopter data (no AH-1Z in the pack; the AH-1F is the pack's tandem Cobra with the same rotor rig and chin-turret station). The unregistered ah1w_super_cobra data left by an earlier pass is replaced. Source nose is toolbox -x (yaw180).",
+  "yaw180": true,
+  "scale": 1.02,
+  "note_scale": "The source rotor is 264 px for the real 14.63 m (18.04 px/m); the pack scales helicopters 1.15x (16 px/block x 1.15), the AH-1F rotor is 268 px for the same 14.63 m, so 1.02 puts the AH-1W on the pack's helicopter scale (the old armor file's model_scale 1.15255 is the same number).",
+  "lengthParts": [
+    2
+  ],
+  "templateLengthBones": [
+    "hull"
+  ],
+  "groundParts": [
+    3
+  ],
+  "excludeParts": [],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [],
+  "shift": [
+    0,
+    0,
+    19.68
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "tail_rotor",
+        "if": {
+          "frame": "source",
+          "zMin": 150
+        }
+      },
+      {
+        "bone": "main_rotor",
+        "if": {
+          "frame": "source",
+          "yMin": 64
+        }
+      },
+      {
+        "bone": "passengerWeaponStationYaw",
+        "if": {
+          "frame": "source",
+          "zMax": -51,
+          "yMin": 8.9,
+          "yMax": 10.5
+        }
+      },
+      {
+        "bone": "passengerWeaponStationPitch",
+        "if": {
+          "frame": "source",
+          "zMax": -51,
+          "yMax": 8.8
+        }
+      },
+      {
+        "bone": "hull",
+        "if": {}
+      }
+    ],
+    "1": "hull",
+    "2": "hull",
+    "3": "hull",
+    "4": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 18.2
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 30,
+          "yMax": 19
+        }
+      },
+      {
+        "bone": "hull",
+        "if": {}
+      }
+    ],
+    "5": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 18.2
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 30,
+          "yMax": 19
+        }
+      },
+      {
+        "bone": "hull",
+        "if": {}
+      }
+    ],
+    "7": "hull"
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "dropGroups": [],
+  "removeClientKeys": [],
+  "armamentOverrides": {
+    "Name": "AH-1W SuperCobra",
+    "MaxPayloadKg": 1450,
+    "SuspendedWeapons": [
+      "Aero6aInner",
+      "Aero7aInner",
+      "ZuniInner",
+      "GpuInner",
+      "Aero6aOuter",
+      "Aero7aOuter",
+      "ZuniOuter",
+      "GpuOuter"
+    ],
+    "BuiltInWeapons": [
+      "PassengerGun1"
+    ],
+    "Pairs": [
+      {
+        "Id": "inner",
+        "Name": "Inner station (WT slots 2 / 3)",
+        "Left": [
+          1.3388,
+          1.6656,
+          1.6238
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.3388,
+              1.6656,
+              1.6238
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.3388,
+          1.6656,
+          1.6238
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.3388,
+              1.6656,
+              1.6238
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:ah1w/hydra7",
+          "berts_vehicle_pack:ah1w/rocket19",
+          "berts_vehicle_pack:ah1w/zuni4",
+          "berts_vehicle_pack:munition/lau131_apkws_x1",
+          "berts_vehicle_pack:gun_pod/gpu2a"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 725,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:ah1w/hydra7": "Aero6aInner",
+          "berts_vehicle_pack:ah1w/rocket19": "Aero7aInner",
+          "berts_vehicle_pack:ah1w/zuni4": "ZuniInner",
+          "berts_vehicle_pack:gun_pod/gpu2a": "GpuInner"
+        }
+      },
+      {
+        "Id": "outer",
+        "Name": "Outer station (WT slots 1 / 4)",
+        "Left": [
+          2.1994,
+          1.8569,
+          1.56
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.1994,
+              1.8569,
+              1.56
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.1994,
+          1.8569,
+          1.56
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.1994,
+              1.8569,
+              1.56
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:ah1w/hydra7",
+          "berts_vehicle_pack:ah1w/rocket19",
+          "berts_vehicle_pack:ah1w/zuni4",
+          "berts_vehicle_pack:munition/lau131_apkws_x1",
+          "berts_vehicle_pack:gun_pod/gpu2a",
+          "berts_vehicle_pack:ah1w/tow_x4",
+          "berts_vehicle_pack:ah1w/tow_x2",
+          "berts_vehicle_pack:ah1w/m272_x4",
+          "berts_vehicle_pack:ah1w/m279_x2",
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:munition/agm122"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 725,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:ah1w/hydra7": "Aero6aOuter",
+          "berts_vehicle_pack:ah1w/rocket19": "Aero7aOuter",
+          "berts_vehicle_pack:ah1w/zuni4": "ZuniOuter",
+          "berts_vehicle_pack:gun_pod/gpu2a": "GpuOuter"
+        }
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {},
+    "MaxPylonMassKg": 725,
+    "MaxWeaponsPerPylon": 1,
+    "WeaponSeat": 1
+  },
+  "note_armament": "War Thunder ah_1w stations (work/elite_expansion_2/ah1w/WT-ah1w.md), written by work/elite_expansion_2/tools/ah1w_armament.py; points on the model's own pylons."
+}

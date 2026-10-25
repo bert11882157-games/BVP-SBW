@@ -54,6 +54,7 @@ object CockpitGauges {
     private var staticRequested = false
     private var liveVehicleId = -1
     private val liveKinds = HashSet<Kind>()
+    private var liveSeat = -1
     private var failed = false
     private var logged = false
 
@@ -78,7 +79,9 @@ object CockpitGauges {
         val vehicle = mc.player?.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
         val gauges = gauges(vehicle) ?: run { liveVehicleId = -1; return }
         if (vehicle.isWreck || !staticPainted) { liveVehicleId = -1; return }
-        val kinds = gauges.mapNotNull { Kind.of(it.kind) }.filter { it.live }.toSet()
+        // only the instruments at the local player's own seat run live (a passenger's view stays still, unpainted)
+        val seat = FlightDisplayState.crewSeat(vehicle)
+        val kinds = gauges.filter { it.seat == seat }.mapNotNull { Kind.of(it.kind) }.filter { it.live }.toSet()
         if (kinds.isEmpty()) { liveVehicleId = -1; return }
         val state = FlightDisplayState.sample(vehicle, partialTick) ?: return
         val rwr = if (Kind.RWR in kinds) RwrDisplayState.sample(vehicle, partialTick) else RwrDisplayState.STILL
@@ -89,6 +92,7 @@ object CockpitGauges {
             }
             liveKinds.clear(); liveKinds.addAll(kinds)
             liveVehicleId = vehicle.id
+            liveSeat = seat
             if (!logged) {
                 logged = true
                 LOGGER.info("Live cockpit gauges active for {}: {}", VehicleResource.getDefault(vehicle).id, kinds)
@@ -116,7 +120,7 @@ object CockpitGauges {
         for (gauge in list) {
             val kind = Kind.of(gauge.kind) ?: continue
             val dial = Dial.of(gauge) ?: continue
-            val cell = if (isLive && kind in liveKinds) liveCell(kind) else stillCell(kind)
+            val cell = if (isLive && gauge.seat == liveSeat && kind in liveKinds) liveCell(kind) else stillCell(kind)
             face(faces, pose.pose(), dial, cell)
         }
         val case = buffers.getBuffer(RenderType.entityCutoutNoCull(CASE_TEXTURE))

@@ -1,0 +1,42 @@
+{
+  "Schema": 1,
+  "Name": "AGM-65L Maverick · laser-guided (AI)",
+  "Category": "LASER_GUIDED",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm65e.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1525,
+    0.3486
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1525,
+      0.0,
+      0.3486
+    ],
+    "Right": [
+      -0.1525,
+      0.0,
+      0.3486
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.3486
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm65e.png",
+  "Capacity": 1,
+  "MassKg": 291.2,
+  "Scale": 1,
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm65l_maverick",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm65l_maverick",
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1525,
+    0.0
+  ]
+}

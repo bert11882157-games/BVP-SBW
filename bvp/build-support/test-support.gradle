@@ -1,0 +1,143 @@
+import groovy.json.JsonSlurper
+
+// Standalone harnesses are not JUnit tests: each runs in its own Java 17 process.
+def harness = { String taskName, String className ->
+    tasks.register(taskName, JavaExec) {
+        group = 'verification'
+        description = "Run ${className} (standalone headless harness)."
+        dependsOn tasks.named('testClasses')
+        javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) }
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = className
+        workingDir projectDir
+        enableAssertions = true
+    }
+}
+def base = 'com.yourname.berts_vehicle_pack.'
+[
+    armorFaceThickness: 'armor.ArmorFaceThicknessTest',
+    armorImpactStats: 'armor.ArmorImpactStatsTest',
+    armorMeshBenchmark: 'armor.ArmorMeshBenchmarkTest',
+    armorMeshEquivalence: 'armor.ArmorMeshEquivalenceTest',
+    armorMeshLoader: 'armor.ArmorMeshLoaderTest',
+    armorMeshMath: 'armor.ArmorMeshMathTest',
+    armorMeshVolume: 'armor.ArmorMeshVolumeTest',
+    armorMissLog: 'armor.ArmorMissLogTest',
+    rayBoxProximity: 'armor.RayBoxProximityTest',
+    clientImpactFragments: 'client.BvpClientImpactFragmentsTest',
+    aircraftAfterburner: 'client.renderer.BvpAircraftAfterburnerTest',
+    rendererBonesRecoil: 'client.renderer.RendererBonesRecoilTest',
+    wheelSteeringPose: 'client.renderer.WheelSteeringPoseTest',
+    caliberExplosion: 'effects.BvpCaliberExplosionTest',
+    movementCollisionBounds: 'entity.BvpMovementCollisionBoundsTest',
+    rotorSpool: 'entity.BvpRotorSpoolTest',
+    helicopterAttitude: 'entity.helicopter.HelicopterAttitudeControllerTest',
+    helicopterForceAcceptance: 'entity.helicopter.HelicopterForceModelAcceptance',
+    helicopterGunStow: 'entity.helicopter.HelicopterGunStowPolicyTest',
+    helicopterPhysicalControls: 'entity.helicopter.HelicopterPhysicalControlsTest',
+    aircraftRigAnimatorCore: 'client.renderer.AircraftRigAnimatorTest'
+].each { name, klass -> harness(name, base + klass) }
+
+// Require explicit fixtures instead of letting zero-input harnesses report a vacuous pass.
+def requiredProperty = { String key ->
+    def value = providers.gradleProperty(key).orNull
+    if (value == null || value.trim().isEmpty()) throw new GradleException("Required fixture: -P${key}=...")
+    value
+}
+def requiredFile = { String key ->
+    def value = file(requiredProperty(key))
+    if (!value.isFile() || value.length() == 0) throw new GradleException("Missing/empty fixture ${key}: ${value}")
+    value
+}
+def requiredDirectory = { String key ->
+    def value = file(requiredProperty(key))
+    if (!value.isDirectory()) throw new GradleException("Missing fixture directory ${key}: ${value}")
+    value
+}
+[
+    aircraftRigAnimatorMesh: ['client.renderer.AircraftRigAnimatorTest', 'aircraftRigMesh'],
+    fittedGroundRigPose: ['client.renderer.FittedGroundRigPoseTest', 'groundRigFixtures'],
+    aircraftFlightProfiles: ['entity.aircraft.BvpAircraftFlightProfilesTest', 'flightProfileFixtures']
+].each { name, spec ->
+    harness(name, base + spec[0]).configure {
+        doFirst { setArgs([requiredFile(spec[1]).absolutePath]) }
+    }
+}
+harness('generatedAircraftRigBind', base + 'client.renderer.GeneratedAircraftRigBindTest').configure {
+    description = 'Bind generated aircraft rigs; bootstraps Minecraft registries but opens no world. Requires -PaircraftAssets.'
+    doFirst {
+        def assets = requiredDirectory('aircraftAssets')
+        if (fileTree(new File(assets, 'sbw/vehicles')).matching { include '*.json' }.isEmpty())
+            throw new GradleException('aircraftAssets must contain nonempty sbw/vehicles JSON fixtures')
+        setArgs([assets.absolutePath])
+    }
+}
+harness('armorMeshAutoCheck', base + 'armor.ArmorMeshAutoCheck').configure {
+    doFirst {
+        def armor = requiredDirectory('armorProfiles')
+        def meshes = requiredDirectory('armorMeshes')
+        def ids = requiredProperty('armorVehicleIds').split(',', -1).collect { it.trim() }
+        if (ids.any { it.isEmpty() }) throw new GradleException('armorVehicleIds must contain nonempty comma-separated IDs')
+        setArgs([armor.absolutePath, meshes.absolutePath] + ids)
+    }
+}
+harness('armorMeshHitreg', base + 'armor.ArmorMeshHitregHarness').configure {
+    description = 'Run explicit hitreg rays; -PhitregArguments=<JSON array of eight arguments>, paths relative to bvp.'
+    doFirst {
+        def values = new JsonSlurper().parse(requiredFile('hitregArguments'))
+        if (!(values instanceof List) || values.size() != 8 || values.any { !(it instanceof String) || it.trim().isEmpty() })
+            throw new GradleException('hitregArguments must be eight nonempty strings: id, armor, mesh, rays, output, turretPivot, barrelPivot, yaws')
+        [1, 2, 3].each { i ->
+            if (!file(values[i]).isFile() || file(values[i]).length() == 0)
+                throw new GradleException("Missing/empty hitreg input: ${values[i]}")
+        }
+        [5, 6].each { i ->
+            def coordinates = values[i].split(',', -1)
+            if (coordinates.length != 3 || coordinates.any { !Double.isFinite(Double.parseDouble(it)) })
+                throw new GradleException('Hitreg pivots must contain three finite coordinates')
+        }
+        if (values[7].split(',', -1).any { !Double.isFinite(Double.parseDouble(it)) })
+            throw new GradleException('Hitreg yaws must be finite')
+        if (!file(values[4]).parentFile.isDirectory()) throw new GradleException('Hitreg output parent must already exist')
+        setArgs(values)
+    }
+}
+// The equivalence enumerator otherwise accepts an empty resource directory.
+tasks.named('armorMeshEquivalence', JavaExec) {
+    doFirst {
+        def profiles = sourceSets.main.output.resourcesDir.toPath().resolve('data/berts_vehicle_pack/armor').toFile()
+        if (fileTree(profiles).matching { include '*.json' }.isEmpty())
+            throw new GradleException('No packaged armor profiles available for equivalence checks')
+    }
+}
+
+def debugFixtures = layout.buildDirectory.dir('generated/test-fixtures/debug-policy')
+tasks.register('prepareDebugPolicyFixtures') {
+    outputs.dir(debugFixtures)
+    doLast {
+        def root = debugFixtures.get().asFile
+        def relative = 'META-INF/superbwarfare/playtest-variant.json'
+        new File(root, 'absent').mkdirs()
+        if (new File(root, "absent/${relative}").exists()) throw new GradleException('Absent-marker fixture unexpectedly contains a marker')
+        [disabled: '{"schema":1,"variant":"reduced-roster-playtest","disableDebugTools":true}', malformed: '{invalid'].each { variant, json ->
+            def marker = new File(root, "${variant}/${relative}")
+            marker.parentFile.mkdirs()
+            marker.setText(json, 'UTF-8')
+        }
+    }
+}
+[Absent: 'true', Disabled: 'false', Malformed: 'false'].each { variant, allowed ->
+    harness("debugPolicy${variant}", 'com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicyTest').configure {
+        dependsOn tasks.named('prepareDebugPolicyFixtures')
+        // Fixture directory first; every variant is a fresh process, so the static policy is never reused.
+        classpath = files(debugFixtures.map { it.dir(variant.toLowerCase()) }) + sourceSets.test.runtimeClasspath
+        args allowed
+    }
+}
+tasks.register('headlessHarnessChecks') {
+    group = 'verification'
+    description = 'Small deterministic standalone smoke set plus three independent debug-policy resource variants.'
+    dependsOn 'armorMeshMath', 'rayBoxProximity', 'rotorSpool', 'helicopterGunStow',
+        'debugPolicyAbsent', 'debugPolicyDisabled', 'debugPolicyMalformed'
+}
+tasks.named('check') { dependsOn tasks.named('headlessHarnessChecks') }

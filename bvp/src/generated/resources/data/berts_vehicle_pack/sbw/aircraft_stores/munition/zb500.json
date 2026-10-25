@@ -1,0 +1,50 @@
+{
+  "Schema": 1,
+  "Name": "ZB-500 · 374 kg incendiary tank (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/zb500.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.274,
+    -0.1144
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.25,
+      0.0,
+      -0.1144
+    ],
+    "Right": [
+      -0.25,
+      0.0,
+      -0.1144
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.1144
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/zb500.png",
+  "Capacity": 1,
+  "MassKg": 374.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 9,
+    "TntEquivalentKg": 65.0,
+    "BlastDamage": 300
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/zb500",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.274,
+    0.0
+  ]
+}

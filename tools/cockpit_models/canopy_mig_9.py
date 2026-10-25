@@ -36,14 +36,14 @@ SECTIONS = [
     (0.90, [(0.278, -0.166), (0.278, -0.149), (0.162, -0.087), (0.082, -0.076), (0.0, -0.066)]),   # its foot on the nose
 ]
 SPLIT = 0.45                     # the hood's front edge, against the windscreen arch (where the flat top ends)
-FRONT_PANE_X = 0.09              # the flat front pane's edges, out from the centre line
+FRONT_PANE_X = 0.14              # the flat front pane's edges, out from the centre line (a wide armoured pane: the view ahead)
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
     sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -0.48, SPLIT, nz=15) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.90, nz=8)
+    glass = C.glass_triangles(sh, E, -0.48, SPLIT, nz=15) + C.glass_triangles(sh, E, SPLIT + 0.035, 0.90, nz=8)
     # the hood: its rear bow, its front bow, the sill rails
     C.skin(m, sh, E, -0.84, -0.48, out)             # the metal fairing over the model's opening's rear notch, down onto the deck
     C.bow(m, sh, E, -0.465, 0.035, 0.025, out, inner)
@@ -52,13 +52,13 @@ def build(atlas, E, skin):
         for sd in (1, -1):
             m.flat([E + [sd * xa, ya, -0.47], E + [sd * xb, yb, -0.47], E + [0.0, yb, -0.47], E + [0.0, ya, -0.47]], inner,
                    normal=[0, 0, 1])
-    C.bow(m, sh, E, SPLIT - 0.005, 0.028, 0.018, out, inner)
+    C.bow(m, sh, E, SPLIT - 0.005, 0.018, 0.014, out, inner)          # (light frames, as the real MiG-9's: the view ahead open)
     C.member(m, sh, E, 0.0, -0.48, SPLIT, 0.04, 0.03, out, inner, steps=15)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
-    C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), SPLIT + 0.045, 0.90, 0.025, 0.02, out, inner)
-    C.bow(m, sh, E, 0.885, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.90, 0.04, 0.03, out, inner)
+    C.bow(m, sh, E, SPLIT + 0.022, 0.022, 0.014, out, inner)
+    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), SPLIT + 0.035, 0.90, 0.015, 0.012, out, inner)
+    C.bow(m, sh, E, 0.89, 0.02, 0.014, out, inner)
+    C.member(m, sh, E, 0.0, SPLIT + 0.035, 0.90, 0.03, 0.025, out, inner)
     return m, glass
 
 

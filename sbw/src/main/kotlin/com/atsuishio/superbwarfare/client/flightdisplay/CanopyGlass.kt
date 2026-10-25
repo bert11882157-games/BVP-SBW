@@ -41,25 +41,40 @@ object CanopyGlass {
     private const val VERTEX_FLOATS = 7            // x y z (view space), r g b a
     private const val MAX_VERTICES = 300_000
 
+    /** Reload apply runs before another world frame can enqueue these triangles. */
+    internal fun resetResources() {
+        cache.clear()
+        collecting = false
+        vertexCount = 0
+    }
+
     /** Model-frame triangles (x, y, z per corner) with a smooth normal per corner. */
     private class Mesh(val points: FloatArray, val normals: FloatArray)
 
-    private val cache = HashMap<DefaultVehicleResource.CanopyGlassResource, Mesh?>()
+    private val cache = IdentityFitCache<DefaultVehicleResource.CanopyGlassResource, Mesh>(::buildMesh)
     private var collecting = false
     private var batch = FloatArray(VERTEX_FLOATS * 4096)
     private var vertexCount = 0
 
-    private fun mesh(resource: DefaultVehicleResource.CanopyGlassResource): Mesh? = cache.getOrPut(resource) {
-        if (resource.frame != "VEHICLE_LOCAL_BLOCKS") return@getOrPut null
+    /** The glass colour (r, g, b, 0-255): the resource's optional "Tint", else the pack-wide default. */
+    internal fun tintOf(resource: DefaultVehicleResource.CanopyGlassResource): IntArray {
+        val t = resource.tint
+        return if (t != null && t.size == 3 && t.all { it in 0..255 }) t else intArrayOf(TINT_R, TINT_G, TINT_B)
+    }
+
+    private fun mesh(resource: DefaultVehicleResource.CanopyGlassResource): Mesh? = cache.get(resource)
+
+    private fun buildMesh(resource: DefaultVehicleResource.CanopyGlassResource): Mesh? {
+        if (resource.frame != "VEHICLE_LOCAL_BLOCKS") return null
         val local = when (resource.schema) {
             1 -> resource.triangles?.takeIf { it.size >= 9 && it.size % 9 == 0 }
             2 -> dome(resource)
             else -> null
-        } ?: return@getOrPut null
-        if (!local.all(Double::isFinite)) return@getOrPut null
+        } ?: return null
+        if (!local.all(Double::isFinite)) return null
         // Vehicle-local (+X left, +Z forward) to the model frame: rotate 180 degrees about Y.
         val p = FloatArray(local.size) { i -> (if (i % 3 == 1) local[i] else -local[i]).toFloat() }
-        Mesh(p, smoothNormals(p))
+        return Mesh(p, smoothNormals(p))
     }
 
     /** Triangles of a Schema 2 dome: a fan round the apex, then quads between neighbouring spokes. */
@@ -120,7 +135,8 @@ object CanopyGlass {
         val matrix = pose.pose()
         val normalMatrix = pose.normal()
         val light = brightness(packedLight)
-        val r = TINT_R / 255f * light; val g = TINT_G / 255f * light; val b = TINT_B / 255f * light
+        val tint = tintOf(resource)
+        val r = tint[0] / 255f * light; val g = tint[1] / 255f * light; val b = tint[2] / 255f * light
         val p = mesh.points; val nm = mesh.normals
         val pos = Vector4f(); val nrm = Vector3f()
         var o = vertexCount * VERTEX_FLOATS

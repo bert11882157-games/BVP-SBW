@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.client.FixedWingPilotIntentClient
 import com.atsuishio.superbwarfare.client.input.FixedWingMouseAimMath
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingPilotIntent
 import com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicatorDynamic
+import com.atsuishio.superbwarfare.client.overlay.VehicleWeaponHudRouting
 import com.atsuishio.superbwarfare.client.overlay.VehicleMainWeaponHudOverlay
 import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
@@ -168,8 +169,9 @@ object AircraftHud {
                 guiGraphics, vehicle, player, screenWidth,
                 if (fixedWing) flightPresentation?.throttle?.toDouble() else vehicle.power.toDouble(),
                 if (fixedWing) FixedWingHudMetrics.speedKmh(flightPresentation) else vehicle.absoluteSpeed * 72)
-            com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.ground(
-                guiGraphics, vehicle, player, screenWidth, screenHeight, true)
+            if (VehicleWeaponHudRouting.aircraftPanel(vehicle.usesGroundVehicleWeaponScheme()))
+                com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.ground(
+                    guiGraphics, vehicle, player, screenWidth, screenHeight, true)
             return
         }
 
@@ -229,8 +231,10 @@ object AircraftHud {
 
                 poseStack.pushPose()
                 poseStack.translate(x, y, 0f)
-                val component = vehicle.thirdPersonAmmoComponent(gunData, player)
-                guiGraphics.drawString(mc.font, component, 25, -11, 1, false)
+                if (!vehicle.usesGroundVehicleWeaponScheme()) {
+                    val component = vehicle.thirdPersonAmmoComponent(gunData, player)
+                    guiGraphics.drawString(mc.font, component, 25, -11, 1, false)
+                }
                 poseStack.popPose()
 
                 RenderHelper.preciseBlit(
@@ -446,8 +450,8 @@ object AircraftHud {
             }
             guiGraphics.drawString(mc.font, Component.literal("TGT"), 76, 78, color, false)
 
-            // 武器名
-            if (gunData != null) {
+            // The shared panel owns selected ammunition for opted-in vehicles.
+            if (gunData != null && !vehicle.usesGroundVehicleWeaponScheme()) {
                 val heat = vehicle.getWeaponHeat(player)
                 val component = vehicle.firstPersonAmmoComponent(gunData, player)
                 guiGraphics.drawString(

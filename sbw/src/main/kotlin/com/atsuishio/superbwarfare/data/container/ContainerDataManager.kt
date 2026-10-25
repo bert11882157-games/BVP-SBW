@@ -16,6 +16,10 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 object ContainerDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/containers") {
     private val containerData: MutableMap<ResourceLocation, MutableList<Pair<String, Int>>> = hashMapOf()
 
+    /** Entity type ids ("namespace:path") that add-ons keep out of every container list; the entity types stay registered. */
+    @JvmField
+    val hiddenTypes: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+
     override fun apply(
         pObject: MutableMap<ResourceLocation, JsonElement>,
         manager: ResourceManager,
@@ -37,6 +41,7 @@ object ContainerDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/cont
                         list.add(Pair.of(arr.asString, 1))
                     }
                 }
+                list.removeIf { it.first() in hiddenTypes }
                 containerData[id] = list
             } catch (_: Exception) {
                 Mod.LOGGER.error("Failed to load container data for {}", id)

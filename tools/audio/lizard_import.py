@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Vehicle audio import (tools/audio/lizard_manifest.json -> bvp/src/main/resources/assets/bvp_audio).
 
-  python3 tools/audio/lizard_import.py SOURCE_ROOT [--air-only]
+  python3 tools/audio/lizard_import.py SOURCE_ROOT [--air-only | --only VEHICLE_ID]
 
 SOURCE_ROOT holds the staged archive folders (objects_vehicles_client/vehicles/..., objects_weapons_client/weapons/...).
 
@@ -307,6 +307,13 @@ def main(argv):
     if air_only:
         manifest = {k: v for k, v in manifest.items() if k.startswith('air') or k == 'aircraft'}
         manifest.update({'engine': {}, 'tracks': {}, 'turret': {}, 'vehicles': {}})
+    if '--only' in argv:   # one vehicle's new sets (Ogg output is not byte-reproducible, so the rest is left alone)
+        only = argv[argv.index('--only') + 1]
+        engine, _, _ = manifest['vehicles'][only]
+        families = {f for k, f in manifest['weapon_map'].items() if k.startswith(only + '.')}
+        manifest = {'engine': {engine: manifest['engine'][engine]}, 'tracks': {}, 'turret': {},
+                    'vehicles': {only: manifest['vehicles'][only]},
+                    'weapons': {f: s for f, s in manifest.get('weapons', {}).items() if f in families}}
     sounds, meta, problems = {}, {}, []
 
     def source(rel):

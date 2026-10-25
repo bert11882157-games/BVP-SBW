@@ -568,8 +568,9 @@ object AircraftArmamentManager {
         if (request.operation == "OPEN") {
             val now = player.serverLevel().gameTime
             if (now - (lease.last["open"] ?: Long.MIN_VALUE / 2) >= 10) {
-                lease.pod = false
-                lease.last["open"] = now; reply(player, lease, true)
+                lease.last["open"] = now
+                if (AircraftLoadoutAccess.inMotion(vehicle)) reply(player, lease, message = AircraftLoadoutAccess.IN_MOTION_MESSAGE)
+                else { lease.pod = false; reply(player, lease, true) }
             }
             return
         }
@@ -627,7 +628,13 @@ object AircraftArmamentManager {
                     require(AircraftDesignationData.get(player.serverLevel()).put(vehicle.uuid, null)) { "Designation storage is full." }
                     publishPoint(vehicle)
                 }
-                "FIRE" -> { fire(player, vehicle, body); publish(vehicle) }
+                "FIRE" -> {
+                    require(!vehicle.usesGroundVehicleWeaponScheme()) {
+                        "Use the selected vehicle weapon slot to fire."
+                    }
+                    fire(player, vehicle, body)
+                    publish(vehicle)
+                }
             }
         } catch (e: IllegalArgumentException) {
             reply(player, lease, message = e.message?.take(160) ?: "Invalid armament request.")
@@ -706,7 +713,7 @@ object AircraftArmamentManager {
     }
     private fun apply(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject,
                       savedPreset: Boolean = false): AircraftLoadoutCost.Plan {
-        require(vehicle.onGround() && vehicle.deltaMovement.lengthSqr() <= 0.0025) { "Stop the aircraft on the ground before fitting weapons." }
+        require(AircraftLoadoutAccess.canRefit(vehicle)) { "Stop the aircraft on the ground before fitting weapons." }
         val state = equipment(vehicle)
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
         val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"), savedPreset)
@@ -722,6 +729,7 @@ object AircraftArmamentManager {
         return plan
     }
     private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject) {
+        require(vehicle.isVehicleActionFireAllowed()) { "Weapon systems cannot fire now." }
         val pair = mounts(definition(vehicle)!!).firstOrNull { it["Id"].asString == body["Pair"]?.asString }
         require(pair != null) { "Choose a hardpoint." }
         val id = selection(vehicle)[pair["Id"].asString]?.asString

@@ -1,0 +1,62 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9D Sidewinder · cooled infrared · twin LAU-7 rails (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9d.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0635,
+    0.4018
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0635,
+      0.0,
+      0.4018
+    ],
+    "Right": [
+      -0.0635,
+      0.0,
+      0.4018
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9d.png",
+  "Capacity": 1,
+  "MassKg": 88.5,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 68,
+    "Range": 800,
+    "ConeDegrees": 20,
+    "CountermeasureVulnerability": 1.3
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.7,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 44,
+    "Damage": 25,
+    "BlastRadius": 2.5,
+    "TntEquivalentKg": 7.6204
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.66,
+    0.35,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.0635,
+    0.0
+  ]
+}

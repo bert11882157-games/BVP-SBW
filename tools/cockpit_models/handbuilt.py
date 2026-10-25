@@ -186,6 +186,118 @@ class Facet:
         return self.o + self.R * a + self.U * v + self.N * lift
 
 
+# ---------------------------------------------------------------- HUD / gunsight combiners
+
+COMBINER = []                  # glass triangles of the combiners built this run (install hands them to the canopy step)
+
+
+def combiner_outline(shape, w, h, k=0.0, n=10):
+    """the glass outline, (u, v) in metres, u across (centre 0), v up from the glass's foot (0), counter-clockwise
+    from the bottom left. shape: 'rect'; 'chamfer' (top corners cut k metres); 'trapezoid' (the top k times the
+    bottom's width); 'rounded' (top corners rounded, radius k); 'oval' (straight sides to k times the height, then
+    half an ellipse over the top)"""
+    hw = w / 2
+    if shape == 'chamfer':
+        return [(-hw, 0), (hw, 0), (hw, h - k), (hw - k, h), (-hw + k, h), (-hw, h - k)]
+    if shape == 'trapezoid':
+        return [(-hw, 0), (hw, 0), (hw * k, h), (-hw * k, h)]
+    if shape == 'rounded':
+        pts = [(-hw, 0), (hw, 0)]
+        for side, a0 in ((1, 0.0), (-1, math.pi / 2)):
+            cx = side * (hw - k)
+            for j in range(n + 1):
+                t = a0 + math.pi / 2 * j / n
+                pts.append((cx + k * math.cos(t), h - k + k * math.sin(t)))
+        return pts
+    if shape == 'oval':
+        hs = h * k
+        pts = [(-hw, 0), (hw, 0)]
+        for j in range(2 * n + 1):
+            t = math.pi * j / (2 * n)
+            pts.append((hw * math.cos(t), hs + (h - hs) * math.sin(t)))
+        return pts
+    return [(-hw, 0), (hw, 0), (hw, h), (-hw, h)]
+
+
+def combiner(m, foot, up, toward, w, h, shape, k, frames, bar, rect, depth=None, gap=0.004, back=0.004):
+    """a HUD or gunsight combiner of its own shape: the glass (tinted, into the canopy glass by the canopy step)
+    standing on [foot] (the middle of its lower edge) along [up], facing the pilot ([toward]); frame bars [bar] wide
+    along the edges named in [frames] ('bottom', 'side', 'top'), outside the glass (it stops [gap] short of them, so
+    nothing lies on it). Returns the glass's centre."""
+    U = unit(up); N = unit(toward); R = unit(np.cross(U, N))
+    foot = np.array(foot, float)
+    pts = combiner_outline(shape, w, h, k)
+    P = [foot + R * u + U * v for u, v in pts]
+    c = foot + U * h / 2
+    d = depth if depth is not None else bar * 0.8
+    for i in range(len(P)):
+        a, b = P[i], P[(i + 1) % len(P)]
+        (ua, va), (ub, vb) = pts[i], pts[(i + 1) % len(pts)]
+        tag = 'bottom' if max(va, vb) < 1e-6 else ('side' if abs(ub - ua) < 0.6 * abs(vb - va) else 'top')
+        if tag not in frames:
+            continue
+        t = b - a; ln = np.linalg.norm(t)
+        if ln < 1e-6:
+            continue
+        t /= ln
+        o = unit(np.cross(N, t))
+        if o @ ((a + b) / 2 - c) < 0:
+            o = -o
+        m.box((a + b) / 2 + o * bar / 2, (t, o, N), (ln / 2 + bar * 0.3, bar / 2, d / 2), rect)
+    G = [p + unit(c - p) * gap - N * back for p in P]
+    g0 = c - N * back
+    for i in range(len(G)):
+        COMBINER.extend([g0, G[i], G[(i + 1) % len(G)]])
+    return c
+
+
+def canopy_surface(vid):
+    """the canopy's inside surface height, f(x, z) -> y eye-relative (None outside it), from the canopy script's
+    sections (the windscreen made flat round its armoured pane where it has one, as the canopy step builds it)"""
+    import importlib
+    import handbuilt_canopy as C
+    M = importlib.import_module('canopy_' + vid)
+    shs = []
+    for attr in ('SECTIONS', 'CANOPY', 'WINDSCREEN'):
+        if hasattr(M, attr):
+            sec = getattr(M, attr)
+            if hasattr(M, 'PANE') and attr in ('SECTIONS', 'WINDSCREEN'):
+                sec = C.flat_pane(sec, *M.PANE)
+            shs.append(C.Shape(sec))
+
+    def y_at(x, z):
+        for sh in shs:
+            if sh.z[0] <= z <= sh.z[-1]:
+                sec = sh.section(z)
+                if abs(x) <= sec[0][0]:
+                    return float(np.interp(abs(x), sec[::-1, 0], sec[::-1, 1]))
+        return None
+    return y_at
+
+
+def fit_sight_under(vid, E, centre, up, h, half_w, clear=0.015, h_min=0.07, back_max=0.15):
+    """a gunsight's reflector glass kept under the windscreen: its top edge [clear] under the glass. The centre stays
+    on the pilot's eye line (the reticle's boresight); the glass is made smaller first (down to [h_min], a real
+    reflector's size), then moved back toward the pilot. Returns (centre, h)."""
+    y_at = canopy_surface(vid)
+    U = unit(up); R = np.array([1.0, 0, 0])
+
+    def ok(c, hh):
+        for u in np.linspace(-half_w, half_w, 7):
+            p = np.array(c, float) + U * hh / 2 + R * u - np.array(E, float)
+            y = y_at(p[0], p[2])
+            if y is not None and p[1] > y - clear:
+                return False
+        return True
+    c = np.array(centre, float)
+    while not ok(c, h) and h > h_min:
+        h = max(h_min, h - 0.005)
+    moved = 0.0
+    while not ok(c, h) and moved < back_max:
+        c = c - np.array([0, 0, 0.005]); moved += 0.005
+    return c, h
+
+
 def facet_box(m, f, a, y, w, h, depth, rect, front=None, lift=0.0025):
     """a box standing on facet f at (a, y): w x h across the panel, [depth] toward the pilot, its back face [lift]
     off the panel face (so nothing lies on the panel); front: a rect for the face toward the pilot"""
@@ -528,6 +640,9 @@ def install(ac, mesh, stick, source, stick_bone, gauges, displays, hud, eye, sea
     else:
         a.pop('HeadUpDisplay', None)
     a.pop('CanopyGlass', None)                  # no glass for now (the owner's call, 2026-10-20)
+    a.pop('CombinerGlass', None)
+    if COMBINER:                                # the combiners' glass, for the canopy step (it takes the key out)
+        a['CombinerGlass'] = [r5(p) for p in COMBINER]
     return pm
 
 

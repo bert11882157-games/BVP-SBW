@@ -73,8 +73,9 @@ final class BvpCreativeCatalog {
                     }
                     ids.add(vehicleId);
                 }
-                if (!ids.contains(icon) || categories.putIfAbsent(id,
-                        new Category(id, icon, List.copyOf(ids))) != null) {
+                // Disabled vehicles (disabled_vehicles.json) are validated above, then dropped from the tab.
+                if (!ids.contains(icon) || BvpDisabledVehicles.isDisabled(icon) || categories.putIfAbsent(id,
+                        new Category(id, icon, List.copyOf(BvpDisabledVehicles.visible(ids)))) != null) {
                     throw new IllegalStateException("Invalid/duplicate creative category: " + id);
                 }
             }

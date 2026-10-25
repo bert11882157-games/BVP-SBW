@@ -122,6 +122,7 @@ share of those shots; ties keep WT's order.
 | 2A38 (Tunguska) | 30 mm AP-T |
 | 2A14 (ZU-23-2, ZSU-23-4) | 23 mm API-T |
 | M242 (Bradley) / M811 (VBCI) / M242 (LAV-25) | M791 / PMB090 / M919 |
+| L21A1 RARDEN (Fox) | 30 mm APDS-T (WT offers its three rounds as separate single-round belts: APDS-T, APHE-I, HE-I-T) |
 | Rh202 (Marders) | DM63 |
 | KDA (Gepard) | DM23 |
 | Bofors L/70 (CV9040) | slpprj m/01 |

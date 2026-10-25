@@ -79,11 +79,35 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Flaps") public Flap[] flaps;
         @SerializedName("NoseSteering") public NoseSteering[] noseSteering;
 
-        /** Whole source subtrees, visibility only; no invented retraction axis or angle. */
+        /**
+         * Whole source subtrees. Without Retract a leg is shown or hidden by the travel fraction; with Retract it
+         * swings about its hinge into a modelled gear well (and optionally telescopes) as the gear travels.
+         */
         public static final class Gear {
             @SerializedName("Bone") public String bone;
             @SerializedName("Parent") public String parent;
             @SerializedName("VisibleWhen") public String visibleWhen;
+            @SerializedName("Retract") public GearRetract retract;
+        }
+
+        /** The leg's swing: its hinge (the leg bone's pivot), axis and full-travel angle. */
+        public static final class GearRetract {
+            @SerializedName("Pivot") public double[] pivot;
+            @SerializedName("Axis") public double[] axis;
+            @SerializedName("AngleDegrees") public Double angleDegrees;
+            @SerializedName("Slide") public GearSlide slide;
+        }
+
+        /**
+         * A child bone of the leg (wheel, fork, lower strut) that slides up the leg as it swings, like an oleo
+         * closing, and may twist about the leg's axis through its pivot, so the wheel lies flat in the well.
+         */
+        public static final class GearSlide {
+            @SerializedName("Bone") public String bone;
+            @SerializedName("Pivot") public double[] pivot;
+            @SerializedName("Direction") public double[] direction;
+            @SerializedName("DistancePx") public Double distancePx;
+            @SerializedName("TwistDegrees") public Double twistDegrees;
         }
 
         public static class Part {
@@ -93,9 +117,14 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Axis") public double[] axis;
         }
 
-        /** Source-neutral open door, rotated about its authored hinge as the gear retracts. */
+        /**
+         * A gear door rotated about its authored hinge. ClosedAngleDegrees: modelled open, it closes as the gear
+         * retracts. OpenAngleDegrees: modelled closed (the skin cut from a gear well), it stands open while the
+         * gear is down or moving and shuts at the end of retraction.
+         */
         public static final class GearDoor extends Part {
             @SerializedName("ClosedAngleDegrees") public Double closedAngleDegrees;
+            @SerializedName("OpenAngleDegrees") public Double openAngleDegrees;
         }
 
         /**
@@ -193,6 +222,13 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Direction") public double[] direction;
             /** Exit radius of the nozzle in blocks (measured from the model); drives the afterburner plume size. */
             @SerializedName("NozzleRadiusBlocks") public Double nozzleRadiusBlocks;
+            /**
+             * Opt-in pitch thrust vectoring: the largest nozzle swing in degrees (the flight reference's
+             * thrustVectoring.pitchDeg). The flame, haze and TaP emitters of this outlet turn by accepted elevator x this.
+             */
+            @SerializedName("VectorPitchDegrees") public Double vectorPitchDegrees;
+            /** Hinge of the vectoring nozzle in vehicle-local blocks (the rig bone's pivot); absent turns about the outlet. */
+            @SerializedName("VectorPivot") public double[] vectorPivot;
         }
 
         public static final class Stream {
@@ -260,6 +296,8 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Apex") public double[] apex;
         @SerializedName("Rings") public int rings;
         @SerializedName("Spokes") public double[][] spokes;
+        /** Optional glass colour {r, g, b}, 0-255; absent (or malformed) keeps the pack's blue-grey tint. Alpha is unchanged. */
+        @SerializedName("Tint") public int[] tint;
     }
 
     @SerializedName("CockpitGauges")
@@ -321,6 +359,17 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
     /** The pilot's head-up display: symbology projected on the combiner glass; null without a HUD. */
     public @Nullable HeadUpDisplayResource getHeadUpDisplay() {
         return headUpDisplay;
+    }
+
+    @SerializedName("HeadUpDisplays")
+    private HeadUpDisplayResource[] headUpDisplays;
+
+    /**
+     * More crew stations' sights or head-up displays, one per seat (a helicopter's gunner beside its pilot); each is
+     * drawn live for the crewman in its own seat as [getHeadUpDisplay] is. Null when the vehicle has none.
+     */
+    public @Nullable HeadUpDisplayResource[] getHeadUpDisplays() {
+        return headUpDisplays;
     }
 
     /**

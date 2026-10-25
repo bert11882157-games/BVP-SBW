@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "GBU-31 JDAM · Mk 84 GPS (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu31.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.253,
+    0.0105
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.229,
+      0.0,
+      0.0105
+    ],
+    "Right": [
+      -0.229,
+      0.0,
+      0.0105
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0105
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu31.png",
+  "Capacity": 1,
+  "MassKg": 893.6,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 14,
+    "TntEquivalentKg": 578.61,
+    "BlastDamage": 900
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu31",
+  "LaunchOffset": [
+    0.0,
+    -0.253,
+    0.0
+  ]
+}

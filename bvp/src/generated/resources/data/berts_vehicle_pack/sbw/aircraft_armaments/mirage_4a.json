@@ -1,0 +1,85 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inboard wing pylons (2,500 l tanks)",
+      "Left": [
+        3.3942,
+        1.2445,
+        -2.7446
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.3942,
+            1.2445,
+            -2.7446
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.3942,
+        1.2445,
+        -2.7446
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.3942,
+            1.2445,
+            -2.7446
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_2500l",
+        "berts_vehicle_pack:munition/mk83_x3",
+        "berts_vehicle_pack:munition/samp21_x2"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2500
+    }
+  ],
+  "StoreGroups": {},
+  "Name": "Mirage IVA",
+  "BuiltInWeapons": [],
+  "MaxPayloadKg": 7800,
+  "MaxPylonMassKg": 3000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "belly",
+      "Name": "Belly station (semi-recessed)",
+      "Position": [
+        0.0,
+        1.0929,
+        -3.4235
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            1.0929,
+            -3.4235
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk83_x3",
+        "berts_vehicle_pack:munition/samp21_x2",
+        "berts_vehicle_pack:munition/samp25_x2",
+        "berts_vehicle_pack:munition/samp21_200_x2",
+        "berts_vehicle_pack:munition/samp25_200_x2",
+        "berts_vehicle_pack:munition/ct52_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 3000
+    }
+  ]
+}

@@ -56,11 +56,16 @@ ROUNDS = {
     # 30 mm ZPT-99
     'dtc04_30_apds': ('DARK_RED', 1180, None), 'dty02_30_hefi': ('NONE', 960, 0.0755),
     'dtc10_30_apfsds': ('RED', 1310, None),
+    # 30 mm RARDEN (WT 30mm_L21A1_RARDEN_user_cannon): APHE-I 1080 m/s 0.018 kg hexal (x1.70), HE-I-T 1080 m/s 0.05 kg
+    # hexal, APDS-T 1175 m/s; 7.62 mm L37A2 ap_ball 853 m/s
+    'rarden_30_aphe_i': ('NONE', 1080, 0.0306), 'rarden_30_hei_t': ('GREEN', 1080, 0.085),
+    'rarden_30_apds_t': ('GREEN', 1175, None), 'l37a2_762_ap_t': ('RED', 853, None),
 }
 # HE rounds of these guns fly at the gun's APDS velocity (user rule), not WT's
 # weapons whose gun has the APDS round but no belt of it here (the BMP-2M fires APFSDS instead): same HE velocity
 HE_AT_APDS_NO_BELT = {('bmp2m', 'Cannon')}
-HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_30_hefi': 'dtc04_30_apds'}
+HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_30_hefi': 'dtc04_30_apds',
+                'rarden_30_hei_t': 'rarden_30_apds_t'}
 
 # Owner's standard (2026-09-28): every autocannon has two belts.
 #   Air Belt    (HE-dominant): 3x HE, no tracer, then 1x AP with tracer
@@ -95,7 +100,15 @@ KDA = air_first(std('kda_35_hei_t', 'kda_35_api_t', 'kda_35_dm23_apds', 'kda_35_
 BOFORS = std('slsgr_m90_he', 'slpprj_m01_apfsds', 'slpprj_m01_apfsds', 'slsgr_m90_he')
 ZPT99 = std('dty02_30_hefi', 'dtc04_30_apds', 'dtc10_30_apfsds', 'dty02_30_hefi')
 
+# The RARDEN is a hand-fed 3-round clip gun and WT offers its three rounds as separate ammunition, so each is a pure
+# belt, the best armour-piercing one first (owner 2026-10-02, docs/WT_BELTS.md: APDS-T, then WT's APHE-I, HE-I-T); the coax is WT's ap_ball, ap_ball, t_ball belt. Bert's mixed two-belt standard is
+# not applied here (expansion rule: armament as War Thunder).
+RARDEN = [('APDS-T', [('rarden_30_apds_t', 1)]), ('APHE-I', [('rarden_30_aphe_i', 1)]),
+          ('HE-I-T', [('rarden_30_hei_t', 1)])]
+L37A2 = [('AP Belt', [('l37a2_762_ap_t', 2, 'NONE'), ('l37a2_762_ap_t', 1, 'T')])]
+
 WEAPONS = {
+    ('fv721_fox', 'Cannon'): ('GENERIC', RARDEN), ('fv721_fox', 'MachineGun'): ('WESTERN_COAX_762', L37A2),
     ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42M),
     ('bmpt', 'Cannon'): ('TWO_A42', A42), ('bmpt', 'DualCannon'): ('TWO_A42', A42),
     ('btr_90', 'Cannon'): ('TWO_A42', BTR90),

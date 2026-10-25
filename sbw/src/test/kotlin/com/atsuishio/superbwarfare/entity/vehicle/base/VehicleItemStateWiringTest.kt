@@ -46,4 +46,12 @@ class VehicleItemStateWiringTest {
         val restore = calls("restoreVehicleItemState")
         assertTrue(restore.contains("ldc:AircraftArmament") && restore.contains("getPersistentData"))
     }
+    @Test fun `item boundary uses shared durable projection and validates before restore`() {
+        assertTrue("project" in calls("createVehicleItemState"))
+        val restore = calls("restoreVehicleItemState")
+        assertTrue(restore.indexOf("isValidVehicleItemState") in 0 until restore.indexOf("forRestore"))
+        assertTrue(restore.indexOf("forRestore") < restore.indexOf("readAdditionalSaveData"))
+        assertTrue("validBoardingMarker" in calls("isValidVehicleItemState"))
+        assertTrue("getKeys" in calls("isValidVehicleItemState"), "unknown fields must still be rejected")
+    }
 }

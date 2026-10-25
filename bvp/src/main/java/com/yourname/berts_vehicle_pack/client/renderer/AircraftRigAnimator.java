@@ -37,6 +37,9 @@ final class AircraftRigAnimator {
     private static final double STEER_FULL_SPEED = 0.5, STEER_LOW_SPEED = 2.0, STEER_HIGH_SPEED_GAIN = 0.2;
     /** Cockpit controls follow the 20 Hz synchronized inputs through this lag (ticks), so they glide, not step. */
     private static final double CONTROL_LAG_TICKS = 1.5;
+    /** A retracting leg swings over this share of the gear travel; well doors move over the rest. */
+    static final double LEG_SPAN = 0.8;
+    private static final double MAX_SLIDE_PX = 64;
     private static final Map<PolyMeshModel, Entry> BINDINGS = new LinkedHashMap<>();
     private static final Map<UUID, Phase> PHASES = new LinkedHashMap<>(16, 0.75F, true);
     private static Object world;
@@ -65,20 +68,28 @@ final class AircraftRigAnimator {
             entry.resource = resource;
             entry.binding = null;
             entry.station = null;
+            entry.turret = null;
             AircraftRigResource data = resource == null ? null : resource.getAircraftRig();
             entry.explicit = data != null;
             if (data != null) {
                 try {
                     entry.binding = bind(data, model::getBone);
-                    var station = resource.getDefensiveStationPresentation();
-                    if (station != null) entry.station = bindStation(station, entry.binding, model::getBone);
                 } catch (IllegalArgumentException invalid) {
-                    if (warningsRemaining > 0) {
-                        warningsRemaining--;
-                        LogUtils.getLogger().warn("Aircraft rig skipped for {}: {}",
-                                entry.resourceId, invalid.getMessage());
+                    warn("Aircraft rig skipped for {}: {}", entry.resourceId, invalid);
+                }
+                var station = resource.getDefensiveStationPresentation();
+                // A bad station must not take the main turret down with it: each binds on its own.
+                if (entry.binding != null && station != null) {
+                    try {
+                        entry.station = bindStation(station, entry.binding, model::getBone);
+                    } catch (IllegalArgumentException invalid) {
+                        warn("Defensive station skipped for {}: {}", entry.resourceId, invalid);
                     }
                 }
+                // A cockpit-only rig leaves the turret to the legacy poser, which still runs for it.
+                if (entry.binding != null && entity instanceof BvpHelicopterEntity && entity.hasTurret()
+                        && !cockpitOnly(entry))
+                    entry.turret = bindTurret(entry.binding, entry.station, model::getBone);
             }
         }
         if (!entry.explicit) return false;
@@ -173,7 +184,9 @@ final class AircraftRigAnimator {
         binding.apply(elevator, aileron, rudder, speed, phase);
         // Far copies receive the same normalized snapshot value in SynchedGearRot.
         float gearFraction = entity.getSynchedGearRot();
-        binding.applyGear(gearFraction);
+        // Swinging legs and well doors follow the interpolated travel; visibility keeps the synchronized value.
+        float gearTravel = Float.isFinite(partialTick) ? entity.gearRot(partialTick) : gearFraction;
+        binding.applyGear(gearFraction, gearTravel);
         if (binding.steering.length != 0) binding.applySteering(usable && grounded, gearFraction, rudder, speed);
         if (binding.flaps.length != 0) {
             binding.applyFlaps(Float.isFinite(partialTick) && !entity.isWreck()
@@ -190,7 +203,56 @@ final class AircraftRigAnimator {
                         renderParts.getStationYawFromRenderedHullDegrees(), -renderParts.getStationPitchDegrees());
             } else entry.station.restore();
         }
+        if (entry.turret != null) {
+            if (Float.isFinite(partialTick) && !entity.isWreck() && entity.hasTurret()) {
+                entry.turret.apply(renderParts.getTurretYawFromRenderedHullDegrees(),
+                        renderParts.getBarrelPitchDegrees());
+            } else entry.turret.restore();
+        }
         return true;
+    }
+
+    /**
+     * The main turret of a rigged helicopter (owner 2026-10-23, AH-56A nose turret frozen): the rig owns the model,
+     * so the legacy turret/barell poser never runs for it. Pose those two bones here, exactly as the legacy poser
+     * does (turret yaw about +Y, barell pitch about +X), unless the rig or the station already owns either bone.
+     */
+    static Turret bindTurret(Binding binding, Station station, Function<String, BedrockBone> bones) {
+        BedrockBone turret = bones.apply("turret");
+        BedrockBone barrel = bones.apply("barell");
+        if (turret == null && barrel == null) return null;
+        Set<BedrockBone> owned = new HashSet<>();
+        for (Part part : binding.surfaces) owned.add(part.bone);
+        for (Part part : binding.rotors) owned.add(part.bone);
+        for (Sweep sweep : binding.sweeps) owned.add(sweep.part.bone);
+        for (Gear gear : binding.gear) owned.add(gear.bone);
+        for (Part part : binding.flaps) owned.add(part.bone);
+        for (Door door : binding.doors) owned.add(door.part.bone);
+        for (Part part : binding.steering) owned.add(part.bone);
+        if (station != null) { owned.add(station.yaw.bone); owned.add(station.pitch.bone); }
+        Part yaw = turret == null || owned.contains(turret) ? null : new Part(turret, -9, 1, 0, 0, 0, 0, 1, 0);
+        Part pitch = barrel == null || owned.contains(barrel) ? null : new Part(barrel, -9, 1, 0, 0, 0, 1, 0, 0);
+        return yaw == null && pitch == null ? null : new Turret(yaw, pitch);
+    }
+
+    static final class Turret {
+        final Part yaw, pitch;
+
+        Turret(Part yaw, Part pitch) { this.yaw = yaw; this.pitch = pitch; }
+
+        void apply(double yawDegrees, double pitchDegrees) {
+            if (!Double.isFinite(yawDegrees) || !Double.isFinite(pitchDegrees)) {
+                restore();
+                return;
+            }
+            if (yaw != null) yaw.rotate(yawDegrees);
+            if (pitch != null) pitch.rotate(pitchDegrees);
+        }
+
+        void restore() {
+            if (yaw != null) yaw.restore();
+            if (pitch != null) pitch.restore();
+        }
     }
 
     static Station bindStation(DefaultVehicleResource.DefensiveStationResource data, Binding binding,
@@ -240,7 +302,11 @@ final class AircraftRigAnimator {
      */
     static boolean cockpitOnly(PolyMeshModel model) {
         Entry entry = BINDINGS.get(model);
-        Binding binding = entry == null ? null : entry.binding;
+        return entry != null && cockpitOnly(entry);
+    }
+
+    private static boolean cockpitOnly(Entry entry) {
+        Binding binding = entry.binding;
         return binding != null && entry.station == null && binding.rotors.length == 0
                 && binding.sweeps.length == 0 && binding.gear.length == 0 && binding.steering.length == 0;
     }
@@ -257,6 +323,13 @@ final class AircraftRigAnimator {
         PHASES.clear();
         world = null;
         warningsRemaining = 8;
+    }
+
+    private static void warn(String message, String resourceId, IllegalArgumentException invalid) {
+        if (warningsRemaining > 0) {
+            warningsRemaining--;
+            LogUtils.getLogger().warn(message, resourceId, invalid.getMessage());
+        }
     }
 
     private static <K, V> void trim(Map<K, V> cache) {
@@ -336,14 +409,19 @@ final class AircraftRigAnimator {
             var source = data.gear[index];
             require(source != null && source.bone != null
                     && source.bone.matches("[a-z][a-z0-9_]{0,63}")
-                    && !"hull".equals(source.bone) && names.add(source.bone)
-                    && "hull".equals(source.parent), "gear identity/parent");
-            BedrockBone bone = bones.apply(source.bone);
-            BedrockBone parent = bones.apply(source.parent);
-            require(bone != null && parent != null && bone.parent == parent, "missing gear bone/parent");
+                    && !"hull".equals(source.bone) && "hull".equals(source.parent), "gear identity/parent");
             require(source.visibleWhen == null || "DEPLOYED".equals(source.visibleWhen)
                     || "RETRACTED".equals(source.visibleWhen), "gear visibility state");
-            gear[index] = new Gear(bone, "RETRACTED".equals(source.visibleWhen));
+            if (source.retract == null) {
+                require(names.add(source.bone), "gear identity/parent");
+                BedrockBone bone = bones.apply(source.bone);
+                BedrockBone parent = bones.apply(source.parent);
+                require(bone != null && parent != null && bone.parent == parent, "missing gear bone/parent");
+                gear[index] = new Gear(bone, "RETRACTED".equals(source.visibleWhen));
+            } else {
+                require(source.visibleWhen == null, "a retracting leg is always shown");
+                gear[index] = retractingGear(source, names, bones);
+            }
         }
         for (int index = 0; index < flaps.length; index++) {
             var source = data.flaps[index];
@@ -364,19 +442,26 @@ final class AircraftRigAnimator {
         }
         for (int index = 0; index < doors.length; index++) {
             var source = data.gearDoors[index];
-            require(source != null && "hull".equals(source.parent) && source.closedAngleDegrees != null
-                    && Double.isFinite(source.closedAngleDegrees) && Math.abs(source.closedAngleDegrees) <= 180,
+            require(source != null && "hull".equals(source.parent)
+                    && (source.closedAngleDegrees == null) != (source.openAngleDegrees == null),
                     "gear door parent/angle");
-            doors[index] = new Door(part(source, -7, source.closedAngleDegrees, 0, 0, 0, true, names, bones));
+            // modelled open: it closes as the gear retracts; modelled closed (cut from a well): it opens
+            boolean modelledClosed = source.openAngleDegrees != null;
+            double angle = modelledClosed ? source.openAngleDegrees : source.closedAngleDegrees;
+            require(Double.isFinite(angle) && Math.abs(angle) <= 180, "gear door parent/angle");
+            doors[index] = new Door(part(source, -7, angle, 0, 0, 0, true, names, bones), modelledClosed);
         }
         Part[] steering = new Part[data.noseSteering == null ? 0 : data.noseSteering.length];
         for (int index = 0; index < steering.length; index++) {
             var source = data.noseSteering[index];
             require(source != null && source.parent != null, "null nose steering");
-            // only a deployed gear leg can carry a steering assembly: it disappears with the leg on retraction
+            // only a deployed gear leg (or its sliding lower strut) can carry a steering assembly: it hides or
+            // swings away with the leg on retraction
             boolean deployedLeg = false;
             for (var leg : data.gear) {
-                if (leg != null && source.parent.equals(leg.bone) && !"RETRACTED".equals(leg.visibleWhen)) {
+                if (leg != null && !"RETRACTED".equals(leg.visibleWhen) && (source.parent.equals(leg.bone)
+                        || leg.retract != null && leg.retract.slide != null
+                        && source.parent.equals(leg.retract.slide.bone))) {
                     deployedLeg = true;
                 }
             }
@@ -424,11 +509,75 @@ final class AircraftRigAnimator {
                 (float) (-source.axis[1] / length), (float) (-source.axis[2] / length));
     }
 
+    /**
+     * A leg that swings about its hinge (the leg bone's pivot) into a modelled well, optionally telescoping a child
+     * bone up the leg as it goes.
+     */
+    private static Gear retractingGear(AircraftRigResource.Gear source, Set<String> names,
+                                       Function<String, BedrockBone> bones) {
+        var retract = source.retract;
+        var hinge = new AircraftRigResource.Part();
+        hinge.bone = source.bone;
+        hinge.parent = source.parent;
+        hinge.pivot = retract.pivot;
+        hinge.axis = retract.axis;
+        require(retract.angleDegrees != null && Double.isFinite(retract.angleDegrees)
+                && retract.angleDegrees != 0 && Math.abs(retract.angleDegrees) <= 180, "gear retract angle");
+        Part swing = part(hinge, -11, retract.angleDegrees, 0, 0, 0, true, names, bones);
+        Slide slide = null;
+        if (retract.slide != null) {
+            var source2 = retract.slide;
+            require(source2.distancePx != null && Double.isFinite(source2.distancePx) && source2.distancePx >= 0
+                    && source2.distancePx <= MAX_SLIDE_PX, "gear slide distance");
+            double twist = source2.twistDegrees == null ? 0 : source2.twistDegrees;
+            require(Double.isFinite(twist) && Math.abs(twist) <= 180, "gear slide twist");
+            require(source2.distancePx > 0 || twist != 0, "gear slide neither slides nor twists");
+            // the twist turns the bone about the leg's own (unswung) vertical axis through the slide pivot
+            var turn = new AircraftRigResource.Part();
+            turn.bone = source2.bone;
+            turn.parent = source.bone;
+            turn.pivot = source2.pivot;
+            turn.axis = new double[]{0, 1, 0};
+            Part twistPart = part(turn, -12, twist, 0, 0, 0, true, names, bones);
+            vector(source2.direction, "gear slide direction");
+            double[] d = source2.direction;
+            double length = Math.sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+            require(length > 1.0E-8 && Double.isFinite(length), "gear slide direction");
+            double distance = source2.distancePx;
+            // translations reflect X only, as pivots do
+            slide = new Slide(twistPart.bone, (float) (-d[0] / length * distance),
+                    (float) (d[1] / length * distance), (float) (d[2] / length * distance),
+                    twist == 0 ? null : twistPart);
+        }
+        return new Gear(swing, slide);
+    }
+
+    /** Share of its swing a retracting leg has made at gear travel {@code travel} (0 down, 1 up). */
+    static double legTravel(double travel) {
+        return smooth(clamp(travel, 0, 1) / LEG_SPAN);
+    }
+
+    /** How far a well door stands open: fully while the leg moves, shutting over the last of the travel. */
+    static double doorOpening(double travel) {
+        return 1 - smooth((clamp(travel, 0, 1) - LEG_SPAN) / (1 - LEG_SPAN));
+    }
+
+    private static double smooth(double t) {
+        t = clamp(t, 0, 1);
+        return t * t * (3 - 2 * t);
+    }
+
     private static void validateParents(AircraftRigResource data) {
         Map<String, String> parents = new HashMap<>();
         for (var source : data.surfaces) parents.put(source.bone, source.parent);
         for (var source : data.sweeps) parents.put(source.bone, source.parent);
-        if (data.gear != null) for (var source : data.gear) if (source != null) parents.put(source.bone, "hull");
+        if (data.gear != null) for (var source : data.gear) {
+            if (source == null) continue;
+            parents.put(source.bone, "hull");
+            if (source.retract != null && source.retract.slide != null) {
+                parents.put(source.retract.slide.bone, source.bone);
+            }
+        }
         // steering assemblies hang under gear legs; wheel rotors may in turn hang under them
         if (data.noseSteering != null) for (var source : data.noseSteering) parents.put(source.bone, source.parent);
         for (var source : data.rotors) validateParent(source.bone, source.parent, parents);
@@ -510,6 +659,7 @@ final class AircraftRigAnimator {
         DefaultVehicleResource resource;
         Binding binding;
         Station station;
+        Turret turret;
         boolean resolved;
         boolean explicit;
 
@@ -521,6 +671,7 @@ final class AircraftRigAnimator {
         void restore() {
             if (binding != null) binding.restore();
             if (station != null) station.restore();
+            if (turret != null) turret.restore();
         }
     }
 
@@ -571,10 +722,17 @@ final class AircraftRigAnimator {
         }
 
         void applyGear(double fraction) {
+            applyGear(fraction, fraction);
+        }
+
+        /** {@code fraction}: the synchronized travel, which pops legacy legs; {@code travel}: the interpolated one. */
+        void applyGear(double fraction, double travel) {
             boolean retracted = Double.isFinite(fraction) && fraction == 1.0;
-            for (Gear part : gear) part.apply(retracted);
+            double moved = Double.isFinite(travel) ? clamp(travel, 0, 1) : 0;
+            double legs = legTravel(moved);
+            for (Gear part : gear) part.apply(retracted, legs);
             double closure = Double.isFinite(fraction) ? clamp(fraction, 0, 1) : 0;
-            for (Door door : doors) door.apply(closure);
+            for (Door door : doors) door.apply(door.modelledClosed ? doorOpening(moved) : closure);
         }
 
         /**
@@ -621,12 +779,15 @@ final class AircraftRigAnimator {
 
     static final class Door {
         final Part part;
+        /** True for a door cut from a well (rotated by its opening); false for one modelled open (by closure). */
+        final boolean modelledClosed;
         private boolean captured, visibleBefore;
-        Door(Part part) { this.part = part; }
-        void apply(double closure) {
+        Door(Part part) { this(part, false); }
+        Door(Part part, boolean modelledClosed) { this.part = part; this.modelledClosed = modelledClosed; }
+        void apply(double amount) {
             if (!captured) { visibleBefore = part.bone.visible; captured = true; }
             part.bone.visible = true;
-            part.rotate(closure * part.rate);
+            part.rotate(amount * part.rate);
         }
         void restore() {
             part.restore();
@@ -635,26 +796,95 @@ final class AircraftRigAnimator {
         }
     }
 
-    /** Restores the exact incoming visibility; shared models cannot retain another entity's gear. */
+    /**
+     * Restores the exact incoming visibility and pose; shared models cannot retain another entity's gear. A legacy
+     * leg is shown or hidden; a retracting one ({@code swing} set) swings into its well and stays visible.
+     */
     static final class Gear {
         final BedrockBone bone;
         final boolean showRetracted;
+        final Part swing;
+        final Slide slide;
         private boolean captured;
         private boolean visibleBefore;
 
         Gear(BedrockBone bone) { this(bone, false); }
-        Gear(BedrockBone bone, boolean showRetracted) { this.bone = bone; this.showRetracted = showRetracted; }
+        Gear(BedrockBone bone, boolean showRetracted) {
+            this.bone = bone;
+            this.showRetracted = showRetracted;
+            this.swing = null;
+            this.slide = null;
+        }
+        Gear(Part swing, Slide slide) {
+            this.bone = swing.bone;
+            this.showRetracted = false;
+            this.swing = swing;
+            this.slide = slide;
+        }
 
-        void apply(boolean retracted) {
+        void apply(boolean retracted) { apply(retracted, retracted ? 1 : 0); }
+
+        void apply(boolean retracted, double legs) {
             if (!captured) {
                 visibleBefore = bone.visible;
                 captured = true;
             }
-            bone.visible = visibleBefore && (retracted == showRetracted);
+            if (swing == null) {
+                bone.visible = visibleBefore && (retracted == showRetracted);
+                return;
+            }
+            swing.rotate(legs * swing.rate);
+            if (slide != null) slide.apply(legs);
         }
 
         void restore() {
             if (captured) bone.visible = visibleBefore;
+            captured = false;
+            if (swing != null) swing.restore();
+            if (slide != null) slide.restore();
+        }
+    }
+
+    /**
+     * A bone offset along a fixed direction in its parent's frame, an oleo strut closing up as the leg stows, and
+     * optionally twisted about the leg's axis so the wheel lies flat in its well.
+     */
+    static final class Slide {
+        final BedrockBone bone;
+        final float dx, dy, dz;
+        final Part twist;
+        private boolean captured;
+        private float x, y, z;
+
+        Slide(BedrockBone bone, float dx, float dy, float dz) { this(bone, dx, dy, dz, null); }
+
+        Slide(BedrockBone bone, float dx, float dy, float dz, Part twist) {
+            this.bone = bone;
+            this.dx = dx;
+            this.dy = dy;
+            this.dz = dz;
+            this.twist = twist;
+        }
+
+        void apply(double fraction) {
+            if (!captured) {
+                x = bone.x;
+                y = bone.y;
+                z = bone.z;
+                captured = true;
+            }
+            bone.x = (float) (x + dx * fraction);
+            bone.y = (float) (y + dy * fraction);
+            bone.z = (float) (z + dz * fraction);
+            if (twist != null) twist.rotate(fraction * twist.rate);
+        }
+
+        void restore() {
+            if (twist != null) twist.restore();
+            if (!captured) return;
+            bone.x = x;
+            bone.y = y;
+            bone.z = z;
             captured = false;
         }
     }

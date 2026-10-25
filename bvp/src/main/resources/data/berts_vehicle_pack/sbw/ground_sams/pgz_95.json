@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "_comment": "PGZ-95: four QW-2 infrared MANPADS missiles on the turret, CLC-1 search radar. War Thunder has no PGZ-95; the numbers follow its PGZ04A (the same turret and four-missile layout): HN-6 optical IR seeker, warm-up 2 s (40 ticks), lock cone 15 degrees, rangeMax 5,000 m, fire-and-forget; radar CLC-1 range 10 km. Passive IR: the seeker must hold the target before launch, so a shot without a lock is refused. The pack's range figure is metres / 10 (the Vodnik's 9M336 is 500 for 5 km).",
+  "Radar": {
+    "Range": 1000
+  },
+  "Weapons": {
+    "Missile": {
+      "Name": "QW-2",
+      "WithoutLock": "REFUSE",
+      "Guidance": {
+        "Mode": "INFRARED",
+        "LockTicks": 40,
+        "Range": 500,
+        "ConeDegrees": 15,
+        "CountermeasureVulnerability": 0.8
+      },
+      "Flight": {
+        "InitialSpeed": 0.5,
+        "MaxSpeed": 5,
+        "AccelerationPerTick": 0.1,
+        "TurnDegreesPerSecond": 80,
+        "Damage": 30,
+        "BlastRadius": 3,
+        "TntEquivalentKg": 0.924
+      }
+    }
+  }
+}

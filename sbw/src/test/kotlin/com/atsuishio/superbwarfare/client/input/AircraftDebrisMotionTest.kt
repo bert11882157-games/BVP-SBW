@@ -27,6 +27,7 @@ class AircraftDebrisMotionTest {
         val contact = AircraftDebrisContact.sweep(from, to) { a, b -> floor.clip(a,b,BlockPos.ZERO) }!!
         assertEquals(Vec3(0.0,1.0,0.0), contact.normal)
         assertEquals(0.0, contact.position.y, 1e-9)
+        assertEquals(0.0, contact.fraction!!, 1e-9, "Inside recovery consumes no sweep time")
         val part=AircraftDebrisMotion(from,Vec3(.8,-.03,0.0),Quaternionf(),Vec3.ZERO,0.0)
         part.tick({ a,b -> AircraftDebrisContact.relaxedSweep(a,b) { c,d -> floor.clip(c,d,BlockPos.ZERO) } })
         assertTrue(part.velocity.x > .7, "Floor recovery preserves tangential inertia")
@@ -84,8 +85,10 @@ class AircraftDebrisMotionTest {
 
     @Test fun slidingOffALedgeResumesGravityAndWingExpiresTenSecondsAfterImpact() {
         val part=AircraftDebrisMotion(Vec3(0.0,.1,0.0),Vec3(.7,-.2,0.0),Quaternionf(),Vec3.ZERO,0.0)
-        part.tick(::ground)
+        // The relaxed support ray is .185 blocks above this point: contact is not on tick one.
+        while (!part.impacted && part.age < 10) part.tick(::ground)
         assertTrue(part.impacted);assertFalse(part.expired)
+        assertEquals(0, part.groundedTicks, "Lifetime starts at the observed first impact")
         val y=part.position.y
         repeat(10){part.tick({ _,_->null })}
         assertFalse(part.grounded);assertTrue(part.position.y<y-1)
@@ -147,6 +150,32 @@ class AircraftDebrisMotionTest {
         assertEquals(0, part.pinnedTicks)
     }
 
+    @Test fun relaxedFloorRecoveryDoesNotConsumeTangentialTravelTime() {
+        val start = Vec3(0.0, .3 - slop, 0.0)
+        val part = AircraftDebrisMotion(start, Vec3(.2, 0.0, 0.0), Quaternionf(), Vec3.ZERO, 0.0,
+            halfExtents = Vec3(.5, .3, .5))
+        val down = 9.80665 / 400.0
+        val incomingX = .2 * WreckDebrisPhysics.AIR_DRAG
+        // Ray begins .005 above the physical floor after the deliberate support lift.
+        val hitTime = .005 / down
+        flat.tick(part)
+        assertTrue(part.grounded)
+        assertTrue(part.position.x > .18, "Recovery must not consume most of a .2-block slide: ${part.position}")
+        assertEquals(incomingX * hitTime + part.velocity.x * (1 - hitTime), part.position.x, 1e-6)
+        assertTrue(lowest(part) >= -slop - 1e-4)
+    }
+
+    @Test fun supportSelectionUsesSweepTimeNotRecoveryDistance() {
+        val part = AircraftDebrisMotion(Vec3.ZERO, Vec3.ZERO, Quaternionf(), Vec3.ZERO, 0.0,
+            halfExtents = Vec3(.5, .3, .5))
+        val contact = part.sweep(Vec3.ZERO, Vec3(1.0, 0.0, 0.0)) { from, _ ->
+            if (from == Vec3.ZERO) AircraftDebrisMotion.Contact(Vec3(.8, 0.0, 0.0), Vec3(-1.0, 0.0, 0.0), fraction = .8)
+            else AircraftDebrisMotion.Contact(from.add(.2, 2.0, 0.0), Vec3(0.0, 1.0, 0.0), fraction = .2)
+        }!!
+        assertEquals(.2, contact.fraction!!, 1e-9)
+        assertEquals(Vec3(0.0, 1.0, 0.0), contact.normal)
+    }
+
     @Test fun lowStepsLiftASlidingPieceButWallsDoNot() {
         val step = Terrain(Shapes.or(Shapes.box(-100.0, -1.0, -100.0, 100.0, 0.0, 100.0),
             Shapes.box(4.0, 0.0, -100.0, 100.0, 1.0, 100.0)))
@@ -163,6 +192,25 @@ class AircraftDebrisMotionTest {
         assertTrue(blocked.position.x < 4 && blocked.position.y < .5, "A three-block wall is not climbed")
     }
 
+    @Test fun forcedCutEndRollSurvivesBriefLossOfSupport() {
+        val half = Vec3(1.2, 1.0, .8)
+        val up = Vec3(0.0, 1.0, 0.0)
+        val section = AircraftDebrisMotion(Vec3(0.0, half.z + .05, 0.0), Vec3.ZERO,
+            Quaternionf().rotationX(Math.toRadians(90.0).toFloat()), Vec3.ZERO, 0.0,
+            halfExtents = half, rest = WreckDebrisPhysics.Rest.FUSELAGE)
+        while (WreckDebrisPhysics.verticalAxis(section.orientation, up) == 2 && section.age < 80)
+            flat.tick(section)
+        assertEquals(1, WreckDebrisPhysics.verticalAxis(section.orientation, up))
+        assertTrue(abs(section.orientation.transform(Vector3f(0f, 0f, 1f)).y) > .2f,
+            "Interrupt an unfinished roll, not a section that is already flat")
+        section.tick({ _, _ -> null })
+        assertFalse(section.grounded)
+        repeat(150) { flat.tick(section) }
+        assertTrue(abs(section.orientation.transform(Vector3f(0f, 0f, 1f)).y) < .05f,
+            "An interrupted cut-end roll must complete after landing: ${section.orientation}")
+        assertTrue(lowest(section) in -slop - .03 .. .03)
+    }
+
     @Test fun wingOnItsEdgeTopplesFlatAndFuselageLeavesItsCutEnd() {
         val up = Vec3(0.0, 1.0, 0.0)
         val wing = AircraftDebrisMotion(Vec3(0.0, 2.5, 0.0), Vec3.ZERO, Quaternionf().rotationZ(Math.toRadians(70.0).toFloat()),
@@ -177,9 +225,15 @@ class AircraftDebrisMotionTest {
                 Quaternionf().rotationX(Math.toRadians(90.0).toFloat()), Vec3.ZERO, 0.0, halfExtents = half,
                 rest = WreckDebrisPhysics.Rest.FUSELAGE)
             assertEquals(2, WreckDebrisPhysics.verticalAxis(section.orientation, up))
-            repeat(200) { flat.tick(section) }
+            val trace = mutableListOf<String>()
+            repeat(200) {
+                flat.tick(section)
+                if (it % 10 == 0 || it >= 195) trace += "age=${section.age} grounded=${section.grounded} " +
+                    "q=${section.orientation} low=${lowest(section)} rest=${section.restAge}"
+            }
             assertNotEquals(2, WreckDebrisPhysics.verticalAxis(section.orientation, up), "Never rests on the cut end")
-            assertTrue(abs(section.orientation.transform(Vector3f(0f, 0f, 1f)).y) < .05f)
+            assertTrue(abs(section.orientation.transform(Vector3f(0f, 0f, 1f)).y) < .05f,
+                "Fuselage half=$half must complete its roll on flat ground: ${trace.joinToString("; ")}")
             assertTrue(lowest(section) in -slop - .03 .. .03)
         }
     }

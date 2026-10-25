@@ -51,7 +51,7 @@ internal object HudPainter {
         fpmX = fpmX.coerceIn(f.left + margin, f.right - margin)
         fpmY = fpmY.coerceIn(f.top + margin, f.bottom - margin)
 
-        ladder(g, s, f, fpmX, fpmY)
+        ladder(g, s, f)
         waterline(g, f.boreX, f.boreY)
         if (pathRight != null && pathUp != null) fpm(g, fpmX, fpmY, clamped)
         headingTape(g, s.heading, cx, f.top + h * 0.09f, w)
@@ -111,14 +111,15 @@ internal object HudPainter {
 
     /**
      * Pitch ladder: a rung every 5 degrees of pitch, solid above the horizon with tips toward it, dashed below;
-     * turned with the bank and centred on the flight path marker across the rungs.
+     * turned with the bank about the boresight.
      */
-    private fun ladder(g: GuiGraphics, s: FlightDisplayState, f: Frame, fpmX: Float, fpmY: Float) {
+    private fun ladder(g: GuiGraphics, s: FlightDisplayState, f: Frame) {
         val k = f.pxPerDeg
         val roll = Math.toRadians(-s.rollRight)
         val cr = cos(roll).toFloat(); val sr = sin(roll).toFloat()
-        // ladder-frame x (along the rungs) of the marker, so the ladder follows it sideways
-        val shift = (fpmX - f.boreX) * cr + (fpmY - f.boreY) * sr
+        // centred on the boresight (the HUD's centre on the eye line); it used to slide sideways with the flight path
+        // marker, so with drift or sideslip it wandered off the centre of the glass
+        val shift = 0f
         fun at(x: Float, y: Float) = floatArrayOf(f.boreX + x * cr - y * sr, f.boreY + x * sr + y * cr)
         val spanDeg = (f.bottom - f.top) / k * 0.75
         val lo = floor((s.pitchUp - spanDeg) / 5.0).toInt() * 5
@@ -244,9 +245,14 @@ internal object HudPainter {
         tape(g, kmh, x, y, height, 10.0, 50.0, 1.6f, rightSide = false, label = { it.roundToInt().toString() },
             box = kmh.coerceAtLeast(0.0).roundToInt().toString())
 
-    private fun altitudeTape(g: GuiGraphics, alt: Double, x: Float, y: Float, height: Float) =
-        tape(g, alt, x, y, height, 10.0, 50.0, 1.6f, rightSide = true, label = { it.roundToInt().toString() },
+    /** Altitude shown as blocks x [ALTITUDE_SCALE] (the owner's convention), on a tape marked every 100, labelled every 500. */
+    private fun altitudeTape(g: GuiGraphics, blocks: Double, x: Float, y: Float, height: Float) {
+        val alt = blocks * ALTITUDE_SCALE
+        tape(g, alt, x, y, height, 100.0, 500.0, 0.16f, rightSide = true, label = { it.roundToInt().toString() },
             box = alt.roundToInt().toString())
+    }
+
+    private const val ALTITUDE_SCALE = 10.0
 
     /** Bank scale below the ladder: fixed marks at 0, 10, 20, 30 and 45 degrees each way, a pointer that turns. */
     private fun bankScale(g: GuiGraphics, roll: Double, cx: Float, cy: Float, width: Float) {

@@ -1,0 +1,9 @@
+{
+  "why": "Mirage IVA: a fixed windscreen frame whose front pane is flat, thick and armoured (bullet-resistant), steeply raked (about 30 degrees here) and narrow, between two stout posts; behind it the pilot's own blown (curved) clamshell canopy hinged at the rear, whose front bow is the windscreen's arch, and the rear crew's small, mostly opaque hood with two small side windows (curved to the hood's skin). Reference used: the owner's note that the armoured front pane is flat, the Mirage III family's windscreen as built for the Mirage IIIE, and the airframe model's own frame lines (the old windscreen's centre posts falling from the top bow to the nose deck). No drawing or photo description of the Mirage IV windscreen panes was reachable from this thread (no web access used), so the quarter panes beside the front pane are built as flat planes but are NOT listed (no reference shows them flat or curved); the curved canopy and the hood windows are not listed. UNVERIFIED against War Thunder / DCS views (not reachable here). The pane is the centre strip between the posts (|x| < 0.10, one plane y = E_y + 0.055 - 0.57 (z - E_z - 0.44) from the front bow to the base bar); the box holds only the triangles whose centroid lies on it.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "boxes": [[[-0.105, 2.84, 6.63], [0.105, 2.90, 6.72]], [[-0.105, 2.38, 6.72], [0.105, 2.90, 7.50]]]
+    }
+  ]
+}

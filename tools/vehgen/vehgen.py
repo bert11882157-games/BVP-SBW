@@ -218,7 +218,10 @@ def build_data(b, tpl, geo, lo, hi):
         d['BarrelPos'] = r5(mtbgeo.geo_to_data(origins['Barrel'] - origins['Turret']))
 
     for i, seat in enumerate(spec['seats']):
+        while i >= len(d['Seats']):          # more seats than the template: clone its last one
+            d['Seats'].append(copy.deepcopy(d['Seats'][-1]))
         frame = seat.get('frame', 'Vehicle')
+        d['Seats'][i].update(copy.deepcopy(seat.get('set', {})))
         d['Seats'][i]['Position'] = r5(mtbgeo.geo_to_data(b.point(seat['at']) - origins[frame]))
         if 'dismount' in seat:
             d['Seats'][i].setdefault('DismountInfo', {'Transform': 'Vehicle'})
@@ -227,7 +230,11 @@ def build_data(b, tpl, geo, lo, hi):
         d['Seats'] = d['Seats'][:len(spec['seats'])]
 
     at = d['Attachments']
-    for name, v in spec['attachments'].items():
+    for name in spec.get('removeAttachments', []):
+        at.pop(name, None)
+    for name, v in spec.get('attachmentsAdd', {}).items():
+        at[name] = {'Parent': v['Parent'], 'Position': [0, 0, 0], 'Direction': [0, 0, 1]}
+    for name, v in {**spec.get('attachmentsAdd', {}), **spec['attachments']}.items():
         parent = at[name]['Parent']
         if parent not in origins:
             raise SystemExit(f'attachment {name}: unsupported parent {parent}')
@@ -465,12 +472,25 @@ def main(argv):
 
     client = load(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))
     client = json.loads(json.dumps(client).replace(f'/{tid}', f'/{b.id}').replace(f':{tid}', f':{b.id}'))
-    exhaust = mtbgeo.geo_to_data(b.point(spec['points']['exhaust']))
+    # EngineExhaust is in the model frame (BvpEngineExhaustRenderer negates Z, rear = +Z): model px / 16, not geo_to_data
+    exhaust = np.array(b.point(spec['points']['exhaust'])) / 16
     client['EngineExhaust']['Origins'][0]['Position'] = r5(exhaust)
+    for key, val in spec.get('clientSet', {}).items():       # dotted paths into the client model definition
+        node = client
+        parts = key.split('.')
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+        node[parts[-1]] = val
     out.json(os.path.join(ASSETS, 'sbw', 'vehicles', f'{b.id}.json'), client)
 
     data, pts = build_data(b, load(os.path.join(DATA, 'sbw', 'vehicles', f'{tid}.json')), geo, lo, hi)
-    out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{b.id}.json'), data)
+    data_path = os.path.join(DATA, 'sbw', 'vehicles', f'{b.id}.json')
+    if spec.get('keepData') and os.path.exists(data_path):   # tuning that is the vehicle's own, not the template's
+        old = load(data_path)
+        for key in spec['keepData']:
+            if key in old:
+                data[key] = old[key]
+    out.json(data_path, data)
     boxes, tpl_boxes = {}, {}
     for frame, bone in (('hull', 'hull'), ('turret', 'turret')):
         for target, g in ((boxes, geo), (tpl_boxes, tpl_geo)):
@@ -490,7 +510,7 @@ def main(argv):
     meshes = [bn['poly_mesh'] for bn in geo['minecraft:geometry'][0]['bones'] if 'poly_mesh' in bn]
     out.image(os.path.join(MAIN, 'resources', 'assets', NS, 'textures', 'item', 'vehicle_icons', f'{b.id}.png'),
               icon(b, meshes, np.asarray(img).astype(float) / 255))
-    if b.id != tid:
+    if b.id != tid and not spec.get('manualRegistration'):
         register(b, out)
     # vehgen sizes ground vehicles against their (already x1.1) template: record it so vehicle_scale never rescales
     path = os.path.join(REPO, 'tools', 'vehicle_scale', 'applied.json')

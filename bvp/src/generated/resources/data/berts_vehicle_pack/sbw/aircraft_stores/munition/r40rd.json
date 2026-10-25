@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "R-40RD · semi-active radar (AI)",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r40rd.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.155,
+    0.8723
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.155,
+      0.0,
+      0.8723
+    ],
+    "Right": [
+      -0.155,
+      0.0,
+      0.8723
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.8723
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r40rd.png",
+  "Capacity": 1,
+  "MassKg": 465.0,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 3000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.8
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 30,
+    "Damage": 80,
+    "BlastRadius": 6,
+    "TntEquivalentKg": 40.0
+  },
+  "AmmoItem": "superbwarfare:large_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.155,
+    0.0
+  ],
+  "Generated": true
+}

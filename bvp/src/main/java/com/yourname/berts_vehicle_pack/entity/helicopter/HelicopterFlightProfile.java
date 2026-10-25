@@ -46,6 +46,17 @@ public final class HelicopterFlightProfile {
     private static final double AH6J_KMH = 282.0D, AH6J_CLIMB = 10.0D;
     private static final double AH1G_KMH = 277.0D, AH1G_CLIMB = 6.9D;
     private static final double AH1F_KMH = 277.0D, AH1F_CLIMB = 8.0D;
+    // War Thunder ah_1w: 309 km/h at 1,000 m (wiki), maxClimbRateNom 17.3 m/s (fm/ah_1w).
+    private static final double AH1W_KMH = 309.0D, AH1W_CLIMB = 17.3D;
+    // War Thunder sa_341f: 306 km/h (wiki), climb UNVERIFIED (the wiki figure does not parse; fm/sa_341f 198.7 s to 1,000 m).
+    private static final double GAZELLE_KMH = 306.0D, GAZELLE_CLIMB = 14.3D;
+    // AH-56A Cheyenne: real top speed about 393 km/h (WT fm/ah_56a maxSpeedNom 393.8 km/h at 3,000 m), maxClimbRateNom 17.3 m/s.
+    private static final double AH56A_KMH = 393.0D, AH56A_CLIMB = 17.3D;
+    // War Thunder mi_24p: 335 km/h (wiki; fm/mi_24p maxSpeedNom 349.6 km/h at sea level), climb 11.2 m/s (wiki, UNVERIFIED which of its four figures).
+    private static final double MI24P_KMH = 335.0D, MI24P_CLIMB = 11.2D;
+    // War Thunder mi_8amtsh: 285 km/h (wiki, the figures run together: UNVERIFIED which of them is the arcade value; fm/mi_8amtsh speedMax0 250 IAS,
+    // maxSpeedNom 349.6 km/h at sea level is the Mi-24P's copied table), climb 11.5 m/s (wiki, UNVERIFIED; fm maxClimbRateNom 17.3 is a default).
+    private static final double MI8AMTSH_KMH = 285.0D, MI8AMTSH_CLIMB = 11.5D;
     private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
     private static final double TIGER_KMH = 315.0D, TIGER_CLIMB = 10.7D;
     private static final double AH64D_KMH = 293.0D, AH64D_CLIMB = 12.7D;
@@ -123,12 +134,58 @@ public final class HelicopterFlightProfile {
             0.060D, 0.0090D, 0.9D * climb(MI24_CLIMB, 2.80D), climb(MI24_CLIMB, 2.80D),
             new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24_KMH), true,
                     new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
+    // Mi-24P: War Thunder fm/mi_24p EmptyMass 8,690 kg + MaxFuelMass0 1,790 kg; two TV3-117 (the Mi-24D's rotor acceleration of 12.2 m/s2,
+    // drag, control and attitude tuning, the rotational inertia scaled to the 2 % lower mass).
+    private static final HelicopterFlightProfile MI24P = new HelicopterFlightProfile(
+            soft(MI24P_KMH), cap(MI24P_KMH), 10480.0D, 127000.0D * POWER_UPLIFT / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 1.17D),
+            lin(0.030D, 83.75D, MI24P_KMH), quad(0.0007727918703541040D, 83.75D, MI24P_KMH), 0.145D, 0.0130D,
+            0.060D, 0.0090D, 0.9D * climb(MI24P_CLIMB, 2.80D), climb(MI24P_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24P_KMH), true,
+                    new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
+    // Mi-8AMTSh: War Thunder fm/mi_8amtsh EmptyMass 6,900 kg + MaxFuelMass0 2,092 kg; two TV3-117VM (the Mi-24D's rotor acceleration of 12.2 m/s2,
+    // drag, control and attitude tuning, the rotational inertia scaled to the 16 % lower mass).
+    private static final HelicopterFlightProfile MI8AMTSH = new HelicopterFlightProfile(
+            soft(MI8AMTSH_KMH), cap(MI8AMTSH_KMH), 8992.0D, 109300.0D * POWER_UPLIFT / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 0.99D),
+            lin(0.030D, 83.75D, MI8AMTSH_KMH), quad(0.0007727918703541040D, 83.75D, MI8AMTSH_KMH), 0.145D, 0.0130D,
+            0.060D, 0.0090D, 0.9D * climb(MI8AMTSH_CLIMB, 2.80D), climb(MI8AMTSH_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI8AMTSH_KMH), true,
+                    new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
     private static final HelicopterFlightProfile AH1F = new HelicopterFlightProfile(
             soft(AH1F_KMH), cap(AH1F_KMH), 3990.0D, 52000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
             HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 0.98D),
             lin(0.040D, 69.25D, AH1F_KMH), quad(0.004229106199018914D, 69.25D, AH1F_KMH), 0.130D, 0.0110D,
             0.050D, 0.0075D, 0.9D * climb(AH1F_CLIMB, 2.05D), climb(AH1F_CLIMB, 2.05D),
             new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1F_KMH), true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    // AH-1W: War Thunder fm/ah_1w EmptyMass 4,898 kg + MaxFuelMass0 879 kg; two T700-GE-401 (the AH-1F's rotor and
+    // control tuning, rotor force scaled to the mass at 14 m/s2 like the Tiger / Apache).
+    private static final HelicopterFlightProfile AH1W = new HelicopterFlightProfile(
+            soft(AH1W_KMH), cap(AH1W_KMH), 5777.0D, 81000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 1.04D),
+            lin(0.040D, 69.25D, AH1W_KMH), quad(0.004229106199018914D, 69.25D, AH1W_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(AH1W_CLIMB, 2.05D), climb(AH1W_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1W_KMH), true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    // SA 341F Gazelle: War Thunder fm/sa_341f EmptyMass 990 kg + MaxFuelMass0 453 kg; one Astazou IIIB (the AH-1W's rotor and control
+    // tuning, rotor force scaled to the mass at 14 m/s2 like the AH-1W).
+    private static final HelicopterFlightProfile SA341F_GAZELLE = new HelicopterFlightProfile(
+            soft(GAZELLE_KMH), cap(GAZELLE_KMH), 1443.0D, 20230.0D * POWER_UPLIFT / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 1.04D),
+            lin(0.040D, 69.25D, GAZELLE_KMH), quad(0.004229106199018914D, 69.25D, GAZELLE_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(GAZELLE_CLIMB, 2.05D), climb(GAZELLE_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(GAZELLE_KMH), true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    // AH-56A: War Thunder fm/ah_56a EmptyMass 5,880 kg + MaxFuelMass0 1,290 kg; one T64-GE-16 (rotor force scaled to the mass at
+    // 14 m/s2 like the AH-1W). A compound helicopter (pusher propeller and stub wings): the pack's flight model has no
+    // forward-thrust term, so it flies as a normal helicopter with the real top speed as its limit.
+    private static final HelicopterFlightProfile AH56A = new HelicopterFlightProfile(
+            soft(AH56A_KMH), cap(AH56A_KMH), 7170.0D, 100500.0D * POWER_UPLIFT / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 1.09D),
+            lin(0.040D, 69.25D, AH56A_KMH), quad(0.004229106199018914D, 69.25D, AH56A_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(AH56A_CLIMB, 2.05D), climb(AH56A_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH56A_KMH), true,
                     new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
     private static final HelicopterFlightProfile MI26 = new HelicopterFlightProfile(
             soft(MI26_KMH), cap(MI26_KMH), 56000.0D, 650000.0D * POWER_UPLIFT / 163300.0D, 0.0D,
@@ -260,8 +317,28 @@ public final class HelicopterFlightProfile {
         return MI24D;
     }
 
+    public static HelicopterFlightProfile mi24p() {
+        return MI24P;
+    }
+
+    public static HelicopterFlightProfile mi8amtsh() {
+        return MI8AMTSH;
+    }
+
     public static HelicopterFlightProfile ah1f() {
         return AH1F;
+    }
+
+    public static HelicopterFlightProfile ah1w() {
+        return AH1W;
+    }
+
+    public static HelicopterFlightProfile sa341fGazelle() {
+        return SA341F_GAZELLE;
+    }
+
+    public static HelicopterFlightProfile ah56a() {
+        return AH56A;
     }
 
     public static HelicopterFlightProfile mi26() {

@@ -122,7 +122,12 @@ public final class BvpHelicopterScenario {
             physicalControls = switch (id) {
                 case "mi_24a" -> HelicopterFlightProfile.mi24a().physicalControls();
                 case "mi_24d" -> HelicopterFlightProfile.mi24d().physicalControls();
+                case "mi_24p" -> HelicopterFlightProfile.mi24p().physicalControls();
+                case "mi_8amtsh" -> HelicopterFlightProfile.mi8amtsh().physicalControls();
                 case "ah_1f" -> HelicopterFlightProfile.ah1f().physicalControls();
+                case "ah1w_super_cobra" -> HelicopterFlightProfile.ah1w().physicalControls();
+                case "sa341f_gazelle" -> HelicopterFlightProfile.sa341fGazelle().physicalControls();
+                case "ah_56a" -> HelicopterFlightProfile.ah56a().physicalControls();
                 case "mi_26" -> HelicopterFlightProfile.mi26().physicalControls();
                 case "ch_46e" -> HelicopterFlightProfile.ch46e().physicalControls();
                 case "eurocopter_tiger" -> HelicopterFlightProfile.eurocopterTiger().physicalControls();

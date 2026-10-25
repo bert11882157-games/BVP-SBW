@@ -1,0 +1,44 @@
+{
+  "Schema": 1,
+  "Name": "Kh-23M · radio command (AI)",
+  "Category": "COMMAND_GUIDED",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh23m.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1375,
+    0.4886
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1375,
+      0.0,
+      0.4886
+    ],
+    "Right": [
+      -0.1375,
+      0.0,
+      0.4886
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4886
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh23m.png",
+  "Capacity": 1,
+  "MassKg": 289.0,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/kh23m",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/kh23m",
+  "LaunchOffset": [
+    0.0,
+    -0.1375,
+    0.0
+  ],
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+}

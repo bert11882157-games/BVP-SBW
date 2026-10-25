@@ -1,0 +1,86 @@
+{
+  "Schema": 1,
+  "Name": "AGM-154A JSOW · BRU-55 twin rack (AI)",
+  "Category": "BOMB",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm154a.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.189,
+    -0.03
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.165,
+      0.0,
+      -0.03
+    ],
+    "Right": [
+      -0.165,
+      0.0,
+      -0.03
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.03
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm154a.png",
+  "Capacity": 1,
+  "MassKg": 483.0,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 9,
+    "TntEquivalentKg": 45,
+    "BlastDamage": 500,
+    "LiftToDrag": 9,
+    "BestGlideSpeed": 6,
+    "MaxG": 3
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/agm154a",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_fa18_x2_jsow.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/fa18e_rack.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.05,
+          -0.1945,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.05,
+          -0.1945,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.52,
+    0.4,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.189,
+    0.0
+  ]
+}

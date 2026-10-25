@@ -376,13 +376,14 @@ object HelicopterHud {
                         )
                     }
                 }
-                val component = vehicle.firstPersonAmmoComponent(data, player)
-
-                val heat = vehicle.getWeaponHeat(player)
-                guiGraphics.drawString(
-                    mc.font, component, screenWidth / 2 - 160, screenHeight / 2 - 59,
-                    getGradientColor(color, 0xFF0000, heat, 2), false
-                )
+                if (!vehicle.usesGroundVehicleWeaponScheme()) {
+                    val component = vehicle.firstPersonAmmoComponent(data, player)
+                    val heat = vehicle.getWeaponHeat(player)
+                    guiGraphics.drawString(
+                        mc.font, component, screenWidth / 2 - 160, screenHeight / 2 - 59,
+                        getGradientColor(color, 0xFF0000, heat, 2), false
+                    )
+                }
 
                 renderEnergyInfo(vehicle, guiGraphics, screenWidth, screenHeight, mc.font)
 

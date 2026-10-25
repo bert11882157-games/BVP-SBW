@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FarTerrainProjectionTest {
     public static final class Radius {
         public static int value;
-        public static int radius() { return value; }
+        public static int renderRadius() { return value; }
     }
 
     private Matrix4f apply(Matrix4f original, int radius) throws Exception {
@@ -30,7 +30,7 @@ public class FarTerrainProjectionTest {
         int substitutions = 0;
         for (var method : node.methods) for (var instruction : method.instructions) {
             if (instruction instanceof MethodInsnNode call && call.owner.equals(
-                    "com/atsuishio/superbwarfare/client/FarTerrainClient") && call.name.equals("radius")) {
+                    "com/atsuishio/superbwarfare/client/FarTerrainClient") && call.name.equals("renderRadius")) {
                 call.owner = Radius.class.getName().replace('.', '/');
                 substitutions++;
             }

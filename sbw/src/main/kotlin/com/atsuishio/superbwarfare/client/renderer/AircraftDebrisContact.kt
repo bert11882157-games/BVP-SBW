@@ -29,10 +29,13 @@ internal object AircraftDebrisContact {
         if (hit.isInside) {
             val support = clip(from.add(0.0, probe.coerceAtLeast(.5), 0.0), from.add(0.0, -.003, 0.0))
             if (support != null && !support.isInside && support.direction == Direction.UP)
-                return AircraftDebrisMotion.Contact(support.location, Vec3(0.0, 1.0, 0.0), support.location)
+                return AircraftDebrisMotion.Contact(support.location, Vec3(0.0, 1.0, 0.0), support.location, 0.0)
             return null
         }
-        return AircraftDebrisMotion.Contact(hit.location, Vec3.atLowerCornerOf(hit.direction.normal), hit.location)
+        val delta = to.subtract(from)
+        val fraction = if (delta.lengthSqr() > 1e-18)
+            (hit.location.subtract(from).dot(delta) / delta.lengthSqr()).coerceIn(0.0, 1.0) else 0.0
+        return AircraftDebrisMotion.Contact(hit.location, Vec3.atLowerCornerOf(hit.direction.normal), hit.location, fraction)
     }
 
     /** Downward surface query: the top of the first upward face, [AircraftDebrisMotion.BURIED] inside a solid. */
