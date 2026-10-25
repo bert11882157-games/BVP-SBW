@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "0.5pre2-reassessment-20261025-r1",
+  "label": "helicopter-ground-weapons-20261025-r1",
   "status": "release-candidate",
-  "createdAt": "2026-10-25T07:37:47.741Z",
-  "treeSha256": "e03c1777ed804c6d53139bc520d88583701c466bfa824b886c34cf2a02bc41d7",
+  "createdAt": "2026-10-25T17:44:41.801Z",
+  "treeSha256": "44efac7b683349c5308a6269b26332b9a25c344e2f6c11890f1402d96a4a0610",
   "files": [
     {
       "path": ".editorconfig",
@@ -25383,8 +25383,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/entity/helicopter/BvpHelicopterEntity.java",
-      "size": 39216,
-      "sha256": "df2ad1e900824f75ec760859dba93bcbbac1f73ae9e847fbeeedc23601e461c3"
+      "size": 39311,
+      "sha256": "6142ccb22f90c1af18f7ecc604a7f0163ca014070b7b8b4d4322be7977c994df"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/entity/helicopter/HelicopterAttitudeController.java",
@@ -39733,8 +39733,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentManager.kt",
-      "size": 72750,
-      "sha256": "0bbf7f95579ef4153b0db39d491d150dfb9788205f23c68f82e70498c11ec6ac"
+      "size": 72971,
+      "sha256": "daf5a2bd4f2fb7448907c1cee848dc0cfdf35eef9d2c69076ff383883968edc0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentRegistry.kt",
@@ -41303,13 +41303,13 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentClient.kt",
-      "size": 26302,
-      "sha256": "441aa1f36d9bbe7ed99d4ec21e09b45985216ee129a6e2883dadb273b6afb324"
+      "size": 26622,
+      "sha256": "19fc71d2a263681d79c1c5e16279883244acbe2c1b260b86588fbe01c4a300ba"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentKeys.kt",
-      "size": 3633,
-      "sha256": "100d4c3ea1d6d7a41b8ec8af6d26a0a71219c21ecac8b647579a99dc2a1a459d"
+      "size": 3954,
+      "sha256": "02234daf38e23c4345527ae1b34f0052effc9e8250265c07feb7ffcdf7436355"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentSnapshot.kt",
@@ -42093,8 +42093,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt",
-      "size": 23963,
-      "sha256": "41791c4b158f6157e204118ed050bfda5fd7ae5a307fdf029af09446773dc181"
+      "size": 24301,
+      "sha256": "f6831ad93df094f675eb390458511679cc70b667ac4ae7b5e426ccc1e24f17e5"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHullRaster.kt",
@@ -42103,8 +42103,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleMainWeaponHudOverlay.kt",
-      "size": 22021,
-      "sha256": "104e35cdee3ba6a8c399fae987c47176a956f8e8688f73950c938febdc47c8c1"
+      "size": 22036,
+      "sha256": "90fd35bac7bfa3624a6ef476cafc1064e7216882dfe7c6230909dad81a8618c8"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleModuleFootprints.kt",
@@ -42148,8 +42148,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/weapon/AircraftHud.kt",
-      "size": 35792,
-      "sha256": "6b1ef7a67345d9a8d9afd244b5f0a47d4978e4b7551a12076e1945b41a7356f2"
+      "size": 36159,
+      "sha256": "36160b944e1e844bfcd79635e221f216e4711144f9b2b42dd2d1da82bf45351b"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/weapon/ArtilleryHud.kt",
@@ -42173,8 +42173,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/weapon/HelicopterHud.kt",
-      "size": 21776,
-      "sha256": "88f05b9e52d4357ee3811a914d748a4ed0b45726ef5fc3d1c845c8967c92323d"
+      "size": 21881,
+      "sha256": "70b86a77634a06cc71dbca95e5c34e89db1efbcb75e2cf6a441e3e6181cbba66"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/weapon/LandVehicleHud.kt",
@@ -44293,8 +44293,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 344479,
-      "sha256": "8f040b90dbe53d1d302908031d42141d13885bb009f6b1579046a6b2bd07bd92"
+      "size": 344776,
+      "sha256": "a196c5f70ad6a6b69d37349c6d64fb312c4fca6e4c779961bd481129a8b6213c"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -58363,8 +58363,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentFireInterlockTest.kt",
-      "size": 4437,
-      "sha256": "054deb1136668dfd76345d3d8d89c993263fdb7e863a5594200d9a4c3d88d3a2"
+      "size": 7967,
+      "sha256": "ebb606f515a1a165948de2431964e7c60f5ba28dd754193e9d5f2feb0dfc68b1"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentValidationTest.kt",
@@ -58525,6 +58525,11 @@
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftWeaponGroupsTest.kt",
       "size": 2929,
       "sha256": "70adb2268d0e61096b49e8cd6ff503327715a690656055b4b3df032d24460073"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/HelicopterGroundWeaponModelTest.kt",
+      "size": 9767,
+      "sha256": "55161d98d134dcb490cdc73714dd96cf33362eb2baf92d83805763fef015e97c"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/MunitionMeshWindingTest.kt",
@@ -59262,6 +59267,11 @@
       "sha256": "c78a565f58d47c13d55b0072d37ef28300cab2ccc83a968c4c0a977b521f1fec"
     },
     {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleWeaponHudRoutingTest.kt",
+      "size": 4975,
+      "sha256": "e54bb226e0bddfe79e47d5d04c87766fe086bd1f5da723da11a60f07e5b2f643"
+    },
+    {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/overlay/weapon/AircraftHudPresentationTest.kt",
       "size": 5160,
       "sha256": "95374ec6925e51c83d17c49029b2a733ba398bb8a687be8adaeedb741598406c"
@@ -59584,21 +59594,21 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "fdc42b443eef4d329afc7f63e2da0b5f544460aef5af5d70ecdd02a064fdab63",
+    "buildRecordSha256": "a042e3eaed6b45ed6eea69b965ec14aa8bba0ddb77b0067bce282311008c8226",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 362375849,
-        "sha256": "e0053fb7544378f521f0506cbc95a69e3a49ad80a7f20f4344236db0c82f4701"
+        "size": 362375895,
+        "sha256": "36aad8d1aaa2a72c504963485039e22a6bb5090bf8329368050cf556d962aea2"
       },
       {
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 37972698,
-        "sha256": "41b62168b652d9ef0727e011b5aa002eb2242aa68cb053d5cefaa74f8357e2f1"
+        "size": 37975369,
+        "sha256": "fdd3317521bb48ae3077ef6c388acbaa24f71c6b47212ca2b6bafe09c139bb24"
       }
     ],
     "dependencies": [
@@ -60492,11 +60502,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:7ee0ad23cf4b",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:c7504b1a578b",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "7ee0ad23cf4b9a50824dcbdb51e9020c7afd47fd250b3128df5070a19cba790d"
+        "sha256": "c7504b1a578bc95fd0c9640600342d88a716d199ac7827e70a9e36b83948a18a"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -61031,11 +61041,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:a85e99ed31b8",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:7e0ba66761a2",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 10376680,
-        "sha256": "a85e99ed31b81d4c0fb3d958354b0419df366212ecf905621dcb5637b712bbfc"
+        "size": 10379339,
+        "sha256": "7e0ba66761a2b6ff784a68a189c92dd2d09c5d7c12eebc313d93a9c2c4c7a844"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:0d6da1b68293",
