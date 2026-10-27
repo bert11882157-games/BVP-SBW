@@ -2,7 +2,8 @@
   "default": {
     "tyre_ratios": [
       0.25
-    ]
+    ],
+    "blister": 3.0
   },
   "b_1b": {
     "tyre_ratios": [
@@ -38,11 +39,5 @@
       0.4,
       0.3
     ]
-  },
-  "mig_21bis": {
-    "blister": 2.0
-  },
-  "su_9": {
-    "blister": 2.0
   }
 }
