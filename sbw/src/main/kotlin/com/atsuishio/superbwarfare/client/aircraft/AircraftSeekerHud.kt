@@ -10,11 +10,17 @@ import kotlin.math.*
 
 object AircraftSeekerHud {
     private val presentation = AircraftSeekerPresentation()
-    fun reset() { presentation.reset(); AircraftSeekerSounds.reset() }
+    fun reset() { presentation.reset(); AircraftSeekerSounds.reset(); AircraftHelmetSightClient.reset() }
+
+    /** A screen-space search circle that replaces the boresight one (the helmet circle, AircraftHelmetSightClient). */
+    data class Search(val x: Double, val y: Double, val radius: Double)
 
     fun render(graphics: GuiGraphics, vehicle: VehicleEntity, seek: AircraftSeekView?, target: Vec3?,
-               partial: Float, width: Int, height: Int) {
+               partial: Float, width: Int, height: Int, search: Search? = null) {
         if (seek?.activeAam != true) { presentation.reset(); return }
+        // While the helmet slaves an empty seeker its circle is the whole display; with a target the seeker circle
+        // closes on it from where the pilot looks.
+        if (search != null && target == null) { presentation.reset(); return }
         val mc = Minecraft.getInstance()
         val transform = vehicle.getVehicleTransform(partial)
         fun axis(x: Double, y: Double, z: Double): Vec3 {
@@ -24,9 +30,9 @@ object AircraftSeekerHud {
         val forward = axis(0.0, 0.0, 1.0)
         val origin = mc.gameRenderer.mainCamera.position
         val centre = origin.add(forward.scale(200.0))
-        val projectedCentre = centre.worldToScreen()
+        val projectedCentre = search?.let { Vec3(it.x, it.y, 1.0) } ?: centre.worldToScreen()
         if (projectedCentre.z <= 0.01 || !projectedCentre.x.isFinite() || !projectedCentre.y.isFinite()) return
-        val fittedRadius = min(width, height) * 0.38 * (seek.coneDegrees / 50.0).coerceIn(0.1, 1.0)
+        val fittedRadius = search?.radius ?: (min(width, height) * 0.38 * (seek.coneDegrees / 50.0).coerceIn(0.1, 1.0))
         val acquired = target?.worldToScreen()?.takeIf { it.z > 0.01 && it.x.isFinite() && it.y.isFinite() }
         // A monotonic client clock: on a dedicated server the level time is corrected by the server's time packet
         // (every second), which can step it back a tick and used to restart the seeker circle.
@@ -54,7 +60,7 @@ object AircraftSeekerHud {
     }
 
     /** Clip before rasterizing so off-screen cone arcs cannot create unbounded GUI work. */
-    private fun line(g: GuiGraphics, a: Vec3, b: Vec3, width: Int, height: Int, color: Int) {
+    internal fun line(g: GuiGraphics, a: Vec3, b: Vec3, width: Int, height: Int, color: Int) {
         val dx = b.x - a.x; val dy = b.y - a.y
         var low = 0.0; var high = 1.0
         fun clip(p: Double, q: Double): Boolean {

@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftGuidanceLabels
 import com.atsuishio.superbwarfare.api.aircraft.AircraftLoadoutAccess
+import com.atsuishio.superbwarfare.api.aircraft.AircraftHelmetSight
 import com.atsuishio.superbwarfare.api.aircraft.AircraftLoadoutCost
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStorePerformance
 import com.atsuishio.superbwarfare.client.camera.AircraftCameraPivot
@@ -188,6 +189,17 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         raw()?.getAsJsonObject("Stores")?.getAsJsonObject(store.id)
             ?.let { AircraftStorePerformance.of(it,AircraftStorePerformance.LoadedProfiles) }
             ?.let(AircraftStorePerformanceText::lines)
+    }.getOrNull().orEmpty()
+    /** "Can helmet lock" for a seeker a helmet sight can cue (AircraftHelmetSight), and whether this aircraft has one. */
+    private fun helmetLines(store: AircraftStoreView): List<Component> = runCatching {
+        val raw = raw() ?: return@runCatching emptyList<Component>()
+        val missile = AircraftHelmetSight.missileLimit(raw.getAsJsonObject("Stores")?.getAsJsonObject(store.id))
+            ?: return@runCatching emptyList<Component>()
+        val sight = AircraftHelmetSight.sight(raw.getAsJsonObject("Definition"))
+        listOf(Component.literal("Can helmet lock · ±${missile.toInt()}° off boresight").withStyle(ChatFormatting.GREEN),
+            if (sight != null) Component.literal("Helmet sight: ${sight.name} (±${minOf(missile, sight.maxOffBoresightDegrees).toInt()}°)")
+                .withStyle(ChatFormatting.GREEN)
+            else Component.literal("This aircraft has no helmet sight").withStyle(ChatFormatting.GRAY))
     }.getOrNull().orEmpty()
     private fun ammoItem(ammo: String) = ResourceLocation.tryParse(ammo)?.let { ForgeRegistries.ITEMS.getValue(it) }
         ?.takeIf { it != Items.AIR }
@@ -464,6 +476,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                     Component.literal(store.categoryLabel).withStyle(ChatFormatting.GREEN),
                     Component.literal(AircraftGuidanceLabels.description(store.guidanceMode)).withStyle(ChatFormatting.GREEN),
                     Component.literal("${(store.massKg*(store.capacity?:1)*count+store.rackMassKg).toInt()} kg${if(count>1) " · $count munitions" else ""}").withStyle(ChatFormatting.GREEN)) +
+                    helmetLines(store) +
                     performanceLines(store).map { Component.literal(it.toString())
                         .withStyle(if(it.known) ChatFormatting.AQUA else ChatFormatting.GRAY) } +
                     (if(fits) emptyList() else listOf(Component.literal("Payload or station limit exceeded").withStyle(ChatFormatting.RED))) +
