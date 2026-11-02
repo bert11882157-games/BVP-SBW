@@ -13,7 +13,7 @@ import kotlin.math.acos
  * The cue reaches the smaller of the two angles.
  *
  * Behaviour (server-owned, see [line]):
- * - While the pilot looks more than [ENGAGE_DEGREES] away from the nose, and inside the limit, the seeker is slaved to
+ * - While the pilot freelooks more than [ENGAGE_DEGREES] away from the nose, and inside the limit, the seeker is slaved to
  *   the pilot's line of sight with a narrow [ACQUIRE_CONE_DEGREES] cone: the aircraft under the helmet circle is
  *   acquired and dwells to a lock as usual.
  * - Once the seeker holds a target it tracks that target (the line to it, with the store's own cone) for as long as the
@@ -29,8 +29,11 @@ object AircraftHelmetSight {
     const val SIGHT = "HelmetSight"
     /** Key inside a store's Guidance object. */
     const val STORE_LIMIT = "HelmetOffBoresightDegrees"
-    /** The pilot must look at least this far off the nose before the helmet takes the seeker. */
-    const val ENGAGE_DEGREES = 8.0
+    /**
+     * The pilot must freelook at least this far off the nose (the forward crosshair) before the helmet circle appears and
+     * takes the seeker (owner 2026-11-02: 2 degrees).
+     */
+    const val ENGAGE_DEGREES = 2.0
     /** Half-angle of the helmet circle: what the seeker searches while slaved to the pilot's eyes. */
     const val ACQUIRE_CONE_DEGREES = 4.0
     /** A held target this close to the helmet line stays held while the pilot keeps looking at it. */

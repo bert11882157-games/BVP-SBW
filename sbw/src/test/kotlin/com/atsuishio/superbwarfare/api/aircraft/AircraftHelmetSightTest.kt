@@ -31,7 +31,8 @@ class AircraftHelmetSightTest {
     }
 
     @Test fun `looking near the nose keeps the ordinary boresight seeker`() {
-        assertNull(AircraftHelmetSight.line(nose, right(5.0), null, 45.0, 40.0))
+        assertNull(AircraftHelmetSight.line(nose, right(1.5), null, 45.0, 40.0))
+        assertNotNull(AircraftHelmetSight.line(nose, right(2.5), null, 45.0, 40.0), "2 degrees off the crosshair cues")
         assertNull(AircraftHelmetSight.line(nose, null, null, 45.0, 40.0))
     }
 

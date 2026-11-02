@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager
 import com.atsuishio.superbwarfare.api.aircraft.AircraftHelmetSight
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons
+import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.tools.worldToScreen
 import com.google.gson.JsonArray
@@ -54,11 +55,15 @@ object AircraftHelmetSightClient {
         return AircraftHelmetSight.limit(AircraftArmamentManager.definition(vehicle), store)
     }
 
-    /** Helmet cueing applies only to the operator's own first-person view, not the pod, a TV seeker or a free orbit. */
+    /**
+     * Helmet cueing follows freelook (the held free-camera key) in the operator's own first-person view; not the pod, a
+     * TV seeker, an external orbit, or the mouse-aim camera's lead, which would cue the seeker during ordinary flying.
+     */
     private fun sample(vehicle: VehicleEntity, seek: AircraftSeekView?, partial: Float): Cue? {
         val mc = Minecraft.getInstance()
         val player = mc.player ?: return null
         if (mc.options.cameraType != CameraType.FIRST_PERSON || mc.cameraEntity !== player) return null
+        if (!VehicleFreeCameraController.isActive(player)) return null
         if (AircraftArmamentClient.isPodActive(vehicle) || AircraftTvClient.activeFor(vehicle)) return null
         val limit = limit(vehicle, seek) ?: return null
         val look = mc.gameRenderer.mainCamera.lookVector

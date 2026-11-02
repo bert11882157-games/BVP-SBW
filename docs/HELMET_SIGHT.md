@@ -25,12 +25,13 @@ The usable angle is the smaller of the two. The loader rejects a sight outside 1
 
 ## Behaviour
 
-1. **Cueing.** The pilot (first-person view, not the targeting pod or a TV seeker) looks more than 8° off the nose. A
-   green circle labelled HMS appears where they look. While the angle is inside the limit, the seeker searches a 4°
+1. **Cueing.** The pilot holds freelook (the free-camera key, default C) in first-person view, not the targeting pod or a
+   TV seeker, and looks more than 2° away from the nose (the forward crosshair). A green circle labelled HMS appears
+   where they look. The mouse-aim camera's lead during ordinary flying never cues the seeker. While the angle is inside the limit, the seeker searches a 4°
    cone around that line, so the aircraft under the circle is acquired and dwells to a lock as usual (`LockTicks`).
    Past the limit the circle turns grey ("HMS LIMIT") and the seeker returns to the nose.
 2. **Tracking.** Once the seeker holds a target it follows that target, with the store's own cone, while the target
-   stays inside the limit. The pilot can look back at the nose and keep the lock. Looking at a different aircraft (more
+   stays inside the limit. The pilot can release freelook and keep the lock. Looking at a different aircraft (more
    than 8° from the held one) re-cues onto it.
 3. **Launch.** A helmet-cued round leaves towards its target rather than along the nose, because FFA only admits a
    launch with the target inside the seeker cone of the launch direction. The aircraft's own velocity still dominates
