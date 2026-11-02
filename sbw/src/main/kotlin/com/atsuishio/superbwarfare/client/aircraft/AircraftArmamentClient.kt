@@ -60,6 +60,9 @@ object AircraftArmamentClient {
                         getState(it.uuid)?.getAsJsonObject("Definition"), seat) } }
     }
 
+    /** The aircraft whose stores this player operates (pilot or weapon seat), or null. */
+    internal fun operatedVehicle(): VehicleEntity? = pilot()
+
     /** Only the pilot edits the loadout. */
     private fun seatedPilot(vehicle: VehicleEntity): Boolean =
         Minecraft.getInstance().player?.let { vehicle.getSeatIndex(it) == 0 } == true
@@ -444,10 +447,11 @@ object AircraftArmamentClient {
             graphics.fill(width / 2 - 5, height / 2, width / 2 + 6, height / 2 + 1, color)
             graphics.fill(width / 2, height / 2 - 5, width / 2 + 1, height / 2 + 6, color)
         }
+        val helmet = AircraftHelmetSightClient.render(graphics, vehicle, state.seek, partial, width, height)
         state.seek?.let { seek ->
             val target = lockTargetEntity?.takeIf { !it.isRemoved && it.uuid == seek.target }
             val displayPoint = target?.getPosition(partial)?.add(0.0, target.bbHeight * 0.5, 0.0) ?: seek.position
-            AircraftSeekerHud.render(graphics, vehicle, seek, displayPoint, partial, width, height)
+            AircraftSeekerHud.render(graphics, vehicle, seek, displayPoint, partial, width, height, helmet)
         }
     }
 

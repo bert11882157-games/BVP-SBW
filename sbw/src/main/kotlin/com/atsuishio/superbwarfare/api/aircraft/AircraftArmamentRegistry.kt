@@ -114,6 +114,7 @@ object AircraftArmamentRegistry {
                 require((json["Category"].asString == "CRUISE") == (guidance.mode == "ACTIVE_SURFACE_RADAR"))
                 if (json["Category"].asString == "BOMB") require(json.getAsJsonObject("Bomb")?.get("Mode")?.asString == "TV")
             }
+            AircraftHelmetSight.validateStore(json)
             json.getAsJsonObject("Flight")?.let { flight ->
                 require(json["Category"]?.asString != "BOMB") { "Bombs cannot use powered missile flight" }
                 require(json.has("Guidance") || json["Category"]?.asString == "CRUISE")
@@ -237,6 +238,7 @@ object AircraftArmamentRegistry {
             require(a.size() <= 64 && a.all { it.asString.length in 1..128 })
         }
         names("BuiltInWeapons"); names("SuspendedWeapons")
+        AircraftHelmetSight.validateSight(json)
         json["MaxPayloadKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.0..100000.0) }
         json["MaxPylonMassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..100000.0) }
         json["MaxWeaponsPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }

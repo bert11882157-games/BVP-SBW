@@ -44,7 +44,9 @@ object AircraftArmamentManager {
         var seekFingerprint: String = "", var seekChannels: Set<String> = emptySet(),
         var designationGeneration: Long = 0, var designating: Boolean = false,
         var stabilizeGeneration: Long = 0, var stabilizing: Boolean = false,
-        val last: MutableMap<String, Long> = mutableMapOf())
+        val last: MutableMap<String, Long> = mutableMapOf(),
+        /** The pilot's helmet line of sight in the aircraft's own frame (AircraftHelmetSight), and when it arrived. */
+        var helmet: Vec3? = null, var helmetTick: Long = Long.MIN_VALUE / 2)
     private val leases = WeakHashMap<ServerPlayer, Lease>()
     private val sequences = WeakHashMap<Connection, Long>()
     private val watchers = WeakHashMap<VehicleEntity, MutableSet<ServerPlayer>>()
@@ -574,6 +576,7 @@ object AircraftArmamentManager {
             }
             return
         }
+        if (request.operation == HELMET) { helmetReport(player, vehicle, lease, request, body); return }
         if (request.epoch != lease.epoch) { reply(player, lease, message = "Controls refreshed; try again."); return }
         val now = player.serverLevel().gameTime
         val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "STABILIZE" -> "stabilize"; "TV" -> "tv"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
@@ -758,11 +761,14 @@ object AircraftArmamentManager {
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
         // A TV bomb needs no lock to release: its seeker view opens after release (AircraftTvGuidance).
+        // A helmet-cued seeker keeps its off-boresight line through the release (AircraftHelmetSight).
         if (guidedMissile) {
-            val lock = AircraftMissileLauncher.update(vehicle, player, selectedGroup, store)
+            val lock = AircraftMissileLauncher.update(vehicle, player, selectedGroup, store,
+                helmetLine(vehicle, player, selectedGroup, store))
             require(lock >= 0) { "Compatible Fire From Above missile support is unavailable." }
             require(lock == 2) { "Hold the target in the seeker cone until locked." }
         }
+        val launchForward = if (guidedMissile) helmetLaunchForward(vehicle, selectedGroup, store) else null
         val state = equipment(vehicle); val key = pair["Id"].asString
         val fired = state.getCompound("Fired"); var used = fired.getInt(key)
         while (used >= 0 && used < mountCapacity(vehicle, key) &&
@@ -784,7 +790,7 @@ object AircraftArmamentManager {
         val offset = AircraftPylonRacks.launchOffset(pair, store, rackCount(vehicle, key), used, id)
         // The munition was bought when it was fitted (AircraftLoadoutCost); releasing it spends only the rack round.
         require(when {
-            guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store, offset)
+            guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store, offset, launchForward)
             bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup, offset)
             cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store, offset)
             else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup, offset)
@@ -951,7 +957,7 @@ object AircraftArmamentManager {
             // One seeker per store: when two crew members select the same store, the lower seat drives its dwell
             // (two updates a tick would lock it twice as fast) and the other reads the same lock.
             val status = if (lockDriverSeat(vehicle, weapon).let { it < 0 || it == seat })
-                AircraftMissileLauncher.update(vehicle, player, weapon, store)
+                AircraftMissileLauncher.update(vehicle, player, weapon, store, helmetLine(vehicle, player, weapon, store))
             else sharedLockStatus(AircraftMissileLauncher.state(vehicle, weapon))
             val selectedDisplay = displayChannel ?: continue
             if (weapon != selectedDisplay.weaponId) continue
@@ -1002,6 +1008,65 @@ object AircraftArmamentManager {
             occupant != null && occupant.isAlive && (vehicle.getGunName(seat) == channel ||
                 vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) } == channel)
         } ?: -1
+    }
+
+    private const val HELMET = "HELMET"
+
+    /**
+     * Records where [player] looks (AircraftHelmetSight): `Direction`, a unit vector in the aircraft's own frame, or no
+     * direction when the pilot looks back at the nose. Reports stream while cueing, so a stale epoch or a report inside
+     * the rate limit is dropped silently instead of answered with a full snapshot.
+     */
+    private fun helmetReport(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease,
+                             request: AircraftArmamentRequestMessage, body: JsonObject) {
+        if (request.epoch != lease.epoch) return
+        val now = player.serverLevel().gameTime
+        if (now - (lease.last[HELMET] ?: Long.MIN_VALUE / 2) < AircraftHelmetSight.REPORT_INTERVAL_TICKS - 1) return
+        lease.last[HELMET] = now
+        if (AircraftHelmetSight.sight(definition(vehicle)) == null) { lease.helmet = null; return }
+        val direction = runCatching { AircraftArmamentRegistry.vector(body["Direction"]) }.getOrNull()
+            ?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.lengthSqr() in 0.98..1.02 }
+        lease.helmet = direction?.normalize()
+        lease.helmetTick = now
+    }
+
+    private fun nose(vehicle: VehicleEntity): Vec3 {
+        val d = vehicle.getVehicleTransform(1f).transformDirection(Vector3d(0.0, 0.0, 1.0)).normalize()
+        return Vec3(d.x, d.y, d.z)
+    }
+
+    /** From this aircraft towards the target the [channel] seeker holds; null when it holds none. */
+    private fun heldTargetDirection(vehicle: VehicleEntity, channel: String): Vec3? {
+        val state = AircraftMissileLauncher.state(vehicle, channel)
+        if (!state.hasUUID("TargetUUID")) return null
+        val level = vehicle.level() as? ServerLevel ?: return null
+        val centre = level.getEntity(state.getUUID("TargetUUID"))?.takeIf { it.isAlive }?.boundingBox?.center
+            ?: Vec3(state.getDouble("TargetX"), state.getDouble("TargetY"), state.getDouble("TargetZ"))
+        return centre.subtract(vehicle.boundingBox.center).takeIf { it.lengthSqr() > 1.0e-6 }
+    }
+
+    /**
+     * The seeker line [player]'s helmet sight gives [store] this tick, or null for the ordinary boresight seeker. Only
+     * an aircraft with a helmet sight and a seeker that accepts the cue get one; everything else costs one map lookup.
+     */
+    private fun helmetLine(vehicle: VehicleEntity, player: ServerPlayer, channel: String,
+                           store: JsonObject): AircraftHelmetSight.Line? {
+        val limit = AircraftHelmetSight.limit(definition(vehicle), store) ?: return null
+        val cone = runCatching { AircraftMissileLauncher.guidance(store)?.cone }.getOrNull() ?: return null
+        val lease = leases[player]?.takeIf { it.vehicle === vehicle }
+        val local = lease?.helmet?.takeIf { player.serverLevel().gameTime - lease.helmetTick <= AircraftHelmetSight.STALE_TICKS }
+        val view = local?.let {
+            val d = vehicle.getVehicleTransform(1f).transformDirection(Vector3d(it.x, it.y, it.z)).normalize()
+            Vec3(d.x, d.y, d.z)
+        }
+        return AircraftHelmetSight.line(nose(vehicle), view, heldTargetDirection(vehicle, channel), limit, cone)
+    }
+
+    /** A helmet-capable shot leaves towards its target when that target is inside the off-boresight limit. */
+    private fun helmetLaunchForward(vehicle: VehicleEntity, channel: String, store: JsonObject): Vec3? {
+        val limit = AircraftHelmetSight.limit(definition(vehicle), store) ?: return null
+        val toTarget = heldTargetDirection(vehicle, channel) ?: return null
+        return toTarget.normalize().takeIf { AircraftHelmetSight.angleDegrees(nose(vehicle), it) <= limit }
     }
 
     /** The lock status (as AircraftMissileLauncher.update returns it) another seat's seeker holds on a channel. */

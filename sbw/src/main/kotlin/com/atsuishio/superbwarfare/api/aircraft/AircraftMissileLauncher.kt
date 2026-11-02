@@ -77,10 +77,15 @@ object AircraftMissileLauncher {
     fun state(vehicle: VehicleEntity, channel: String): CompoundTag = runCatching {
         api?.state?.invoke(null, vehicle, channel) as? CompoundTag ?: CompoundTag()
     }.getOrDefault(CompoundTag())
-    /** -1 missing/incompatible FFA, 0 seeking, 1 acquiring, 2 locked. */
-    fun update(vehicle: VehicleEntity, player: ServerPlayer, channel: String, store: JsonObject): Int = runCatching {
+    /**
+     * -1 missing/incompatible FFA, 0 seeking, 1 acquiring, 2 locked. A [line] (a helmet-sight cue, see
+     * AircraftHelmetSight) replaces the hull nose and the store's cone for this update.
+     */
+    fun update(vehicle: VehicleEntity, player: ServerPlayer, channel: String, store: JsonObject,
+               line: AircraftHelmetSight.Line? = null): Int = runCatching {
         val p = guidance(store) ?: return -1
-        (api?.update?.invoke(null, vehicle, player, channel, forward(vehicle), p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
+        (api?.update?.invoke(null, vehicle, player, channel, line?.forward ?: forward(vehicle), p.mode, p.lockTicks,
+            p.range, line?.coneDegrees ?: p.cone) as? Int) ?: -1
     }.onFailure { logFailure("update", it) }.getOrDefault(-1)
     /** Lock toward an explicit world [forward] (a turret or launcher bore) instead of the hull nose. */
     fun updateToward(vehicle: VehicleEntity, player: ServerPlayer, channel: String, forward: Vec3, store: JsonObject): Int = runCatching {
@@ -114,9 +119,13 @@ object AircraftMissileLauncher {
         visualModel(store)?.let { profile.putString("VisualModel", it) }
         return profile
     }
-    /** [launchOffset]: hull offset from [mount] to the launch point (the pylon layout's); null uses LaunchOffset. */
+    /**
+     * [launchOffset]: hull offset from [mount] to the launch point (the pylon layout's); null uses LaunchOffset.
+     * [launchForward]: the world direction the round leaves along; null is the hull nose. A helmet-cued shot leaves
+     * towards its off-boresight target, because FFA admits a launch only with the target inside the seeker cone.
+     */
     fun launch(vehicle: VehicleEntity, player: ServerPlayer, channel: String, mount: Vec3, store: JsonObject,
-               launchOffset: Vec3? = null): Boolean = runCatching {
+               launchOffset: Vec3? = null, launchForward: Vec3? = null): Boolean = runCatching {
         val p = guidance(store) ?: return false
         val offset = launchOffset
             ?: if (store.has("LaunchOffset")) requireNotNull(AircraftArmamentRegistry.vector(store["LaunchOffset"])) else Vec3.ZERO
@@ -129,7 +138,9 @@ object AircraftMissileLauncher {
         // FFA simulates the missile; SBW stamps the TNT charge on the entity it spawns (see ExternalMunitionBlasts).
         val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile
-        val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
+        val direction = launchForward?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() &&
+            it.lengthSqr() > 1.0e-6 }?.normalize() ?: forward(vehicle)
+        val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), direction,
             p.mode, p.lockTicks, p.range, p.cone, p.vulnerability)
         IncomingMissileWarning.launch(vehicle.level(), p.mode, lockedTarget(vehicle, channel)) {
             com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
