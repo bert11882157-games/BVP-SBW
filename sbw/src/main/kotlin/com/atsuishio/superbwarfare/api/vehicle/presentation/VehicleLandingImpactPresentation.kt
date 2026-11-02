@@ -101,6 +101,8 @@ object VehicleLandingImpactPresentation {
         for (occupant in vehicle.passengers) {
             if (occupant !is ServerPlayer || !occupant.isAlive || occupant.isSpectator ||
                 occupant.vehicle !== vehicle || occupant.level() !== vehicle.level()) continue
+            // Riders get no screen effects except their own guns' shake; touchdown is felt through sound and smoke.
+            if (VehicleScreenEffects.shields(occupant)) continue
             // Center each occupant's impulse on them: no propagation delay or seat-distance bias.
             occupant.sendPacket(ShakeClientMessage(IMPULSE_PHASE, OCCUPANT_RADIUS, amplitude,
                 occupant.x, occupant.y, occupant.z))

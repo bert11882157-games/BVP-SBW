@@ -26,6 +26,7 @@ import com.atsuishio.superbwarfare.tools.*
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.resources.ResourceLocation
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleScreenEffects
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -710,12 +711,27 @@ object LivingEventHandler {
     fun onEffectApply(event: MobEffectEvent.Applicable) {
         val entity = event.entity
         val vehicle = entity.vehicle
+        // Any seat: no screen-distorting effects (nausea, blindness, darkness, other mods' blur) while riding.
+        if (VehicleScreenEffects.shields(entity) && VehicleScreenEffects.isScreenEffect(event.effectInstance.effect)) {
+            event.result = Event.Result.DENY
+            return
+        }
         if (event.effectInstance.effect.category == MobEffectCategory.HARMFUL
             && vehicle is VehicleEntity
             && vehicle.isEnclosed(vehicle.getSeatIndex(entity))
         ) {
             event.result = Event.Result.DENY
         }
+    }
+
+    /** Effects that skip the Applicable event (forceAddEffect) or were active before mounting. */
+    @SubscribeEvent
+    fun stripScreenEffectsInVehicle(event: net.minecraftforge.event.TickEvent.PlayerTickEvent) {
+        val player = event.player
+        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END || player.level().isClientSide
+            || player.tickCount % 5 != 0 || !VehicleScreenEffects.shields(player)) return
+        val strip = player.activeEffects.map { it.effect }.filter(VehicleScreenEffects::isScreenEffect)
+        for (effect in strip) player.removeEffect(effect)
     }
 
     /**

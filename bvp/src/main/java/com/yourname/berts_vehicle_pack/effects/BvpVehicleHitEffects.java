@@ -2,11 +2,8 @@ package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.impact.*;
-import com.atsuishio.superbwarfare.api.vehicle.presentation.EnclosedCrewShake;
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
-import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.MinecraftUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.init.ModParticles;
@@ -54,16 +51,12 @@ public final class BvpVehicleHitEffects {
     /** Native weapon callbacks may report a confirmed hit without claiming armor penetration. */
     public static void acceptedHit(VehicleEntity vehicle, double caliber) {
         if (!(vehicle.level() instanceof ServerLevel level) || !Double.isFinite(caliber) || caliber <= 0) return;
-        boolean aircraft = vehicle.getVehicleType() == VehicleType.AIRPLANE || vehicle.getVehicleType() == VehicleType.HELICOPTER;
         long now = level.getGameTime();
         if (now - LAST_SHAKE.getOrDefault(vehicle, Long.MIN_VALUE / 2) >= 2) {
             LAST_SHAKE.put(vehicle, now);
-            double amplitude = BvpImpactShakeScale.amplitude(caliber, aircraft);
+            // Riders hear the hit but their view stays still (VehicleScreenEffects): no camera shake on ERA,
+            // penetrations or any other hit, in any vehicle or seat.
             for (var passenger : vehicle.getPassengers()) if (passenger instanceof ServerPlayer player) {
-                // Crew inside a ground hull hear the hit but their view stays still (ERA, penetrations).
-                if (!EnclosedCrewShake.shields(player))
-                    MinecraftUtil.sendPacketTo(player, new ShakeClientMessage(aircraft ? 6 : 10, 8, amplitude,
-                            vehicle.getX(), vehicle.getY(), vehicle.getZ()));
                 com.atsuishio.superbwarfare.tools.SoundTool.playLocalSound(player,
                         com.yourname.berts_vehicle_pack.init.ModSounds.IMPACT_METAL.get(),
                         (float)Math.min(1.8, .22 + caliber / 100),

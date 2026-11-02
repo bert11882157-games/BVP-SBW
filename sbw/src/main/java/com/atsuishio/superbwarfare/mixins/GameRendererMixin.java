@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleScreenEffects;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.client.camera.FixedWingCockpitCamera;
 import com.atsuishio.superbwarfare.client.camera.VehicleCameraFrameDiagnostic;
@@ -56,6 +57,12 @@ public class GameRendererMixin {
         VehicleCameraFrameDiagnostic.afterProjectionEffects();
     }
 
+    /** No hurt tilt (or another mod's shake injected into bobHurt) while riding a vehicle. */
+    @Inject(method = "bobHurt(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
+    private void sbw$noHurtTiltInVehicle(PoseStack pose, float partialTick, CallbackInfo ci) {
+        if (VehicleScreenEffects.shields(mainCamera.getEntity())) ci.cancel();
+    }
+
     @Inject(method = "pick(F)V", at = @At("HEAD"))
     private void sbw$beginPhysicalUiPick(float partialTicks, CallbackInfo ci) {
         AircraftCollisionPicking.beginUiPick(partialTicks);
@@ -96,7 +103,8 @@ public class GameRendererMixin {
 
         matrices.mulPose(Axis.ZP.rotationDegrees(ClientEventHandler.cameraRoll));
 
-        if (entity instanceof Player player && !player.isSpectator() && player.hasEffect(ModMobEffects.SHOCK.get())) {
+        if (entity instanceof Player player && !player.isSpectator() && player.hasEffect(ModMobEffects.SHOCK.get())
+                && !VehicleScreenEffects.shields(player)) {
             float shakeStrength = (float) DisplayConfig.SHOCK_SCREEN_SHAKE.get() / 100.0f;
             if (shakeStrength <= 0.0f) return;
             matrices.mulPose(Axis.ZP.rotationDegrees((float) Mth.nextDouble(RandomSource.create(), 8, 12) * shakeStrength));

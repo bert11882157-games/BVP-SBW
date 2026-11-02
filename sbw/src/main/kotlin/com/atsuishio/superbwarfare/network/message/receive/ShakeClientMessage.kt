@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message.receive
 
-import com.atsuishio.superbwarfare.api.vehicle.presentation.EnclosedCrewShake
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleScreenEffects
 import com.atsuishio.superbwarfare.config.client.DisplayConfig
 import com.atsuishio.superbwarfare.event.ClientEventHandler.shakeAmplitude
 import com.atsuishio.superbwarfare.event.ClientEventHandler.shakePos
@@ -60,7 +60,7 @@ data class ShakeClientMessage(
 
     companion object {
 
-        /** Explosions and blasts: crew inside a ground vehicle's hull are skipped (EnclosedCrewShake). */
+        /** Explosions and blasts: anyone riding a vehicle is skipped (VehicleScreenEffects). */
         @JvmStatic
         fun sendToNearbyPlayers(
             level: Level,
@@ -90,7 +90,7 @@ data class ShakeClientMessage(
                 ServerPlayer::class.java,
                 AABB(center, center).inflate(sendRadius)
             ) { true }) {
-                if (!EnclosedCrewShake.receives(serverPlayer, source)) continue
+                if (!VehicleScreenEffects.receives(serverPlayer, source)) continue
                 serverPlayer.sendPacket(ShakeClientMessage(time, sendRadius, amplitude, x, y, z))
             }
         }
@@ -99,7 +99,7 @@ data class ShakeClientMessage(
         fun sendToNearbyPlayers(source: Entity, sendRadius: Double, time: Double, amplitude: Double) {
             if (sendRadius <= 0 || time <= 0 || amplitude <= 0) return
 
-            // A vehicle's own gun still shakes its crew; anyone else's gun does not reach a closed hull.
+            // A vehicle's own gun still shakes its crew; anyone else's gun does not shake a vehicle's riders.
             send(
                 source.level(),
                 source.x,
