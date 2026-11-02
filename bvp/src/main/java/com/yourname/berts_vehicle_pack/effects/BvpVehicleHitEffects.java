@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.impact.*;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.EnclosedCrewShake;
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage;
@@ -59,8 +60,10 @@ public final class BvpVehicleHitEffects {
             LAST_SHAKE.put(vehicle, now);
             double amplitude = BvpImpactShakeScale.amplitude(caliber, aircraft);
             for (var passenger : vehicle.getPassengers()) if (passenger instanceof ServerPlayer player) {
-                MinecraftUtil.sendPacketTo(player, new ShakeClientMessage(aircraft ? 6 : 10, 8, amplitude,
-                        vehicle.getX(), vehicle.getY(), vehicle.getZ()));
+                // Crew inside a ground hull hear the hit but their view stays still (ERA, penetrations).
+                if (!EnclosedCrewShake.shields(player))
+                    MinecraftUtil.sendPacketTo(player, new ShakeClientMessage(aircraft ? 6 : 10, 8, amplitude,
+                            vehicle.getX(), vehicle.getY(), vehicle.getZ()));
                 com.atsuishio.superbwarfare.tools.SoundTool.playLocalSound(player,
                         com.yourname.berts_vehicle_pack.init.ModSounds.IMPACT_METAL.get(),
                         (float)Math.min(1.8, .22 + caliber / 100),
