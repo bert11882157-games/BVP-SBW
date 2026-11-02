@@ -2451,6 +2451,7 @@ object ClientEventHandler {
     private fun handleShockCamera(event: ViewportEvent.ComputeCameraAngles, entity: LivingEntity) {
         val player = entity as? Player ?: return
         if (player.isSpectator) return
+        if (com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleScreenEffects.shields(player)) return
 
         if (entity.hasEffect(ModMobEffects.SHOCK.get()) && mc.options.cameraType == CameraType.FIRST_PERSON) {
             val shakeStrength = DisplayConfig.SHOCK_SCREEN_SHAKE.get().toFloat() / 100.0f
