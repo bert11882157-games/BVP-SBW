@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer
 
 import com.atsuishio.superbwarfare.tools.mc
 import com.mojang.blaze3d.platform.NativeImage
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import kotlin.math.min
@@ -32,10 +33,14 @@ object TextureBrightnessHandler {
             )
 
             // 4. 注册到纹理管理器
-            mc.textureManager.register(
-                newTextureLoc,
-                DynamicTexture(brightenedImage)
-            )
+            val texture = UploadedTexture(brightenedImage)
+            mc.textureManager.register(newTextureLoc, texture)
+            // DynamicTexture keeps its pixels in native memory for re-uploads that never happen here. On the render
+            // thread the constructor has already uploaded them, so drop the CPU copy: a 4096x8192 aircraft texture
+            // otherwise stays resident as 134 MB of off-heap RAM per brightness, for the rest of the game.
+            if (RenderSystem.isOnRenderThread()) {
+                texture.setPixels(null)
+            }
 
             // 5. 缓存并返回
             BRIGHTENED_TEXTURES[key] = newTextureLoc
@@ -73,5 +78,13 @@ object TextureBrightnessHandler {
         }
 
         return brightened
+    }
+
+    /** A DynamicTexture whose GL texture is still released on close after its pixels were dropped. */
+    private class UploadedTexture(image: NativeImage) : DynamicTexture(image) {
+        override fun close() {
+            super.close()
+            releaseId()
+        }
     }
 }
